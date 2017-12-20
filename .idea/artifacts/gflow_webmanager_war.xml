@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="gflow-webmanager:war">
-    <output-path>$PROJECT_DIR$/gflow-webmanager/target</output-path>
-    <root id="archive" name="gflow-webmanager.war">
-      <element id="artifact" artifact-name="gflow-webmanager:war exploded" />
-    </root>
-  </artifact>
-</component>
