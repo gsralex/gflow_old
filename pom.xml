@@ -12,6 +12,27 @@
         <module>gflow-core</module>
         <module>gflow-webmanager</module>
     </modules>
+    <properties>
+        <junit-version>4.12</junit-version>
+        <commons-lang3-version>3.4</commons-lang3-version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
+    </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit-version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3-version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
