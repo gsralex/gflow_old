@@ -1,4 +1,4 @@
-package com.gsralex.gflow.flow;
+package com.gsralex.gflow.core.api;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -17,10 +17,10 @@ public class FlowParameter {
 
     public FlowParameter(String parameter) {
         this.parameter = parameter;
-        init();
+        parse();
     }
 
-    private void init() {
+    private void parse() {
         pMap = new HashMap<>();
         String[] pArray = this.parameter.split(",");
         for (String p : pArray) {

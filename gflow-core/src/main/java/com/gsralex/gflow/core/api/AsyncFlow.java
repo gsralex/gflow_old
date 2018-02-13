@@ -1,4 +1,4 @@
-package com.gsralex.gflow.flow;
+package com.gsralex.gflow.core.api;
 
 /**
  * @author gsralex
