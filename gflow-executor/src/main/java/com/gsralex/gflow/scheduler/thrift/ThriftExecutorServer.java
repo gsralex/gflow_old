@@ -1,4 +1,4 @@
-package com.gsralex.gflow.executor.thrift;
+package com.gsralex.gflow.scheduler.thrift;
 
 /**
  * @author gsralex

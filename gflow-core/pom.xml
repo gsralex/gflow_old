@@ -13,6 +13,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>../gflow-executor</module>
+        <module>../gflow-scheduler</module>
+        <module>../gflow-executor</module>
     </modules>
     <dependencies>
         <dependency>

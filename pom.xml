@@ -10,13 +10,18 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>gflow-core</module>
-        <module>gflow-webmanager</module>
+        <module>gflow-executor</module>
+        <module>gflow-scheduler</module>
+        <module>gflow-webmanage</module>
     </modules>
     <properties>
         <junit.version>4.12</junit.version>
         <commonslang3.version>3.4</commonslang3.version>
         <log4j.version>1.2.17</log4j.version>
-        <thrift.verison>0.9.3</thrift.verison>
+        <thrift.verison>0.11.0</thrift.verison>
+        <dbcp.version>1.4</dbcp.version>
+        <mysql.version>5.1.39</mysql.version>
+        <!--maven-->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
@@ -47,6 +52,19 @@
             <groupId>org.apache.thrift</groupId>
             <artifactId>libthrift</artifactId>
             <version>${thrift.verison}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>${dbcp.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.version}</version>
         </dependency>
     </dependencies>
 
