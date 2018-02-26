@@ -48,9 +48,10 @@ public class ModelMapper {
                 column.setId(true);
                 column.setName(field.getName());
                 if(!StringUtils.isEmpty(idField.name())){
-
+                    column.setAliasName(idField.name());
+                }else{
+                    column.setAliasName(field.getName());
                 }
-                column.setAliasName(idField.name());
             }
             AliasField aliasField = field.getAnnotation(AliasField.class);
             if (aliasField != null) {

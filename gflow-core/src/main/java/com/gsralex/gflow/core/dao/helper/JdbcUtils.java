@@ -2,12 +2,10 @@ package com.gsralex.gflow.core.dao.helper;
 
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +16,8 @@ import java.util.Map;
  */
 public class JdbcUtils {
 
+    private static Logger LOGGER = Logger.getLogger(JdbcUtils.class);
+
     private DataSource dataSource;
 
 
@@ -26,65 +26,128 @@ public class JdbcUtils {
     }
 
     public <T> boolean save(T t) throws SQLException {
-        FieldMapper mapper = ModelMapper.getMapper(t.getClass());
-        String sql = String.format("insert into `%s`", mapper.getTableName());
-        String insertSql = "(";
-        String valueSql = " values(";
+        if (t == null)
+            return false;
+        Object[] objArray = getInsertObjects(t);
+        String sql = getInsertSql(t.getClass());
+        LOGGER.debug("sql:" + sql);
+        return executeUpdate(sql, objArray) != 0 ? true : false;
+    }
 
+    public <T> int batchSave(List<T> list) throws SQLException {
+        if (list == null || list.size() == 0)
+            return 0;
+        Class<T> type = (Class<T>) list.get(0).getClass();
+        String sql = getInsertSql(type);
+        List<Object[]> objectList = new ArrayList<>();
+        for (T t : list) {
+            objectList.add(getInsertObjects(t));
+        }
+        return executeBatch(sql, objectList);
+    }
+
+    private <T> Object[] getInsertObjects(T t) {
+        FieldMapper mapper = ModelMapper.getMapper(t.getClass());
         FieldValue fieldValue = new FieldValue(t, t.getClass());
         List<Object> objects = new ArrayList<>();
         for (Map.Entry<String, FieldColumn> entry : mapper.getMapper().entrySet()) {
             FieldColumn column = entry.getValue();
             if (!column.isId()) {
-                insertSql += String.format("`%s`,", column.getAliasName());
-                valueSql += "?,";
                 Object value = fieldValue.getValue(entry.getValue().getClass(), entry.getKey());
                 objects.add(value);
+            }
+        }
+        Object[] objArray = new Object[objects.size()];
+        objects.toArray(objArray);
+        return objArray;
+    }
+
+    private <T> String getInsertSql(Class<T> type) {
+        FieldMapper mapper = ModelMapper.getMapper(type);
+        String sql = String.format("insert into `%s`", mapper.getTableName());
+        String insertSql = "(";
+        String valueSql = " values(";
+        for (Map.Entry<String, FieldColumn> entry : mapper.getMapper().entrySet()) {
+            FieldColumn column = entry.getValue();
+            if (!column.isId()) {
+                insertSql += String.format("`%s`,", column.getAliasName());
+                valueSql += "?,";
             }
         }
         insertSql = StringUtils.removeEnd(insertSql, ",");
         insertSql += ")";
         valueSql = StringUtils.removeEnd(valueSql, ",");
         valueSql += ")";
-        sql = sql + insertSql + valueSql;
-        Object[] objArray = new Object[objects.size()];
-        objects.toArray(objArray);
-        System.out.println(sql);
-        return executeUpdate(sql, objArray) != 0 ? true : false;
+        return sql + insertSql + valueSql;
     }
 
 
     public <T> boolean update(T t) throws SQLException {
-        FieldMapper mapper = ModelMapper.getMapper(t.getClass());
+        if (t == null)
+            return false;
+        String sql = getUpdateSql(t.getClass());
+        Object[] objects = getUpdateObjects(t);
+        return executeUpdate(sql, objects) != 0 ? true : false;
+    }
+
+    public <T> int batchUpdate(List<T> list) throws SQLException {
+        if (list == null || list.size() == 0) {
+            return 0;
+        }
+        Class<T> type = (Class<T>) list.get(0).getClass();
+        String sql = getUpdateSql(type);
+        List<Object[]> objectList = new ArrayList<>();
+        for (T t : list) {
+            objectList.add(getUpdateObjects(t));
+        }
+        return executeBatch(sql, objectList);
+    }
+
+    private <T> String getUpdateSql(Class<T> type) {
+        FieldMapper mapper = ModelMapper.getMapper(type);
         String sql = String.format("update `%s` set ", mapper.getTableName());
+        for (Map.Entry<String, FieldColumn> entry : mapper.getMapper().entrySet()) {
+            FieldColumn column = entry.getValue();
+            if (!column.isId()) {
+                sql += String.format("`%s`=?,", column.getAliasName());
+            }
+        }
+        sql = StringUtils.removeEnd(sql, ",");
+        sql += " where 1=1 ";
+        for (Map.Entry<String, FieldColumn> entry : mapper.getMapper().entrySet()) {
+            FieldColumn column = entry.getValue();
+            if (column.isId()) {
+                sql += String.format("and %s=?,", column.getAliasName());
+            }
+        }
+        sql=StringUtils.removeEnd(sql,",");
+        return sql;
+    }
+
+    private <T> Object[] getUpdateObjects(T t) {
+        FieldMapper mapper = ModelMapper.getMapper(t.getClass());
         FieldValue fieldValue = new FieldValue(t, t.getClass());
         List<Object> objects = new ArrayList<>();
 
         for (Map.Entry<String, FieldColumn> entry : mapper.getMapper().entrySet()) {
             FieldColumn column = entry.getValue();
             if (!column.isId()) {
-                sql += String.format("`%s`=?,", column.getAliasName());
+                Object value = fieldValue.getValue(entry.getValue().getClass(), entry.getKey());
+                objects.add(value);
             }
-            Object value = fieldValue.getValue(entry.getValue().getClass(), entry.getKey());
-            objects.add(value);
         }
-        sql = StringUtils.remove(sql, ",");
-
-
-        sql += " where 1=1 ";
         for (Map.Entry<String, FieldColumn> entry : mapper.getMapper().entrySet()) {
             FieldColumn column = entry.getValue();
             if (column.isId()) {
-                sql += String.format("and %s=? ", column.getAliasName());
+                Object value = fieldValue.getValue(entry.getValue().getClass(), entry.getKey());
+                objects.add(value);
             }
-            Object value = fieldValue.getValue(entry.getValue().getClass(), entry.getKey());
-            objects.add(value);
         }
         Object[] objArray = new Object[objects.size()];
         objects.toArray(objArray);
-        return executeUpdate(sql, objArray) != 0 ? true : false;
-
+        return objArray;
     }
+
 
     public int executeUpdate(String sql, Object[] objects) throws SQLException {
         PreparedStatement ps = null;
@@ -96,7 +159,7 @@ public class JdbcUtils {
         }
     }
 
-    public <T> List<T> executeQuery(String sql, Object[] objects, Class<T> type) throws SQLException {
+    public <T> List<T> query(String sql, Object[] objects, Class<T> type) throws SQLException {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
@@ -107,6 +170,28 @@ public class JdbcUtils {
             closeRs(rs);
             close(ps);
         }
+    }
+
+    public int executeBatch(String sql, List<Object[]> objectList) throws SQLException {
+        PreparedStatement ps = null;
+        try {
+            ps = preBatch(sql, objectList);
+            int[] r = ps.executeBatch();
+            ps.getConnection().commit();
+            return getBatchResult(r);
+        } finally {
+            close(ps);
+        }
+    }
+
+    private int getBatchResult(int[] r) {
+        int cnt = 0;
+        for (int item : r) {
+            if (item != Statement.EXECUTE_FAILED) {
+                cnt++;
+            }
+        }
+        return cnt;
     }
 
     private <T> List<T> mapperList(ResultSet rs, Class<T> type) throws SQLException, IllegalAccessException, InstantiationException {
@@ -170,7 +255,7 @@ public class JdbcUtils {
 
 
     private PreparedStatement pre(String sql, Object[] objects) throws SQLException {
-        Connection conn = this.dataSource.getConnection();
+        Connection conn = getConnection();
         PreparedStatement ps = conn.prepareStatement(sql);
         if (objects != null && objects.length != 0) {
             for (int i = 0; i < objects.length; i++) {
@@ -178,6 +263,23 @@ public class JdbcUtils {
             }
         }
         return ps;
+    }
+
+    private PreparedStatement preBatch(String sql, List<Object[]> objectsArray) throws SQLException {
+        Connection conn = getConnection();
+        conn.setAutoCommit(false);
+        PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+        for (Object[] objects : objectsArray) {
+            for (int i = 0, size = objects.length; i < size; i++) {
+                ps.setObject(i + 1, objects[i]);
+            }
+            ps.addBatch();
+        }
+        return ps;
+    }
+
+    private Connection getConnection() throws SQLException {
+        return this.dataSource.getConnection();
     }
 
     private void close(PreparedStatement ps) throws SQLException {
