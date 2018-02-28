@@ -26,8 +26,6 @@ public class PropertiesUtils {
             PropertyName propertyName = field.getAnnotation(PropertyName.class);
             if (propertyName != null) {
                 String typeName = field.getType().getTypeName();
-                System.out.println(typeName);
-
                 String propName = propertyName.name();
                 if (StringUtils.isEmpty(propName)) {
                     propName = field.getName();

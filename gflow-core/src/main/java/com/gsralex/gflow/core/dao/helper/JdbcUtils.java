@@ -1,6 +1,7 @@
 package com.gsralex.gflow.core.dao.helper;
 
 
+import com.gsralex.gflow.core.enums.ExecutionEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -25,7 +26,7 @@ public class JdbcUtils {
         this.dataSource = dataSource;
     }
 
-    public <T> boolean save(T t) throws SQLException {
+    public <T> boolean save(T t) {
         if (t == null)
             return false;
         Object[] objArray = getInsertObjects(t);
@@ -34,7 +35,7 @@ public class JdbcUtils {
         return executeUpdate(sql, objArray) != 0 ? true : false;
     }
 
-    public <T> int batchSave(List<T> list) throws SQLException {
+    public <T> int batchSave(List<T> list) {
         if (list == null || list.size() == 0)
             return 0;
         Class<T> type = (Class<T>) list.get(0).getClass();
@@ -82,7 +83,7 @@ public class JdbcUtils {
     }
 
 
-    public <T> boolean update(T t) throws SQLException {
+    public <T> boolean update(T t) {
         if (t == null)
             return false;
         String sql = getUpdateSql(t.getClass());
@@ -90,7 +91,7 @@ public class JdbcUtils {
         return executeUpdate(sql, objects) != 0 ? true : false;
     }
 
-    public <T> int batchUpdate(List<T> list) throws SQLException {
+    public <T> int batchUpdate(List<T> list) {
         if (list == null || list.size() == 0) {
             return 0;
         }
@@ -120,7 +121,7 @@ public class JdbcUtils {
                 sql += String.format("and %s=?,", column.getAliasName());
             }
         }
-        sql=StringUtils.removeEnd(sql,",");
+        sql = StringUtils.removeEnd(sql, ",");
         return sql;
     }
 
@@ -149,22 +150,28 @@ public class JdbcUtils {
     }
 
 
-    public int executeUpdate(String sql, Object[] objects) throws SQLException {
+    public int executeUpdate(String sql, Object[] objects) {
         PreparedStatement ps = null;
         try {
             ps = pre(sql, objects);
             return ps.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("JdbcUtils.executeUpdate", e);
+            return 0;
         } finally {
             close(ps);
         }
     }
 
-    public <T> List<T> query(String sql, Object[] objects, Class<T> type) throws SQLException {
+    public <T> List<T> query(String sql, Object[] objects, Class<T> type) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             ps = pre(sql, objects);
             rs = ps.executeQuery();
+            return mapperList(rs, type);
+        } catch (SQLException e) {
+            LOGGER.error("JdbcUtils.query", e);
             return null;
         } finally {
             closeRs(rs);
@@ -172,13 +179,16 @@ public class JdbcUtils {
         }
     }
 
-    public int executeBatch(String sql, List<Object[]> objectList) throws SQLException {
+    public int executeBatch(String sql, List<Object[]> objectList) {
         PreparedStatement ps = null;
         try {
             ps = preBatch(sql, objectList);
             int[] r = ps.executeBatch();
             ps.getConnection().commit();
             return getBatchResult(r);
+        } catch (SQLException e) {
+            LOGGER.error("JdbcUtils.executeBatch", e);
+            return 0;
         } finally {
             close(ps);
         }
@@ -194,28 +204,45 @@ public class JdbcUtils {
         return cnt;
     }
 
-    private <T> List<T> mapperList(ResultSet rs, Class<T> type) throws SQLException, IllegalAccessException, InstantiationException {
+    private <T> List<T> mapperList(ResultSet rs, Class<T> type) {
         List<T> list = new ArrayList<>();
         FieldMapper fieldMapper = ModelMapper.getMapper(type);
-        while (rs.next()) {
-            T instance = type.newInstance();
-            FieldValue fieldValue = new FieldValue(instance, type);
-            list.add(mapper(rs, fieldMapper, fieldValue));
+        try {
+            while (rs.next()) {
+                T instance = type.newInstance();
+                FieldValue fieldValue = new FieldValue(instance, type);
+                list.add(mapper(rs, fieldMapper, fieldValue));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
         return list;
     }
 
-    private <T> T mapperEntity(ResultSet rs, Class<T> type) throws SQLException, IllegalAccessException, InstantiationException {
-        T instance = type.newInstance();
-        FieldMapper fieldMapper = ModelMapper.getMapper(type);
-        FieldValue fieldValue = new FieldValue(instance, type);
-        if (rs.next()) {
-            return mapper(rs, fieldMapper, fieldValue);
+    private <T> T mapperEntity(ResultSet rs, Class<T> type) {
+        T instance = null;
+        try {
+            instance = type.newInstance();
+            FieldMapper fieldMapper = ModelMapper.getMapper(type);
+            FieldValue fieldValue = new FieldValue(instance, type);
+            if (rs.next()) {
+                return mapper(rs, fieldMapper, fieldValue);
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null;
+        return instance;
     }
 
-    private <T> T mapper(ResultSet rs, FieldMapper fieldMapper, FieldValue fieldValue) throws SQLException {
+    private <T> T mapper(ResultSet rs, FieldMapper fieldMapper, FieldValue fieldValue) {
         try {
             for (Map.Entry<String, FieldColumn> item : fieldMapper.getMapper().entrySet()) {
                 String name = item.getKey();
@@ -254,47 +281,87 @@ public class JdbcUtils {
     }
 
 
-    private PreparedStatement pre(String sql, Object[] objects) throws SQLException {
-        Connection conn = getConnection();
-        PreparedStatement ps = conn.prepareStatement(sql);
-        if (objects != null && objects.length != 0) {
-            for (int i = 0; i < objects.length; i++) {
-                ps.setObject(i + 1, objects[i]);
+    private PreparedStatement pre(String sql, Object[] objects) {
+        try {
+            Connection conn = getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            if (objects != null && objects.length != 0) {
+                for (int i = 0; i < objects.length; i++) {
+                    ps.setObject(i + 1, objects[i]);
+                }
             }
+            return ps;
+        } catch (SQLException e) {
+            LOGGER.error("JdbcUtils.pre", e);
+            return null;
         }
-        return ps;
     }
 
-    private PreparedStatement preBatch(String sql, List<Object[]> objectsArray) throws SQLException {
-        Connection conn = getConnection();
-        conn.setAutoCommit(false);
-        PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-        for (Object[] objects : objectsArray) {
-            for (int i = 0, size = objects.length; i < size; i++) {
-                ps.setObject(i + 1, objects[i]);
+    private PreparedStatement preBatch(String sql, List<Object[]> objectsArray) {
+        try {
+            Connection conn = getConnection();
+            conn.setAutoCommit(false);
+            PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            for (Object[] objects : objectsArray) {
+                for (int i = 0, size = objects.length; i < size; i++) {
+                    ps.setObject(i + 1, objects[i]);
+                }
+                ps.addBatch();
             }
-            ps.addBatch();
+            return ps;
+        } catch (SQLException e) {
+            LOGGER.error("JdbcUtils.preBatch", e);
+            return null;
         }
-        return ps;
     }
 
-    private Connection getConnection() throws SQLException {
-        return this.dataSource.getConnection();
+    private Connection getConnection() {
+        try {
+            return this.dataSource.getConnection();
+        } catch (SQLException e) {
+            LOGGER.error("JdbcUtils.getConnection", e);
+            return null;
+        }
     }
 
-    private void close(PreparedStatement ps) throws SQLException {
-        Connection conn = ps.getConnection();
+    private void close(PreparedStatement ps) {
+
+        try {
+            Connection conn = ps.getConnection();
+            closePs(ps);
+            closeConn(conn);
+        } catch (SQLException e) {
+            LOGGER.error("JdbcUtils.close", e);
+        }
+    }
+
+    private void closePs(PreparedStatement ps) {
         if (ps != null) {
-            ps.close();
-        }
-        if (conn != null) {
-            conn.close();
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                LOGGER.error("JdbcUtils.closePs", e);
+            }
         }
     }
 
-    private void closeRs(ResultSet rs) throws SQLException {
+    private void closeRs(ResultSet rs) {
         if (rs != null) {
-            rs.close();
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                LOGGER.error("JdbcUtils.closeRs", e);
+            }
+        }
+    }
+
+    private void closeConn(Connection conn) {
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                LOGGER.error("JdbcUtils.closeConn", e);
+            }
         }
     }
 }
