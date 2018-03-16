@@ -16,9 +16,10 @@ public class GFlowExecution {
     private int type;
     private int interval;
     private String time;
-    private String date;
-    private int dayOfWeek;
-    private int dayOfMonth;
+    private int week;
+    private int month;
+    private int active;
+    private int timeType;
 
     public long getId() {
         return id;
@@ -60,11 +61,35 @@ public class GFlowExecution {
         this.time = time;
     }
 
-    public String getDate() {
-        return date;
+    public int getWeek() {
+        return week;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setWeek(int week) {
+        this.week = week;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getActive() {
+        return active;
+    }
+
+    public void setActive(int active) {
+        this.active = active;
+    }
+
+    public int getTimeType() {
+        return timeType;
+    }
+
+    public void setTimeType(int timeType) {
+        this.timeType = timeType;
     }
 }
