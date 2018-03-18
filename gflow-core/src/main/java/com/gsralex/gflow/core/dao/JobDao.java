@@ -1,12 +1,8 @@
 package com.gsralex.gflow.core.dao;
 
-import com.gsralex.gflow.core.domain.GFlowJobGroup;
-
 /**
  * @author gsralex
- * @date 2018/3/3
+ * @version 2018/3/17
  */
-public interface JobDao {
-
-    boolean saveJobGroup(GFlowJobGroup jobGroup);
+public class JobDao {
 }

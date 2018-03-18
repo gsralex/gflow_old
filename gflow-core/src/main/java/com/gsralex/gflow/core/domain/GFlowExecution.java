@@ -1,7 +1,8 @@
 package com.gsralex.gflow.core.domain;
 
-import com.gsralex.gflow.core.dao.helper.annotation.AliasField;
-import com.gsralex.gflow.core.dao.helper.annotation.IdField;
+
+import com.gsralex.gdata.annotation.IdField;
+import com.gsralex.gdata.annotation.LabelField;
 
 /**
  * @author gsralex
@@ -11,7 +12,7 @@ public class GFlowExecution {
 
     @IdField
     private long id;
-    @AliasField(name = "trigger_group_id")
+    @LabelField(name = "trigger_group_id")
     private long triggerGroupId;
     private int type;
     private int interval;

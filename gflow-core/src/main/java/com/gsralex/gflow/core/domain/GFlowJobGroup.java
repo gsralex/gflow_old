@@ -1,8 +1,8 @@
 package com.gsralex.gflow.core.domain;
 
-import com.gsralex.gflow.core.dao.helper.annotation.AliasField;
-import com.gsralex.gflow.core.dao.helper.annotation.IdField;
-import com.gsralex.gflow.core.dao.helper.annotation.TbName;
+import com.gsralex.gdata.annotation.IdField;
+import com.gsralex.gdata.annotation.LabelField;
+import com.gsralex.gdata.annotation.TbName;
 
 /**
  * @author gsralex
@@ -12,15 +12,15 @@ import com.gsralex.gflow.core.dao.helper.annotation.TbName;
 public class GFlowJobGroup {
     @IdField
     private long id;
-    @AliasField(name = "start_time")
+    @LabelField(name = "start_time")
     private int startTime;
-    @AliasField(name="end_time")
+    @LabelField(name="end_time")
     private int endTime;
-    @AliasField(name="create_time")
+    @LabelField(name="create_time")
     private int createTime;
-    @AliasField(name="trigger_group_id")
+    @LabelField(name="trigger_group_id")
     private long triggerGroupId;
-    @AliasField(name="start_trigger_id")
+    @LabelField(name="start_trigger_id")
     private long startTriggerId;
 
     public long getId() {

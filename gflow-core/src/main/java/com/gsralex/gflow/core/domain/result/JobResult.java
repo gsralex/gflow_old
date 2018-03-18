@@ -1,19 +1,18 @@
-package com.gsralex.gflow.core.api;
+package com.gsralex.gflow.core.domain.result;
 
 /**
  * @author gsralex
- * @date 2018/2/12
+ * @version 2018/3/18
  */
-public class FlowResult {
+public class JobResult {
 
     private boolean ok;
     private String errMsg;
 
-    public FlowResult(boolean ok, String errMsg) {
+    public JobResult(boolean ok, String errMsg) {
         this.ok = ok;
         this.errMsg = errMsg;
     }
-
 
     public boolean isOk() {
         return ok;

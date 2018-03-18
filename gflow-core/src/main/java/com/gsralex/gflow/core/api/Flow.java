@@ -6,7 +6,7 @@ package com.gsralex.gflow.core.api;
  */
 public interface Flow {
 
-    FlowResult execute(FlowParameter parameter);
+    FlowResult handle(FlowParameter parameter);
 }
 
 

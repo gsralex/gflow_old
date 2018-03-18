@@ -1,20 +1,16 @@
 package com.gsralex.gflow.core.dao.helper;
 
-import com.gsralex.gflow.core.GFlowContext;
-import com.gsralex.gflow.core.config.GFlowConfig;
-import com.gsralex.gflow.core.domain.GFlowAction;
+import com.gsralex.gdata.jdbc.JdbcUtils;
+import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.domain.GFlowJobGroup;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * @author gsralex
@@ -36,7 +32,7 @@ public class JdbcUtilsTest {
     public void save() throws Exception {
         GFlowJobGroup jobGroup = new GFlowJobGroup();
         jobGroup.setTriggerGroupId(1);
-        boolean r = jdbcUtils.save(jobGroup);
+        boolean r = jdbcUtils.insert(jobGroup);
         Assert.assertEquals(r, true);
     }
 
@@ -48,9 +44,12 @@ public class JdbcUtilsTest {
         for (int i = 0; i < size; i++) {
             GFlowJobGroup jobGroup = new GFlowJobGroup();
             jobGroup.setTriggerGroupId(1);
+            jobGroup.setEndTime(123);
+            jobGroup.setStartTime(123);
+            jobGroup.setCreateTime(123);
             jobGroupList.add(jobGroup);
         }
-        int r = jdbcUtils.batchSave(jobGroupList);
+        int r = jdbcUtils.batchInsert(jobGroupList);
         Assert.assertEquals(r, size);
         long end = new Date().getTime();
         System.out.println("time:" + (end - start));
