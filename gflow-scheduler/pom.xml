@@ -12,4 +12,24 @@
     <artifactId>gflow-scheduler</artifactId>
 
 
+    <dependencies>
+
+        <dependency>
+            <groupId>com.gsralex</groupId>
+            <artifactId>gdata-bean</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+    </dependencies>
+
 </project>

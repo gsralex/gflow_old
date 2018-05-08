@@ -1,73 +1,74 @@
 package com.gsralex.gflow.core.domain;
 
-import com.gsralex.gdata.annotation.IdField;
-import com.gsralex.gdata.annotation.LabelField;
-import com.gsralex.gdata.annotation.TbName;
+
+import com.gsralex.gdata.bean.annotation.Column;
+import com.gsralex.gdata.bean.annotation.Id;
+import com.gsralex.gdata.bean.annotation.Table;
 
 /**
  * @author gsralex
  * @date 2018/2/12
  */
-@TbName(name = "gflow_jobgroup")
+@Table(name = "gflow_jobgroup")
 public class GFlowJobGroup {
-    @IdField
-    private long id;
-    @LabelField(name = "start_time")
-    private int startTime;
-    @LabelField(name="end_time")
-    private int endTime;
-    @LabelField(name="create_time")
-    private int createTime;
-    @LabelField(name="trigger_group_id")
-    private long triggerGroupId;
-    @LabelField(name="start_trigger_id")
-    private long startTriggerId;
+    @Id
+    private Long id;
+    @Column(name = "start_time")
+    private Integer startTime;
+    @Column(name="end_time")
+    private Integer endTime;
+    @Column(name="create_time")
+    private Integer createTime;
+    @Column(name="trigger_group_id")
+    private Long triggerGroupId;
+    @Column(name="start_trigger_id")
+    private Long startTriggerId;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public int getStartTime() {
+    public Integer getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(int startTime) {
+    public void setStartTime(Integer startTime) {
         this.startTime = startTime;
     }
 
-    public int getEndTime() {
+    public Integer getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(int endTime) {
+    public void setEndTime(Integer endTime) {
         this.endTime = endTime;
     }
 
-    public int getCreateTime() {
+    public Integer getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(Integer createTime) {
         this.createTime = createTime;
     }
 
-    public long getTriggerGroupId() {
+    public Long getTriggerGroupId() {
         return triggerGroupId;
     }
 
-    public void setTriggerGroupId(long triggerGroupId) {
+    public void setTriggerGroupId(Long triggerGroupId) {
         this.triggerGroupId = triggerGroupId;
     }
 
-    public long getStartTriggerId() {
+    public Long getStartTriggerId() {
         return startTriggerId;
     }
 
-    public void setStartTriggerId(long startTriggerId) {
+    public void setStartTriggerId(Long startTriggerId) {
         this.startTriggerId = startTriggerId;
     }
 }

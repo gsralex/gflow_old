@@ -16,7 +16,7 @@ import org.apache.thrift.transport.TTransportException;
  */
 public class ThriftSchedulerServer implements SchedulerServer {
     @Override
-    public void start(int port, boolean autoTask) {
+    public void start(int port) {
         TServerTransport tServerSocket = null;
         try {
             tServerSocket = new TServerSocket(port);
@@ -43,5 +43,10 @@ public class ThriftSchedulerServer implements SchedulerServer {
         } catch (TTransportException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        SchedulerServer server = new ThriftSchedulerServer();
+        server.start(8010);
     }
 }

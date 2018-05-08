@@ -9,6 +9,11 @@ public class JobResult {
     private boolean ok;
     private String errMsg;
 
+    public JobResult(){
+
+    }
+
+
     public JobResult(boolean ok, String errMsg) {
         this.ok = ok;
         this.errMsg = errMsg;

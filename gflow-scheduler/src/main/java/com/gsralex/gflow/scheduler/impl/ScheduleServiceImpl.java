@@ -2,7 +2,6 @@ package com.gsralex.gflow.scheduler.impl;
 
 import com.gsralex.gflow.core.dao.ActionDao;
 import com.gsralex.gflow.core.domain.result.JobResult;
-import com.gsralex.gflow.core.model.scheduler.ActionDeploy;
 import com.gsralex.gflow.scheduler.ScheduleContext;
 import com.gsralex.gflow.scheduler.ScheduleService;
 import com.gsralex.gflow.scheduler.rpc.JobDesc;
@@ -27,16 +26,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public JobResult submit(long actionId) {
-        List<ActionDeploy> deployList = actionDao.getActionDeployList(actionId);
-        ActionDeploy deploy = deployList.get(0);//简单处理，先取第一个
-        //TODO:为null判断加入runtime error
-        //TODO:加入重试机制
-        JobDesc jobDesc = new JobDesc();
-        jobDesc.setIp(deploy.getIp());
-        jobDesc.setPort(deploy.getPort());
-        jobDesc.setClassName(deploy.getClassName());
-        jobDesc.setActionId(deploy.getActionId());
-        return this.context.getRpcClient().schedule(jobDesc);
+        return null;
     }
 
     @Override

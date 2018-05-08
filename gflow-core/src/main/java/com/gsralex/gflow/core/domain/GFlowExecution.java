@@ -1,8 +1,7 @@
 package com.gsralex.gflow.core.domain;
 
-
-import com.gsralex.gdata.annotation.IdField;
-import com.gsralex.gdata.annotation.LabelField;
+import com.gsralex.gdata.bean.annotation.Column;
+import com.gsralex.gdata.bean.annotation.Id;
 
 /**
  * @author gsralex
@@ -10,48 +9,58 @@ import com.gsralex.gdata.annotation.LabelField;
  */
 public class GFlowExecution {
 
-    @IdField
-    private long id;
-    @LabelField(name = "trigger_group_id")
-    private long triggerGroupId;
-    private int type;
-    private int interval;
+    @Id
+    private Long id;
+    @Column(name = "trigger_group_id")
+    private Long triggerGroupId;
+    @Column(name = "time_type")
+    private Integer TimeType;
+    @Column(name = "interval")
+    private Integer interval;
+    @Column(name = "interval_type")
+    private Integer intervalType;
+    @Column(name = "time")
     private String time;
-    private int week;
-    private int month;
-    private int active;
-    private int timeType;
+    private Boolean active;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getTriggerGroupId() {
+    public Long getTriggerGroupId() {
         return triggerGroupId;
     }
 
-    public void setTriggerGroupId(long triggerGroupId) {
+    public void setTriggerGroupId(Long triggerGroupId) {
         this.triggerGroupId = triggerGroupId;
     }
 
-    public int getType() {
-        return type;
+    public Integer getTimeType() {
+        return TimeType;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setTimeType(Integer timeType) {
+        TimeType = timeType;
     }
 
-    public int getInterval() {
+    public Integer getInterval() {
         return interval;
     }
 
-    public void setInterval(int interval) {
+    public void setInterval(Integer interval) {
         this.interval = interval;
+    }
+
+    public Integer getIntervalType() {
+        return intervalType;
+    }
+
+    public void setIntervalType(Integer intervalType) {
+        this.intervalType = intervalType;
     }
 
     public String getTime() {
@@ -62,35 +71,11 @@ public class GFlowExecution {
         this.time = time;
     }
 
-    public int getWeek() {
-        return week;
-    }
-
-    public void setWeek(int week) {
-        this.week = week;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public int getActive() {
+    public Boolean getActive() {
         return active;
     }
 
-    public void setActive(int active) {
+    public void setActive(Boolean active) {
         this.active = active;
-    }
-
-    public int getTimeType() {
-        return timeType;
-    }
-
-    public void setTimeType(int timeType) {
-        this.timeType = timeType;
     }
 }

@@ -7,7 +7,7 @@ package com.gsralex.gflow.scheduler;
  */
 public interface SchedulerServer {
 
-    void start(int port, boolean autoTask);
+    void start(int port);
 
 }
 

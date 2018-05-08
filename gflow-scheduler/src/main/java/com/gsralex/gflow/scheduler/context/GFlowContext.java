@@ -1,9 +1,10 @@
-package com.gsralex.gflow.core.context;
+package com.gsralex.gflow.scheduler.context;
 
-import com.gsralex.gdata.jdbc.JdbcUtils;
+
+import com.gsralex.gdata.bean.jdbc.JdbcUtils;
 import com.gsralex.gflow.core.config.GFlowConfig;
 import com.gsralex.gflow.core.util.PropertiesUtils;
-import org.apache.commons.dbcp.BasicDataSource;
+
 
 import javax.sql.DataSource;
 
@@ -20,10 +21,6 @@ public class GFlowContext {
 
     private GFlowConfig getConfig() {
         return config;
-    }
-
-    public DataSource getDataSource() {
-        return dataSource;
     }
 
     public JdbcUtils getJdbcUtils() {
@@ -45,11 +42,12 @@ public class GFlowContext {
     }
 
     private void initDataSource() {
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(config.dbDriver);
-        dataSource.setUrl(config.dbUrl);
-        dataSource.setUsername(config.dbUserName);
-        dataSource.setPassword(config.dbUserPass);
-        this.dataSource = dataSource;
+//        BasicDataSource dataSource = new BasicDataSource();
+//        dataSource.setDriverClassName(config.dbDriver);
+//        dataSource.setUrl(config.dbUrl);
+//        dataSource.setUsername(config.dbUserName);
+//        dataSource.setPassword(config.dbUserPass);
+//        this.dataSource = dataSource;
+
     }
 }

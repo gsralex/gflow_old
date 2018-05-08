@@ -11,10 +11,21 @@
 
     <artifactId>gflow-core</artifactId>
     <packaging>pom</packaging>
-    <modules>
-        <module>../gflow-executor</module>
-        <module>../gflow-scheduler</module>
-        <module>../gflow-executor</module>
-    </modules>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>com.gsralex</groupId>
+            <artifactId>gdata-bean</artifactId>
+        </dependency>
+
+        <!--test-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
 
 </project>
