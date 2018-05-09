@@ -19,7 +19,6 @@ public class GFlowExecution {
     private Integer interval;
     @Column(name = "interval_type")
     private Integer intervalType;
-    @Column(name = "time")
     private String time;
     private Boolean active;
 

@@ -22,6 +22,7 @@
         <dbcp.version>1.4</dbcp.version>
         <mysql.version>5.1.39</mysql.version>
         <gdata.version>1.07</gdata.version>
+        <gflow-core.version>1.0-SNAPSHOT</gflow-core.version>
         <!--maven-->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -73,6 +74,12 @@
                 <groupId>com.gsralex</groupId>
                 <artifactId>gdata-bean</artifactId>
                 <version>${gdata.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.gsralex</groupId>
+                <artifactId>gflow-core</artifactId>
+                <version>${gflow-core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
