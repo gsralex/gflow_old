@@ -13,8 +13,7 @@ struct TJobDesc{
     1:i64 id,
     2:i64 actionId,
     3:i64 jobGroupId,
-    4:string parameter,
-    5:string className
+    4:string parameter
 }
 
 struct TGroupJobDesc{

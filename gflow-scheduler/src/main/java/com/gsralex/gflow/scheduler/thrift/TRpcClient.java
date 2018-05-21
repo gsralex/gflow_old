@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.thrift;
 
-import com.gsralex.gflow.core.domain.result.JobResult;
+import com.gsralex.gflow.scheduler.domain.job.JobResult;
 import com.gsralex.gflow.scheduler.rpc.RpcClient;
 import com.gsralex.gflow.scheduler.rpc.JobDesc;
 import com.gsralex.gflow.scheduler.thrift.gen.TJobDesc;
@@ -27,13 +27,14 @@ public class TRpcClient implements RpcClient {
             TProtocol protocol = new TBinaryProtocol(transport);
             TScheduleService.Client client = new TScheduleService.Client(protocol);
             TJobDesc jobDesc = TModelConverter.convertTJobDesc(desc);
-            return TModelConverter.convertJobResult(client.schedule(jobDesc));
+            client.schedule(jobDesc);
         } catch (Throwable e) {
             logger.error("TRpcClient.send", e);
-            return new JobResult(false, e.getMessage());
+//            return new JobResult(false, e.getMessage());
         } finally {
             if (transport != null)
                 transport.close();
         }
+        return null;
     }
 }

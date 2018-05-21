@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler;
 
-import com.gsralex.gflow.core.domain.result.JobResult;
+import com.gsralex.gflow.scheduler.domain.job.JobResult;
 
 /**
  * @author gsralex
@@ -8,11 +8,11 @@ import com.gsralex.gflow.core.domain.result.JobResult;
  */
 public interface ScheduleService {
 
-    JobResult submit(long actionId);
+    JobResult submit(long actionId, String parameter);
 
-    JobResult submitGroup(long triggerGroupId);
+    JobResult submitGroup(long triggerGroupId, String parameter);
 
-    JobResult pauseJobGroup(long jobGroupId);
+    JobResult pauseJobGroup(long jobGroupId, String parameter);
 
     JobResult stopJobGroup(long jobGroupId);
 }

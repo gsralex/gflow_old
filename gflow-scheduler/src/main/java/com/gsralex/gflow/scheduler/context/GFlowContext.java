@@ -2,10 +2,12 @@ package com.gsralex.gflow.scheduler.context;
 
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.core.config.GFlowConfig;
-import com.gsralex.gflow.core.util.PropertiesUtils;
+import com.gsralex.gflow.scheduler.util.PropertiesUtils;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author gsralex
@@ -19,7 +21,8 @@ public class GFlowContext {
 
     private GFlowConfig config;
     private JdbcUtils jdbcUtils;
-    private BeanMap beanMap;
+    private static Map<String, Object> beanMap = new HashMap<>();
+
 
     private GFlowConfig getConfig() {
         return config;
@@ -33,7 +36,6 @@ public class GFlowContext {
     public void init() {
         initConfig();
         initDataSource();
-        initBeanMap();
     }
 
     private void initConfig() {
@@ -47,18 +49,19 @@ public class GFlowContext {
 
     private void initDataSource() {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(config.dbDriver);
-        dataSource.setUrl(config.dbUrl);
-        dataSource.setUsername(config.dbUserName);
-        dataSource.setPassword(config.dbUserPass);
+        dataSource.setDriverClassName(config.getDbDriver());
+        dataSource.setUrl(config.getDbUrl());
+        dataSource.setUsername(config.getDbUserName());
+        dataSource.setPassword(config.getDbPassword());
         jdbcUtils = new JdbcUtils(dataSource);
     }
 
-    private void initBeanMap() {
-        beanMap = new BeanMap();
+
+    public <T> T getBean(Class<T> type) {
+        return (T) beanMap.get(type.getName());
     }
 
-    public BeanMap getBeanMap() {
-        return this.beanMap;
+    public void setBean(Class type, Object instance) {
+        beanMap.put(type.getName(), instance);
     }
 }

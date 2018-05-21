@@ -9,7 +9,6 @@ public class JobDesc {
     private long id;
     private String ip;
     private int port;
-    private String className;
     private String parameter;
     private long actionId;
     private long jobGroupId;
@@ -36,14 +35,6 @@ public class JobDesc {
 
     public void setPort(int port) {
         this.port = port;
-    }
-
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
     }
 
     public String getParameter() {

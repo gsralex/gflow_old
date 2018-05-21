@@ -9,10 +9,7 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>gflow-core</module>
-        <module>gflow-executor</module>
         <module>gflow-scheduler</module>
-        <module>gflow-webmanage</module>
     </modules>
     <properties>
         <junit.version>4.12</junit.version>
@@ -22,7 +19,8 @@
         <dbcp.version>1.4</dbcp.version>
         <mysql.version>5.1.39</mysql.version>
         <gdata.version>1.07</gdata.version>
-        <gflow-core.version>1.0-SNAPSHOT</gflow-core.version>
+        <gflowcore.version>1.0-SNAPSHOT</gflowcore.version>
+        <zkclient.version>0.10</zkclient.version>
         <!--maven-->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -77,9 +75,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.gsralex</groupId>
-                <artifactId>gflow-core</artifactId>
-                <version>${gflow-core.version}</version>
+                <groupId>com.101tec</groupId>
+                <artifactId>zkclient</artifactId>
+                <version>${zkclient.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
