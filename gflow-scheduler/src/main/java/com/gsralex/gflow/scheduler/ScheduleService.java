@@ -15,4 +15,6 @@ public interface ScheduleService {
     JobResult pauseJobGroup(long jobGroupId, String parameter);
 
     JobResult stopJobGroup(long jobGroupId);
+
+    JobResult actionAck(long jobGroupId, long actionId, boolean ok);
 }

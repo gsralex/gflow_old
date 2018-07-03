@@ -32,6 +32,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         return null;
     }
 
+    @Override
+    public JobResult actionAck(long jobGroupId, long actionId, boolean ok) {
+        return null;
+    }
+
 
     public static void main(String[] args) {
         GFlowContext context = new GFlowContext();

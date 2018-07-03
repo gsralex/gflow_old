@@ -1,5 +1,6 @@
 package com.gsralex.gflow.scheduler.domain.persistent;
 
+
 import com.gsralex.gdata.bean.annotation.Column;
 import com.gsralex.gdata.bean.annotation.Id;
 
@@ -7,7 +8,7 @@ import com.gsralex.gdata.bean.annotation.Id;
  * @author gsralex
  * @date 2018/2/17
  */
-public class GFlowExecution {
+public class GFlowExecuteConfig {
 
     @Id
     private Long id;
@@ -17,8 +18,6 @@ public class GFlowExecution {
     private Integer TimeType;
     @Column(name = "interval")
     private Integer interval;
-    @Column(name = "interval_type")
-    private Integer intervalType;
     private String time;
     private Boolean active;
 
@@ -52,14 +51,6 @@ public class GFlowExecution {
 
     public void setInterval(Integer interval) {
         this.interval = interval;
-    }
-
-    public Integer getIntervalType() {
-        return intervalType;
-    }
-
-    public void setIntervalType(Integer intervalType) {
-        this.intervalType = intervalType;
     }
 
     public String getTime() {

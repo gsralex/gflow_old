@@ -1,7 +1,6 @@
 package com.gsralex.gflow.scheduler.util;
 
 
-import com.gsralex.gflow.core.config.GFlowConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -67,7 +66,7 @@ public class PropertiesUtils {
     public static void main(String[] args) throws IllegalAccessException, IOException, InstantiationException {
 
         String filePath = PropertiesUtils.class.getResource("/gflow.properties").getPath();
-        GFlowConfig config = PropertiesUtils.getConfig(filePath, GFlowConfig.class);
-        System.out.println(config);
+//        GFlowConfig config = PropertiesUtils.getConfig(filePath, GFlowConfig.class);
+//        System.out.println(config);
     }
 }

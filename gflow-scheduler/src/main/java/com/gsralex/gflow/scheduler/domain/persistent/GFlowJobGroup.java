@@ -23,6 +23,8 @@ public class GFlowJobGroup {
     private Long triggerGroupId;
     @Column(name="start_trigger_id")
     private Long startTriggerId;
+    @Column(name = "date")
+    private Integer date;
 
     public Long getId() {
         return id;
@@ -70,5 +72,13 @@ public class GFlowJobGroup {
 
     public void setStartTriggerId(Long startTriggerId) {
         this.startTriggerId = startTriggerId;
+    }
+
+    public Integer getDate() {
+        return date;
+    }
+
+    public void setDate(Integer date) {
+        this.date = date;
     }
 }
