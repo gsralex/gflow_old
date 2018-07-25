@@ -2,8 +2,9 @@ package com.gsralex.gflow.scheduler.service.impl;
 
 import com.gsralex.gflow.scheduler.dao.ConfigDao;
 import com.gsralex.gflow.scheduler.dao.FlowJobDao;
-import com.gsralex.gflow.scheduler.domain.persistent.GFlowJobGroup;
-import com.gsralex.gflow.scheduler.domain.persistent.GFlowTrigger;
+import com.gsralex.gflow.scheduler.domain.flow.GFlowJobGroup;
+import com.gsralex.gflow.scheduler.domain.flow.GFlowTrigger;
+import com.gsralex.gflow.scheduler.domain.flow.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.rpc.JobDesc;
 import com.gsralex.gflow.scheduler.rpc.RpcClient;
 import com.gsralex.gflow.scheduler.service.FlowService;
@@ -41,10 +42,11 @@ public class FlowServiceImpl implements FlowService {
 
     @Override
     public void pauseGroup(long jobGroupId) {
-        GFlowJobGroup jobGroup= flowJobDao.getJobGroup(jobGroupId);
-        if(jobGroup!=null){
-            jobGroup
+        GFlowJobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
+        if (jobGroup != null) {
+            jobGroup.setStatus(JobGroupStatusEnum.PAUSE.getValue());
         }
+        flowJobDao.updateJobGroup(jobGroup);
     }
 
     @Override
@@ -54,5 +56,10 @@ public class FlowServiceImpl implements FlowService {
         jobDesc.setJobGroupId(0);
         jobDesc.setParameter(parameter);
         rpcClient.schedule(jobDesc);
+    }
+
+    @Override
+    public void actionAck(long triggerGroupId, long actionId, boolean jobOk) {
+
     }
 }

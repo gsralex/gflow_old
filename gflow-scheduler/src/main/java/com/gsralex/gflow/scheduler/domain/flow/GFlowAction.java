@@ -1,4 +1,4 @@
-package com.gsralex.gflow.scheduler.domain.persistent;
+package com.gsralex.gflow.scheduler.domain.flow;
 
 /**
  * @author gsralex

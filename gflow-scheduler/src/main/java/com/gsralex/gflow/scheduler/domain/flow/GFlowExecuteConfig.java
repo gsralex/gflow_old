@@ -1,4 +1,4 @@
-package com.gsralex.gflow.scheduler.domain.persistent;
+package com.gsralex.gflow.scheduler.domain.flow;
 
 
 import com.gsralex.gdata.bean.annotation.Column;

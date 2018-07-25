@@ -11,4 +11,6 @@ public interface FlowService {
     void pauseGroup(long jobGroupId);
 
     void startAction(long actionId, String parameter);
+
+    void actionAck(long triggerGroupId, long actionId, boolean jobOk);
 }

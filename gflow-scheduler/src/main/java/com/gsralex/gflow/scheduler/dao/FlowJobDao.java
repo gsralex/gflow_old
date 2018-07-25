@@ -1,8 +1,8 @@
 package com.gsralex.gflow.scheduler.dao;
 
 
-import com.gsralex.gflow.scheduler.domain.persistent.GFlowJob;
-import com.gsralex.gflow.scheduler.domain.persistent.GFlowJobGroup;
+import com.gsralex.gflow.scheduler.domain.flow.GFlowJob;
+import com.gsralex.gflow.scheduler.domain.flow.GFlowJobGroup;
 
 /**
  * @author gsralex

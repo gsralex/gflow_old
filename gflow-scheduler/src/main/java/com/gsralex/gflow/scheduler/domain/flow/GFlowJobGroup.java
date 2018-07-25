@@ -1,4 +1,4 @@
-package com.gsralex.gflow.scheduler.domain.persistent;
+package com.gsralex.gflow.scheduler.domain.flow;
 
 
 import com.gsralex.gdata.bean.annotation.Column;
@@ -25,6 +25,8 @@ public class GFlowJobGroup {
     private Long startTriggerId;
     @Column(name = "date")
     private Integer date;
+    @Column(name = "status")
+    private Integer status;
 
     public Long getId() {
         return id;
@@ -80,5 +82,13 @@ public class GFlowJobGroup {
 
     public void setDate(Integer date) {
         this.date = date;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

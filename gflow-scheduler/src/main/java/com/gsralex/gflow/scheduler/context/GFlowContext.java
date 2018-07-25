@@ -51,7 +51,7 @@ public class GFlowContext {
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName(config.getDbDriver());
         dataSource.setUrl(config.getDbUrl());
-        dataSource.setUsername(config.getDbUserName());
+        dataSource.setUsername(config.getDbUsername());
         dataSource.setPassword(config.getDbPassword());
         jdbcUtils = new JdbcUtils(dataSource);
     }

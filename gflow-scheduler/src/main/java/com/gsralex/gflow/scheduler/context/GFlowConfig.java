@@ -1,18 +1,26 @@
 package com.gsralex.gflow.scheduler.context;
 
+import com.gsralex.gflow.scheduler.util.PropertyName;
+
 /**
  * @author gsralex
  * @version 2018/5/21
  */
 public class GFlowConfig {
 
+    @PropertyName(name = "gflow.db.driver")
     private String dbDriver;
-
+    @PropertyName(name = "gflow.db.url")
     private String dbUrl;
-
-    private String dbUserName;
-
+    @PropertyName(name = "gflow.db.username")
+    private String dbUsername;
+    @PropertyName(name = "gflow.db.password")
     private String dbPassword;
+    @PropertyName(name = "gflow.db.prefix")
+    private String dbPrefix;
+
+    @PropertyName(name = "gflow.zk.server")
+    private String zkServer;
 
     public String getDbDriver() {
         return dbDriver;
@@ -30,12 +38,12 @@ public class GFlowConfig {
         this.dbUrl = dbUrl;
     }
 
-    public String getDbUserName() {
-        return dbUserName;
+    public String getDbUsername() {
+        return dbUsername;
     }
 
-    public void setDbUserName(String dbUserName) {
-        this.dbUserName = dbUserName;
+    public void setDbUsername(String dbUsername) {
+        this.dbUsername = dbUsername;
     }
 
     public String getDbPassword() {
@@ -44,5 +52,21 @@ public class GFlowConfig {
 
     public void setDbPassword(String dbPassword) {
         this.dbPassword = dbPassword;
+    }
+
+    public String getDbPrefix() {
+        return dbPrefix;
+    }
+
+    public void setDbPrefix(String dbPrefix) {
+        this.dbPrefix = dbPrefix;
+    }
+
+    public String getZkServer() {
+        return zkServer;
+    }
+
+    public void setZkServer(String zkServer) {
+        this.zkServer = zkServer;
     }
 }

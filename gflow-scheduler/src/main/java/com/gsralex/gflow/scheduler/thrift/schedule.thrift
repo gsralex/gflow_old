@@ -23,9 +23,7 @@ struct TGroupJobDesc{
 
 
 service TScheduleService{
-    TJobResult submit(TJobDesc desc);
-    TJobResult submitGroup(TGroupJobDesc desc);
     TJobResult schedule(TJobDesc desc);
-
+    TJobResult scheduleGroup(TGroupJobDesc desc);
 
 }

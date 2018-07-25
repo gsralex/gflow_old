@@ -15,11 +15,11 @@ import org.apache.thrift.transport.TTransport;
  * @author gsralex
  * @version 2018/3/18
  */
-public class TRpcClient implements RpcClient {
+public class TRpcClient {
 
     private static final Logger logger = Logger.getLogger(TRpcClient.class);
 
-    @Override
+
     public JobResult schedule(JobDesc desc) {
         TTransport transport = new TSocket(desc.getIp(), desc.getPort());
         try {
