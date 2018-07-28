@@ -1,10 +1,13 @@
 package com.gsralex.gflow.scheduler.context;
 
+import com.gsralex.gflow.scheduler.constant.ZkConstants;
+import com.gsralex.gflow.scheduler.model.IpAddress;
 import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.zookeeper.CreateMode;
+import org.apache.commons.lang3.math.NumberUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,39 +16,44 @@ import java.util.List;
  */
 public class ZkContext {
 
-    private static final String ZKPATH_GFLOW_EXECUTORIP = "/gflow/executor";
-
     private GFlowConfig config;
+    private static ZkClient zkClient;
+    private List<IpAddress> ipList;
 
-    private ZkClient zkClient;
 
     public ZkContext(GFlowConfig config) {
         this.config = config;
+        this.ipList=new ArrayList<>();
 
     }
 
-    private void init() {
-        String zkHost = "localhost:2181";
-        //this.config.getZkHost();
+
+    public void init() {
         if (this.config != null && !StringUtils.isEmpty(this.config.getZkServer())) {
             zkClient = new ZkClient(this.config.getZkServer());
-            zkClient.create(ZKPATH_GFLOW_EXECUTORIP,"mydata", CreateMode.EPHEMERAL);
-            zkClient.subscribeChildChanges(ZKPATH_GFLOW_EXECUTORIP, new ZkGflowExecutorIp());
+            updateExecutorIp();
+            //加入watch
+            zkClient.subscribeChildChanges(ZkConstants.ZKPATH_EXECUTOR, new IZkChildListener() {
+                @Override
+                public void handleChildChange(String s, List<String> list) throws Exception {
+                    updateExecutorIp();
+                }
+            });
         }
     }
 
-    public static void main(String[] args){
-        GFlowConfig config=new GFlowConfig();
-        config.setZkServer("localhost:2181");
-        ZkContext zkContext=new ZkContext(config);
-        zkContext.init();
-
-    }
-
-    private static class ZkGflowExecutorIp implements IZkChildListener {
-        @Override
-        public void handleChildChange(String s, List<String> list) throws Exception {
-
-        }
+    private void updateExecutorIp() {
+       if(zkClient.exists(ZkConstants.ZKPATH_EXECUTOR)) {
+           List<String> list = zkClient.getChildren(ZkConstants.ZKPATH_EXECUTOR);
+           List<IpAddress> newIpList = new ArrayList<>();
+           for (String path : list) {
+               String ip = zkClient.readData(ZkConstants.ZKPATH_EXECUTOR + "/" + path);
+               String[] ipArray = StringUtils.split(ip, ":");
+               newIpList.add(new IpAddress(ipArray[0], NumberUtils.toInt(ipArray[1])));
+           }
+           synchronized (ipList) {
+               ipList = newIpList;
+           }
+       }
     }
 }

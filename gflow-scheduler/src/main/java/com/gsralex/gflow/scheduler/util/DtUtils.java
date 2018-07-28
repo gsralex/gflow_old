@@ -15,7 +15,7 @@ import java.util.Date;
 public class DtUtils {
 
     private static final String DF_FULLTIME = "yyyy-MM-dd HH:mm:ss";
-    private static final String DF_YYYYMMDD = "yyyy-MM-dd";
+    private static final String DF_YYYYMMDD = "yyyyMMdd";
 
     public static Date getTodayTime(String time) {
         String[] timeArray = time.split(":");
@@ -40,5 +40,13 @@ public class DtUtils {
 
     public static String formatBizDate(Date date) {
         return DateFormatUtils.format(date, DF_YYYYMMDD);
+    }
+
+    public static int getUnixTime() {
+        return (int) (new Date().getTime() / 1000);
+    }
+
+    public static int getBizDate(){
+        return Integer.parseInt(formatBizDate(new Date()));
     }
 }

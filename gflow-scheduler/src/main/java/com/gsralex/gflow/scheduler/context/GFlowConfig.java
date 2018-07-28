@@ -22,6 +22,9 @@ public class GFlowConfig {
     @PropertyName(name = "gflow.zk.server")
     private String zkServer;
 
+    @PropertyName(name = "gflow.port")
+    private Integer port;
+
     public String getDbDriver() {
         return dbDriver;
     }
@@ -68,5 +71,13 @@ public class GFlowConfig {
 
     public void setZkServer(String zkServer) {
         this.zkServer = zkServer;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
     }
 }

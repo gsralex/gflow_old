@@ -1,6 +1,5 @@
 package com.gsralex.gflow.scheduler.service.impl;
 
-import com.gsralex.gflow.scheduler.cache.ExecuteDateCache;
 import com.gsralex.gflow.scheduler.dao.ConfigDao;
 import com.gsralex.gflow.scheduler.dao.FlowJobDao;
 import com.gsralex.gflow.scheduler.domain.flow.*;
@@ -22,7 +21,6 @@ public class ConfigFlowServiceImpl implements ConfigFlowService {
 
     private FlowJobDao flowJobDao;
 
-    private ExecuteDateCache dateCache;
 
     private FlowService flowService;
 
@@ -55,13 +53,14 @@ public class ConfigFlowServiceImpl implements ConfigFlowService {
     }
 
     private Boolean getIsExecute(long triggerGroupId, String date) {
-        Boolean executed = dateCache.getExecute(triggerGroupId, date);
-        if (executed == null) {
-            GFlowJobGroup jobGroup = flowJobDao.getJobGroupByExecute(triggerGroupId, date);
-            executed = jobGroup != null ? true : false;
-            dateCache.markExecute(triggerGroupId, date);
-        }
-        return executed;
+//        Boolean executed = dateCache.getExecute(triggerGroupId, date);
+//        if (executed == null) {
+//            GFlowJobGroup jobGroup = flowJobDao.getJobGroupByExecute(triggerGroupId, date);
+//            executed = jobGroup != null ? true : false;
+//            dateCache.markExecute(triggerGroupId, date);
+//        }
+//        return executed;
+        return false;
     }
 
 

@@ -14,10 +14,9 @@ public class FlowJobDaoImpl implements FlowJobDao {
 
     private JdbcUtils jdbcUtils;
 
-    public FlowJobDaoImpl(GFlowContext context) {
-        this.jdbcUtils = context.getJdbcUtils();
+    public FlowJobDaoImpl(GFlowContext context){
+        this.jdbcUtils=context.getJdbcContext().getJdbcUtils();
     }
-
 
     @Override
     public boolean saveJobGroup(GFlowJobGroup jobGroup) {

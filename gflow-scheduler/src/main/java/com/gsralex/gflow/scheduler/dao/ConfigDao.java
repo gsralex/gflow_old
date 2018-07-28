@@ -14,4 +14,6 @@ public interface ConfigDao {
     List<GFlowExecuteConfig> getExecuteActiveList();
 
     List<GFlowTrigger> getTriggerList(long triggerGroupId);
+
+
 }

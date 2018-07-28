@@ -1,6 +1,7 @@
 package com.gsralex.gflow.scheduler.thrift;
 
 import com.gsralex.gflow.scheduler.SchedulerServer;
+import com.gsralex.gflow.scheduler.context.GFlowContext;
 import com.gsralex.gflow.scheduler.thrift.gen.TScheduleService;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -15,9 +16,10 @@ import org.apache.thrift.transport.TTransportException;
  * @version 2018/3/18
  */
 public class ThriftSchedulerServer implements SchedulerServer {
+
     @Override
     public void start(int port) {
-        TServerTransport tServerSocket = null;
+        TServerTransport tServerSocket;
         try {
             tServerSocket = new TServerSocket(port);
 

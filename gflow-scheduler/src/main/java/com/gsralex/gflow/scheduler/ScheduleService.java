@@ -8,11 +8,11 @@ import com.gsralex.gflow.scheduler.domain.job.JobResult;
  */
 public interface ScheduleService {
 
-    JobResult submit(long actionId, String parameter);
+    JobResult start(long actionId, String parameter);
 
-    JobResult submitGroup(long triggerGroupId, String parameter);
+    JobResult startGroup(long triggerGroupId, String parameter);
 
-    JobResult pauseJobGroup(long jobGroupId, String parameter);
+    JobResult pauseJobGroup(long jobGroupId);
 
     JobResult stopJobGroup(long jobGroupId);
 

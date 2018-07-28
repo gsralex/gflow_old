@@ -1,13 +1,19 @@
 package com.gsralex.gflow.scheduler.service.impl;
 
+import com.gsralex.gflow.scheduler.context.GFlowContext;
 import com.gsralex.gflow.scheduler.dao.ConfigDao;
 import com.gsralex.gflow.scheduler.dao.FlowJobDao;
+import com.gsralex.gflow.scheduler.dao.impl.ConfigDaoImpl;
+import com.gsralex.gflow.scheduler.dao.impl.FlowJobDaoImpl;
 import com.gsralex.gflow.scheduler.domain.flow.GFlowJobGroup;
 import com.gsralex.gflow.scheduler.domain.flow.GFlowTrigger;
 import com.gsralex.gflow.scheduler.domain.flow.JobGroupStatusEnum;
+import com.gsralex.gflow.scheduler.domain.flow.JobStatusEnum;
+import com.gsralex.gflow.scheduler.domain.job.JobResult;
 import com.gsralex.gflow.scheduler.rpc.JobDesc;
 import com.gsralex.gflow.scheduler.rpc.RpcClient;
 import com.gsralex.gflow.scheduler.service.FlowService;
+import com.gsralex.gflow.scheduler.util.DtUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,20 +30,39 @@ public class FlowServiceImpl implements FlowService {
 
     private RpcClient rpcClient;
 
+    public FlowServiceImpl(GFlowContext context){
+        configDao=new ConfigDaoImpl(context);
+        flowJobDao=new FlowJobDaoImpl(context);
+
+
+    }
+
+
+
     @Override
     public void startGroup(long triggerGroupId, String parameter) {
         List<Long> actionIdList = new ArrayList<>();
         List<GFlowTrigger> triggerList = configDao.getTriggerList(triggerGroupId);
         for (GFlowTrigger trigger : triggerList) {
-            if (trigger.getTriggerActionId() == 0) {
-                actionIdList.add(trigger.getActionId());
-                JobDesc jobDesc = new JobDesc();
-                jobDesc.setActionId(trigger.getActionId());
-                jobDesc.setJobGroupId(trigger.getActionGroupId());
-                jobDesc.setParameter(parameter);
-                rpcClient.schedule(jobDesc);
+            if(trigger.getTriggerGroupId()==triggerGroupId) {
+                if (trigger.getTriggerActionId() == 0) {
+                    actionIdList.add(trigger.getActionId());
+                    JobDesc jobDesc = new JobDesc();
+                    jobDesc.setActionId(trigger.getActionId());
+                    jobDesc.setJobGroupId(trigger.getActionGroupId());
+                    jobDesc.setParameter(parameter);
+                    rpcClient.schedule(jobDesc);
+                }
             }
         }
+
+        GFlowJobGroup jobGroup=new GFlowJobGroup();
+        jobGroup.setStartTime(DtUtils.getUnixTime());
+        jobGroup.setCreateTime(DtUtils.getUnixTime());
+        jobGroup.setStatus(JobStatusEnum.Start.getValue());
+        jobGroup.setTriggerGroupId(triggerGroupId);
+        jobGroup.setDate(DtUtils.getBizDate());
+
     }
 
     @Override

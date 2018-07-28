@@ -1,6 +1,7 @@
 package com.gsralex.gflow.scheduler.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
+import com.gsralex.gflow.scheduler.context.GFlowContext;
 import com.gsralex.gflow.scheduler.dao.ConfigDao;
 import com.gsralex.gflow.scheduler.domain.flow.GFlowExecuteConfig;
 import com.gsralex.gflow.scheduler.domain.flow.GFlowTrigger;
@@ -15,6 +16,10 @@ public class ConfigDaoImpl implements ConfigDao {
 
     private JdbcUtils jdbcUtils;
 
+
+    public ConfigDaoImpl(GFlowContext context){
+        jdbcUtils=context.getJdbcContext().getJdbcUtils();
+    }
 
     @Override
     public List<GFlowExecuteConfig> getExecuteActiveList() {
