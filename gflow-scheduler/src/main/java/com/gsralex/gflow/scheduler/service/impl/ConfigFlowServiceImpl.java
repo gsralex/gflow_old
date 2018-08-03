@@ -39,7 +39,7 @@ public class ConfigFlowServiceImpl implements ConfigFlowService {
                         if (executeTime.after(now)) {
                             String date = DtUtils.formatBizDate(now);
                             if (!this.getIsExecute(config.getTriggerGroupId(), date)) {
-                                flowService.startGroup(triggerGroupId, "");
+                                //flowService.startGroup(triggerGroupId, "");
                             }
                         }
                     }

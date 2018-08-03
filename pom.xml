@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>gflow-scheduler</module>
+        <module>gflow-executor</module>
     </modules>
     <properties>
         <junit.version>4.12</junit.version>

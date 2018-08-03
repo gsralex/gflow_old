@@ -34,15 +34,18 @@ public class FlowJobDaoImpl implements FlowJobDao {
         return jdbcUtils.queryForObject(sql, new Object[]{id}, GFlowJobGroup.class);
     }
 
+
     @Override
-    public GFlowJobGroup getJobGroupByExecute(long triggerGroupId, String date) {
-        String sql = "select * from gflow_jobgroup where trigger_group_id=? and date=? " +
+    public int getJobGroupByExecute(long triggerGroupId, int date) {
+        String sql = "select count(1) from gflow_jobgroup where trigger_group_id=? and date=? " +
                 "and execute_config_id>0";
-        return jdbcUtils.queryForObject(sql, new Object[]{triggerGroupId, date}, GFlowJobGroup.class);
+        return jdbcUtils.queryForObject(sql, new Object[]{triggerGroupId, date}, Integer.class);
     }
 
     @Override
     public boolean saveJob(GFlowJob job) {
         return jdbcUtils.insert(job, true);
     }
+
+
 }

@@ -15,11 +15,15 @@ public class GFlowExecuteConfig {
     @Column(name = "trigger_group_id")
     private Long triggerGroupId;
     @Column(name = "time_type")
-    private Integer TimeType;
+    private Integer timeType;
     @Column(name = "interval")
     private Integer interval;
     private String time;
     private Boolean active;
+    @Column(name = "create_time")
+    private Integer createTime;
+    @Column(name = "parameter")
+    private String parameter;
 
     public Long getId() {
         return id;
@@ -38,11 +42,11 @@ public class GFlowExecuteConfig {
     }
 
     public Integer getTimeType() {
-        return TimeType;
+        return timeType;
     }
 
     public void setTimeType(Integer timeType) {
-        TimeType = timeType;
+        this.timeType = timeType;
     }
 
     public Integer getInterval() {
@@ -67,5 +71,21 @@ public class GFlowExecuteConfig {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public Integer getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Integer createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getParameter() {
+        return parameter;
+    }
+
+    public void setParameter(String parameter) {
+        this.parameter = parameter;
     }
 }

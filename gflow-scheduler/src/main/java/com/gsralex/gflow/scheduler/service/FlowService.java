@@ -6,7 +6,7 @@ package com.gsralex.gflow.scheduler.service;
  */
 public interface FlowService {
 
-    void startGroup(long triggerGroupId, String parameter);
+    void startGroup(long triggerGroupId, String parameter,long executeConfigId);
 
     void pauseGroup(long jobGroupId);
 

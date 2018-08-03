@@ -1,5 +1,7 @@
 package com.gsralex.gflow.scheduler.domain.flow;
 
+import com.gsralex.gdata.bean.annotation.Column;
+
 /**
  * @author gsralex
  * @date 2017/12/25
@@ -7,10 +9,15 @@ package com.gsralex.gflow.scheduler.domain.flow;
 public class GFlowTrigger {
 
     private long id;
+    @Column(name = "trigger_group_id")
     private long triggerGroupId;
+    @Column(name = "trigger_action_id")
     private long triggerActionId;
+    @Column(name = "action_group_id")
     private long actionGroupId;
+    @Column(name = "action_id")
     private long actionId;
+    @Column(name = "create_time")
     private int createTime;
 
     public long getId() {

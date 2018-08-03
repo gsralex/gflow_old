@@ -34,13 +34,10 @@ public class FlowServiceImpl implements FlowService {
         configDao=new ConfigDaoImpl(context);
         flowJobDao=new FlowJobDaoImpl(context);
 
-
     }
 
-
-
     @Override
-    public void startGroup(long triggerGroupId, String parameter) {
+    public void startGroup(long triggerGroupId, String parameter,long executeConfigId) {
         List<Long> actionIdList = new ArrayList<>();
         List<GFlowTrigger> triggerList = configDao.getTriggerList(triggerGroupId);
         for (GFlowTrigger trigger : triggerList) {
@@ -62,6 +59,7 @@ public class FlowServiceImpl implements FlowService {
         jobGroup.setStatus(JobStatusEnum.Start.getValue());
         jobGroup.setTriggerGroupId(triggerGroupId);
         jobGroup.setDate(DtUtils.getBizDate());
+        flowJobDao.saveJobGroup(jobGroup);
 
     }
 

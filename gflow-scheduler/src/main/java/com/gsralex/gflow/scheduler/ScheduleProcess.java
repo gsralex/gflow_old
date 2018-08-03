@@ -6,7 +6,7 @@ import com.gsralex.gflow.scheduler.domain.job.JobResult;
  * @author gsralex
  * @date 2018/3/3
  */
-public interface ScheduleService {
+public interface ScheduleProcess {
 
     JobResult start(long actionId, String parameter);
 

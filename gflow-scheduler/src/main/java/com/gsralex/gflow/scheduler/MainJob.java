@@ -1,6 +1,7 @@
 package com.gsralex.gflow.scheduler;
 
 import com.gsralex.gflow.scheduler.context.GFlowContext;
+import com.gsralex.gflow.scheduler.process.TimeProcess;
 import com.gsralex.gflow.scheduler.thrift.ThriftSchedulerServer;
 
 public class MainJob {
@@ -16,5 +17,9 @@ public class MainJob {
 
         SchedulerServer server=new ThriftSchedulerServer();
         server.start(context.getConfig().getPort());
+
+        TimeProcess timeProcess=new TimeProcess(context);
+        timeProcess.start();
+
     }
 }

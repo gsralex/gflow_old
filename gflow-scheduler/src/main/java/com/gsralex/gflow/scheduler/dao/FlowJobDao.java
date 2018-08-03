@@ -17,7 +17,8 @@ public interface FlowJobDao {
 
     GFlowJobGroup getJobGroup(long id);
 
-    GFlowJobGroup getJobGroupByExecute(long triggerGroupId, String date);
+    int getJobGroupByExecute(long triggerGroupId, int date);
 
     boolean saveJob(GFlowJob job);
+
 }
