@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.scheduler.context.GFlowContext;
+import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.scheduler.dao.FlowJobDao;
 import com.gsralex.gflow.scheduler.domain.flow.GFlowJob;
 import com.gsralex.gflow.scheduler.domain.flow.GFlowJobGroup;

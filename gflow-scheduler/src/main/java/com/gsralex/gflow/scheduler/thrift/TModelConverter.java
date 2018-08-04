@@ -1,9 +1,7 @@
 package com.gsralex.gflow.scheduler.thrift;
 
 
-import com.gsralex.gflow.scheduler.rpc.JobDesc;
 import com.gsralex.gflow.scheduler.thrift.gen.TJobDesc;
-import com.gsralex.gflow.scheduler.thrift.gen.TJobResult;
 
 /**
  * @author gsralex

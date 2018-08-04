@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.service.impl;
 
-import com.gsralex.gflow.scheduler.context.GFlowContext;
+import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.scheduler.dao.ConfigDao;
 import com.gsralex.gflow.scheduler.dao.FlowJobDao;
 import com.gsralex.gflow.scheduler.dao.impl.ConfigDaoImpl;
@@ -9,9 +9,8 @@ import com.gsralex.gflow.scheduler.domain.flow.GFlowJobGroup;
 import com.gsralex.gflow.scheduler.domain.flow.GFlowTrigger;
 import com.gsralex.gflow.scheduler.domain.flow.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.domain.flow.JobStatusEnum;
-import com.gsralex.gflow.scheduler.domain.job.JobResult;
-import com.gsralex.gflow.scheduler.rpc.JobDesc;
-import com.gsralex.gflow.scheduler.rpc.RpcClient;
+import com.gsralex.gflow.scheduler.thrift.JobDesc;
+import com.gsralex.gflow.scheduler.thrift.RpcClient;
 import com.gsralex.gflow.scheduler.service.FlowService;
 import com.gsralex.gflow.scheduler.util.DtUtils;
 

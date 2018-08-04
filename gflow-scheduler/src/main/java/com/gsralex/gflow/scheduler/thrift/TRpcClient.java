@@ -1,8 +1,6 @@
 package com.gsralex.gflow.scheduler.thrift;
 
 import com.gsralex.gflow.scheduler.domain.job.JobResult;
-import com.gsralex.gflow.scheduler.rpc.RpcClient;
-import com.gsralex.gflow.scheduler.rpc.JobDesc;
 import com.gsralex.gflow.scheduler.thrift.gen.TJobDesc;
 import com.gsralex.gflow.scheduler.thrift.gen.TScheduleService;
 import org.apache.log4j.Logger;

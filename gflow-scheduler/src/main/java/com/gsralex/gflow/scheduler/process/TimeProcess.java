@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.process;
 
-import com.gsralex.gflow.scheduler.context.GFlowContext;
+import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.scheduler.domain.flow.GFlowExecuteConfig;
 import com.gsralex.gflow.scheduler.service.ExecuteService;
 import com.gsralex.gflow.scheduler.service.FlowService;

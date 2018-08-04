@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler;
 
-import com.gsralex.gflow.scheduler.context.GFlowContext;
+import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.scheduler.process.TimeProcess;
 import com.gsralex.gflow.scheduler.thrift.ThriftSchedulerServer;
 

@@ -1,7 +1,6 @@
 package com.gsralex.gflow.scheduler.thrift;
 
 import com.gsralex.gflow.scheduler.SchedulerServer;
-import com.gsralex.gflow.scheduler.context.GFlowContext;
 import com.gsralex.gflow.scheduler.thrift.gen.TScheduleService;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;

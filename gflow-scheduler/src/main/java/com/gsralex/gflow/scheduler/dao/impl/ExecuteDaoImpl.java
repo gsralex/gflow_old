@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.dao.impl;
 
-import com.gsralex.gflow.scheduler.context.JdbcContext;
+import com.gsralex.gflow.core.context.JdbcContext;
 import com.gsralex.gflow.scheduler.dao.ExecuteDao;
 import com.gsralex.gflow.scheduler.domain.flow.GFlowExecuteConfig;
 
