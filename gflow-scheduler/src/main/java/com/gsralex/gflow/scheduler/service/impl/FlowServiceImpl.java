@@ -1,6 +1,8 @@
 package com.gsralex.gflow.scheduler.service.impl;
 
 import com.gsralex.gflow.core.context.GFlowContext;
+import com.gsralex.gflow.core.thrift.gen.TJobDesc;
+import com.gsralex.gflow.core.util.DtUtils;
 import com.gsralex.gflow.scheduler.dao.ConfigDao;
 import com.gsralex.gflow.scheduler.dao.FlowJobDao;
 import com.gsralex.gflow.scheduler.dao.impl.ConfigDaoImpl;
@@ -9,10 +11,8 @@ import com.gsralex.gflow.scheduler.domain.flow.GFlowJobGroup;
 import com.gsralex.gflow.scheduler.domain.flow.GFlowTrigger;
 import com.gsralex.gflow.scheduler.domain.flow.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.domain.flow.JobStatusEnum;
-import com.gsralex.gflow.scheduler.thrift.JobDesc;
-import com.gsralex.gflow.scheduler.thrift.RpcClient;
 import com.gsralex.gflow.scheduler.service.FlowService;
-import com.gsralex.gflow.scheduler.util.DtUtils;
+import com.gsralex.gflow.scheduler.thrift.TRpcClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,39 +27,39 @@ public class FlowServiceImpl implements FlowService {
 
     private FlowJobDao flowJobDao;
 
-    private RpcClient rpcClient;
+    private TRpcClient rpcClient;
 
-    public FlowServiceImpl(GFlowContext context){
-        configDao=new ConfigDaoImpl(context);
-        flowJobDao=new FlowJobDaoImpl(context);
+    public FlowServiceImpl(GFlowContext context) {
+        configDao = new ConfigDaoImpl(context);
+        flowJobDao = new FlowJobDaoImpl(context);
 
     }
 
     @Override
-    public void startGroup(long triggerGroupId, String parameter,long executeConfigId) {
+    public void startGroup(long triggerGroupId, String parameter, long executeConfigId) {
         List<Long> actionIdList = new ArrayList<>();
         List<GFlowTrigger> triggerList = configDao.getTriggerList(triggerGroupId);
         for (GFlowTrigger trigger : triggerList) {
-            if(trigger.getTriggerGroupId()==triggerGroupId) {
-                if (trigger.getTriggerActionId() == 0) {
-                    actionIdList.add(trigger.getActionId());
-                    JobDesc jobDesc = new JobDesc();
-                    jobDesc.setActionId(trigger.getActionId());
-                    jobDesc.setJobGroupId(trigger.getActionGroupId());
-                    jobDesc.setParameter(parameter);
-                    rpcClient.schedule(jobDesc);
-                }
+            if (trigger.getTriggerGroupId() != triggerGroupId) {
+                continue;
             }
+            if (trigger.getTriggerActionId() != 0) {
+                continue;
+            }
+            actionIdList.add(trigger.getActionId());
+            TJobDesc jobDesc = new TJobDesc();
+            jobDesc.setActionId(trigger.getActionId());
+            jobDesc.setJobGroupId(trigger.getActionGroupId());
+            jobDesc.setParameter(parameter);
+            rpcClient.schedule(jobDesc);
         }
-
-        GFlowJobGroup jobGroup=new GFlowJobGroup();
+        GFlowJobGroup jobGroup = new GFlowJobGroup();
         jobGroup.setStartTime(DtUtils.getUnixTime());
         jobGroup.setCreateTime(DtUtils.getUnixTime());
         jobGroup.setStatus(JobStatusEnum.Start.getValue());
         jobGroup.setTriggerGroupId(triggerGroupId);
         jobGroup.setDate(DtUtils.getBizDate());
         flowJobDao.saveJobGroup(jobGroup);
-
     }
 
     @Override
@@ -73,7 +73,7 @@ public class FlowServiceImpl implements FlowService {
 
     @Override
     public void startAction(long actionId, String parameter) {
-        JobDesc jobDesc = new JobDesc();
+        TJobDesc jobDesc = new TJobDesc();
         jobDesc.setActionId(actionId);
         jobDesc.setJobGroupId(0);
         jobDesc.setParameter(parameter);

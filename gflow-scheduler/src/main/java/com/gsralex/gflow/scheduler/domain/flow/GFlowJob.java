@@ -1,21 +1,33 @@
 package com.gsralex.gflow.scheduler.domain.flow;
 
+import com.gsralex.gdata.bean.annotation.Id;
+import com.gsralex.gflow.core.util.PropertyName;
+
 /**
  * @author gsralex
  * @date 2018/2/12
  */
 public class GFlowJob {
 
+    @Id
     private long id;
+    @PropertyName(name = "action_id")
     private long actionId;
+    @PropertyName(name = "trigger_group_id")
     private long triggerGroupId;
+    @PropertyName(name = "start_time")
     private int startTime;
+    @PropertyName(name = "end_time")
     private int endTime;
+    @PropertyName(name = "err_msg")
     private String errMsg;
-    private int sendRetryCnt;
-    private int actionRetryCnt;
+    @PropertyName(name = "retry_cnt")
+    private int retryCnt;
+    @PropertyName(name = "result")
     private int result;
+    @PropertyName(name = "retry_job_id")
     private long retryJobId;
+    @PropertyName(name = "create_time")
     private int createTime;
 
     public long getId() {
@@ -66,20 +78,12 @@ public class GFlowJob {
         this.errMsg = errMsg;
     }
 
-    public int getSendRetryCnt() {
-        return sendRetryCnt;
+    public int getRetryCnt() {
+        return retryCnt;
     }
 
-    public void setSendRetryCnt(int sendRetryCnt) {
-        this.sendRetryCnt = sendRetryCnt;
-    }
-
-    public int getActionRetryCnt() {
-        return actionRetryCnt;
-    }
-
-    public void setActionRetryCnt(int actionRetryCnt) {
-        this.actionRetryCnt = actionRetryCnt;
+    public void setRetryCnt(int retryCnt) {
+        this.retryCnt = retryCnt;
     }
 
     public int getResult() {

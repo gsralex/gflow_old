@@ -1,7 +1,7 @@
 package com.gsralex.gflow.executor.demo;
 
+import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.executor.ExecutorProcess;
-import com.gsralex.gflow.executor.Parameter;
 
 /**
  * @author gsralex
@@ -10,7 +10,8 @@ import com.gsralex.gflow.executor.Parameter;
 public class DemoProcess implements ExecutorProcess {
 
     @Override
-    public void process(int id, Parameter parameter) {
+    public boolean process(long id, Parameter parameter) {
         System.out.println("Hello world");
+        return false;
     }
 }

@@ -6,6 +6,8 @@ import com.gsralex.gflow.scheduler.dao.FlowJobDao;
 import com.gsralex.gflow.scheduler.domain.flow.GFlowJob;
 import com.gsralex.gflow.scheduler.domain.flow.GFlowJobGroup;
 
+import java.util.List;
+
 /**
  * @author gsralex
  * @version 2018/5/12
@@ -14,8 +16,8 @@ public class FlowJobDaoImpl implements FlowJobDao {
 
     private JdbcUtils jdbcUtils;
 
-    public FlowJobDaoImpl(GFlowContext context){
-        this.jdbcUtils=context.getJdbcContext().getJdbcUtils();
+    public FlowJobDaoImpl(GFlowContext context) {
+        this.jdbcUtils = context.getJdbcContext().getJdbcUtils();
     }
 
     @Override
@@ -45,6 +47,11 @@ public class FlowJobDaoImpl implements FlowJobDao {
     @Override
     public boolean saveJob(GFlowJob job) {
         return jdbcUtils.insert(job, true);
+    }
+
+    @Override
+    public int batchSaveJob(List<GFlowJob> jobList) {
+        return jdbcUtils.batchInsert(jobList, true);
     }
 
 

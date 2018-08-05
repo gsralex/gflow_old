@@ -6,19 +6,19 @@ import com.gsralex.gflow.scheduler.thrift.ThriftSchedulerServer;
 
 public class MainJob {
 
-    public static void main(String[] args){
-        MainJob job=new MainJob();
+    public static void main(String[] args) {
+        MainJob job = new MainJob();
         job.init();
     }
 
-    private void init(){
-        GFlowContext context=new GFlowContext();
+    private void init() {
+        GFlowContext context = new GFlowContext();
         context.init();
 
-        SchedulerServer server=new ThriftSchedulerServer();
+        SchedulerServer server = new ThriftSchedulerServer(context);
         server.start(context.getConfig().getPort());
 
-        TimeProcess timeProcess=new TimeProcess(context);
+        TimeProcess timeProcess = new TimeProcess(context);
         timeProcess.start();
 
     }

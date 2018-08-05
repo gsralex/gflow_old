@@ -1,7 +1,8 @@
 package com.gsralex.gflow.scheduler.thrift;
 
+import com.gsralex.gflow.core.context.GFlowContext;
+import com.gsralex.gflow.core.thrift.gen.TScheduleService;
 import com.gsralex.gflow.scheduler.SchedulerServer;
-import com.gsralex.gflow.scheduler.thrift.gen.TScheduleService;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
@@ -16,6 +17,12 @@ import org.apache.thrift.transport.TTransportException;
  */
 public class ThriftSchedulerServer implements SchedulerServer {
 
+    private GFlowContext context;
+
+    public ThriftSchedulerServer(GFlowContext context) {
+        this.context = context;
+    }
+
     @Override
     public void start(int port) {
         TServerTransport tServerSocket;
@@ -25,12 +32,8 @@ public class ThriftSchedulerServer implements SchedulerServer {
             TMultiplexedProcessor processor = new TMultiplexedProcessor();
 
             TScheduleService.Processor<TScheduleServiceImpl> schedule =
-                    new TScheduleService.Processor<>(new TScheduleServiceImpl());
+                    new TScheduleService.Processor<>(new TScheduleServiceImpl(context));
             processor.registerProcessor("schedule", schedule);
-
-//            TScheduleService.Processor<TReplyServiceImpl> reply =
-//                    new TReplyServie.Processor<>(new TReplyServiceImpl());
-//            processor.registerProcessor("reply", reply);
 
             TThreadPoolServer.Args args = new TThreadPoolServer.Args(tServerSocket);
             args.processor(processor);
@@ -44,10 +47,5 @@ public class ThriftSchedulerServer implements SchedulerServer {
         } catch (TTransportException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        SchedulerServer server = new ThriftSchedulerServer();
-        server.start(8010);
     }
 }
