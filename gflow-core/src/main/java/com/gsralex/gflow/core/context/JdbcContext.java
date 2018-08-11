@@ -15,6 +15,7 @@ public class JdbcContext {
 
     public JdbcContext(GFlowConfig config) {
         this.config = config;
+        this.initSql();
     }
 
 

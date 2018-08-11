@@ -38,6 +38,6 @@ public class ExecutorThread implements Runnable {
         } catch (Exception e) {
             logger.error("ExecutorThread.run" + jobDesc.getId());
         }
-        client.ack(jobDesc, ok);
+        client.ack(jobDesc.getJobId(), ok);
     }
 }

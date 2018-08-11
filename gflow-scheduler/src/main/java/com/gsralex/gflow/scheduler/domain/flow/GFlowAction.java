@@ -1,17 +1,20 @@
 package com.gsralex.gflow.scheduler.domain.flow;
 
+import com.gsralex.gdata.bean.annotation.Column;
+
 /**
  * @author gsralex
  * @date 2017/12/25
  */
 public class GFlowAction {
     private long id;
-    private int type;
     private String name;
+    @Column(name = "class_name")
     private String className;
+    @Column(name = "create_time")
     private int createTime;
+    @Column(name = "mod_time")
     private int modTime;
-    private boolean sync;
 
     public long getId() {
         return id;
@@ -19,14 +22,6 @@ public class GFlowAction {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 
     public String getName() {
@@ -59,13 +54,5 @@ public class GFlowAction {
 
     public void setModTime(int modTime) {
         this.modTime = modTime;
-    }
-
-    public boolean getSync() {
-        return sync;
-    }
-
-    public void setSync(boolean sync) {
-        this.sync = sync;
     }
 }

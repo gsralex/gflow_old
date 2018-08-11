@@ -50,6 +50,17 @@ public class FlowJobDaoImpl implements FlowJobDao {
     }
 
     @Override
+    public boolean updateJob(GFlowJob job) {
+        return jdbcUtils.update(job);
+    }
+
+    @Override
+    public GFlowJob getJob(long id) {
+        String sql = "select * from gflow_job where id=?";
+        return jdbcUtils.queryForObject(sql, new Object[]{id}, GFlowJob.class);
+    }
+
+    @Override
     public int batchSaveJob(List<GFlowJob> jobList) {
         return jdbcUtils.batchInsert(jobList, true);
     }

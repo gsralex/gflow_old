@@ -6,6 +6,7 @@ import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.zookeeper.CreateMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +38,16 @@ public class ZkContext {
         return scheduleIps;
     }
 
+
+    private void initData() {
+        this.zkClient.create(ZkConstants.ZKPATH_EXECUTOR_IP + "/" + "ip1", "127.0.0.1:10001", CreateMode.PERSISTENT);
+        this.zkClient.create(ZkConstants.ZKPATH_SCHEDULER_IP + "/" + "ip1", "127.0.0.1:20001", CreateMode.PERSISTENT);
+    }
+
     public void init() {
         if (this.config != null && !StringUtils.isEmpty(this.config.getZkServer())) {
             zkClient = new ZkClient(this.config.getZkServer());
+//            initData();
             updateExecutorIp();
             updateScheduletorIp();
 
@@ -80,10 +88,11 @@ public class ZkContext {
 
     private List<IpAddress> getIpList(String zkPath) {
         List<IpAddress> list = new ArrayList<>();
-        if (zkClient.exists(ZkConstants.ZKPATH_SCHEDULER)) {
-            List<String> pathList = zkClient.getChildren(ZkConstants.ZKPATH_EXECUTOR);
+        if (zkClient.exists(zkPath)) {
+//            zkClient.create(zkPath + "/" + "ip1", "m1:20001", CreateMode.PERSISTENT);
+            List<String> pathList = zkClient.getChildren(zkPath);
             for (String path : pathList) {
-                String ip = zkClient.readData(ZkConstants.ZKPATH_EXECUTOR + "/" + path);
+                String ip = zkClient.readData(zkPath + "/" + path);
                 String[] ipArray = StringUtils.split(ip, ":");
                 list.add(new IpAddress(ipArray[0], NumberUtils.toInt(ipArray[1])));
             }

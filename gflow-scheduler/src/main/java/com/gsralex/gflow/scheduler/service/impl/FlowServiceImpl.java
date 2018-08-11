@@ -1,16 +1,14 @@
 package com.gsralex.gflow.scheduler.service.impl;
 
 import com.gsralex.gflow.core.context.GFlowContext;
+import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.thrift.gen.TJobDesc;
 import com.gsralex.gflow.core.util.DtUtils;
 import com.gsralex.gflow.scheduler.dao.ConfigDao;
 import com.gsralex.gflow.scheduler.dao.FlowJobDao;
 import com.gsralex.gflow.scheduler.dao.impl.ConfigDaoImpl;
 import com.gsralex.gflow.scheduler.dao.impl.FlowJobDaoImpl;
-import com.gsralex.gflow.scheduler.domain.flow.GFlowJobGroup;
-import com.gsralex.gflow.scheduler.domain.flow.GFlowTrigger;
-import com.gsralex.gflow.scheduler.domain.flow.JobGroupStatusEnum;
-import com.gsralex.gflow.scheduler.domain.flow.JobStatusEnum;
+import com.gsralex.gflow.scheduler.domain.flow.*;
 import com.gsralex.gflow.scheduler.service.FlowService;
 import com.gsralex.gflow.scheduler.thrift.TRpcClient;
 
@@ -32,12 +30,18 @@ public class FlowServiceImpl implements FlowService {
     public FlowServiceImpl(GFlowContext context) {
         configDao = new ConfigDaoImpl(context);
         flowJobDao = new FlowJobDaoImpl(context);
-
+        rpcClient = new TRpcClient(context);
     }
 
     @Override
     public void startGroup(long triggerGroupId, String parameter, long executeConfigId) {
-        List<Long> actionIdList = new ArrayList<>();
+        GFlowJobGroup jobGroup = new GFlowJobGroup();
+        jobGroup.setStartTime(DtUtils.getUnixTime());
+        jobGroup.setCreateTime(DtUtils.getUnixTime());
+        jobGroup.setStatus(JobGroupStatusEnum.EXECUTING.getValue());
+        jobGroup.setTriggerGroupId(triggerGroupId);
+        jobGroup.setDate(DtUtils.getBizDate());
+        flowJobDao.saveJobGroup(jobGroup);
         List<GFlowTrigger> triggerList = configDao.getTriggerList(triggerGroupId);
         for (GFlowTrigger trigger : triggerList) {
             if (trigger.getTriggerGroupId() != triggerGroupId) {
@@ -46,20 +50,8 @@ public class FlowServiceImpl implements FlowService {
             if (trigger.getTriggerActionId() != 0) {
                 continue;
             }
-            actionIdList.add(trigger.getActionId());
-            TJobDesc jobDesc = new TJobDesc();
-            jobDesc.setActionId(trigger.getActionId());
-            jobDesc.setJobGroupId(trigger.getActionGroupId());
-            jobDesc.setParameter(parameter);
-            rpcClient.schedule(jobDesc);
+            startAction(jobGroup.getId(), triggerGroupId, trigger.getActionId(), "");
         }
-        GFlowJobGroup jobGroup = new GFlowJobGroup();
-        jobGroup.setStartTime(DtUtils.getUnixTime());
-        jobGroup.setCreateTime(DtUtils.getUnixTime());
-        jobGroup.setStatus(JobStatusEnum.Start.getValue());
-        jobGroup.setTriggerGroupId(triggerGroupId);
-        jobGroup.setDate(DtUtils.getBizDate());
-        flowJobDao.saveJobGroup(jobGroup);
     }
 
     @Override
@@ -73,15 +65,54 @@ public class FlowServiceImpl implements FlowService {
 
     @Override
     public void startAction(long actionId, String parameter) {
+        startAction(0, 0, actionId, parameter);
+    }
+
+    private void startAction(long jobGroupId, long triggerGroupId, long actionId, String parameter) {
+
+        GFlowAction action = configDao.getAction(actionId);
+        Parameter gflowParameter = new Parameter(parameter);
+        gflowParameter.put("actionClass", action.getClassName());
+
         TJobDesc jobDesc = new TJobDesc();
+        jobDesc.setJobGroupId(jobGroupId);
         jobDesc.setActionId(actionId);
-        jobDesc.setJobGroupId(0);
-        jobDesc.setParameter(parameter);
-        rpcClient.schedule(jobDesc);
+        jobDesc.setParameter(gflowParameter.toString());
+
+        GFlowJob job = new GFlowJob();
+        job.setJobGroupId(jobGroupId);
+        job.setTriggerGroupId(triggerGroupId);
+        job.setActionId(actionId);
+        job.setCreateTime(DtUtils.getUnixTime());
+        job.setStartTime(DtUtils.getUnixTime());
+        if (rpcClient.schedule(jobDesc).isOk()) {
+            job.setStatus(JobStatusEnum.SENDOK.getValue());
+        } else {
+            job.setStatus(JobStatusEnum.SENDERR.getValue());
+        }
+        flowJobDao.saveJob(job);
+
     }
 
     @Override
-    public void actionAck(long triggerGroupId, long actionId, boolean jobOk) {
+    public void actionAck(long jobId, boolean jobOk) {
+        GFlowJob job = flowJobDao.getJob(jobId);
+        if (job != null) {
+            long jobGroupId = job.getJobGroupId();
+            long triggerGroupId = job.getTriggerGroupId();
+            long actionId = job.getActionId();
+            if (jobOk) {
+                List<GFlowTrigger> list = configDao.getNeedActionList(triggerGroupId, actionId);
+                for (GFlowTrigger item : list) {
+                    startAction(jobGroupId, triggerGroupId, item.getActionId(), "");
+                }
+            } else {
+                //加入重试队列
+            }
+        } else {
+
+        }
+
 
     }
 }

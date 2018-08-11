@@ -12,5 +12,5 @@ public interface FlowService {
 
     void startAction(long actionId, String parameter);
 
-    void actionAck(long triggerGroupId, long actionId, boolean jobOk);
+    void actionAck(long scheduleId, boolean jobOk);
 }

@@ -3,6 +3,8 @@ package com.gsralex.gflow.executor;
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.executor.thrift.TExecutorServer;
 
+import java.io.IOException;
+
 
 /**
  * @author gsralex
@@ -10,7 +12,7 @@ import com.gsralex.gflow.executor.thrift.TExecutorServer;
  */
 public class ExecutorMainJob {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         ExecutorMainJob mainJob = new ExecutorMainJob();
         mainJob.start();
     }
@@ -23,6 +25,5 @@ public class ExecutorMainJob {
 
         TExecutorServer server = new TExecutorServer(context);
         server.start(context.getConfig().getPort());
-
     }
 }

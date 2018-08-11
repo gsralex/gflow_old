@@ -46,6 +46,8 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        return null;
+        TResult tResult = new TResult();
+        tResult.setOk(true);
+        return tResult;
     }
 }

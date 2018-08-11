@@ -20,11 +20,12 @@ public class Parameter {
         if (!StringUtils.isEmpty(str)) {
             String[] array = StringUtils.split(str, ",");
             for (String item : array) {
-                String[] kv = StringUtils.split("=");
+                String[] kv = StringUtils.split(item, "=");
                 String key = "", value = "";
                 if (kv.length >= 1) {
                     key = kv[0];
-                } else if (kv.length >= 2) {
+                }
+                if (kv.length >= 2) {
                     value = kv[1];
                 }
                 map.put(key, value);
@@ -43,5 +44,18 @@ public class Parameter {
 
     public long getLong(String key, long defaultValue) {
         return NumberUtils.toLong(getString(key), defaultValue);
+    }
+
+    public void put(String key, String value) {
+        map.put(key, value);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder b = new StringBuilder();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            b.append(String.format("%s=%s,", entry.getKey(), entry.getValue()));
+        }
+        return StringUtils.removeEnd(b.toString(), ",");
     }
 }

@@ -1,72 +1,84 @@
 package com.gsralex.gflow.scheduler.domain.flow;
 
+import com.gsralex.gdata.bean.annotation.Column;
 import com.gsralex.gdata.bean.annotation.Id;
-import com.gsralex.gflow.core.util.PropertyName;
+import com.gsralex.gdata.bean.annotation.Table;
 
 /**
  * @author gsralex
  * @date 2018/2/12
  */
+@Table(name = "gflow_job")
 public class GFlowJob {
 
     @Id
-    private long id;
-    @PropertyName(name = "action_id")
-    private long actionId;
-    @PropertyName(name = "trigger_group_id")
-    private long triggerGroupId;
-    @PropertyName(name = "start_time")
-    private int startTime;
-    @PropertyName(name = "end_time")
-    private int endTime;
-    @PropertyName(name = "err_msg")
+    private Long id;
+    @Column(name = "action_id")
+    private Long actionId;
+    @Column(name = "trigger_group_id")
+    private Long triggerGroupId;
+    @Column(name = "job_group_id")
+    private Long jobGroupId;
+    @Column(name = "start_time")
+    private Integer startTime;
+    @Column(name = "end_time")
+    private Integer endTime;
+    @Column(name = "err_msg")
     private String errMsg;
-    @PropertyName(name = "retry_cnt")
-    private int retryCnt;
-    @PropertyName(name = "result")
-    private int result;
-    @PropertyName(name = "retry_job_id")
-    private long retryJobId;
-    @PropertyName(name = "create_time")
-    private int createTime;
+    @Column(name = "retry_cnt")
+    private Integer retryCnt;
+    @Column(name = "status")
+    private Integer status;
+    @Column(name = "retry_job_id")
+    private Long retryJobId;
+    @Column(name = "create_time")
+    private Integer createTime;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public long getActionId() {
+    public Long getActionId() {
         return actionId;
     }
 
-    public void setActionId(long actionId) {
+    public void setActionId(Long actionId) {
         this.actionId = actionId;
     }
 
-    public long getTriggerGroupId() {
+    public Long getTriggerGroupId() {
         return triggerGroupId;
     }
 
-    public void setTriggerGroupId(long triggerGroupId) {
+    public void setTriggerGroupId(Long triggerGroupId) {
         this.triggerGroupId = triggerGroupId;
     }
 
-    public int getStartTime() {
+    public Long getJobGroupId() {
+        return jobGroupId;
+    }
+
+    public void setJobGroupId(Long jobGroupId) {
+        this.jobGroupId = jobGroupId;
+    }
+
+    public Integer getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(int startTime) {
+    public void setStartTime(Integer startTime) {
         this.startTime = startTime;
     }
 
-    public int getEndTime() {
+    public Integer getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(int endTime) {
+    public void setEndTime(Integer endTime) {
         this.endTime = endTime;
     }
 
@@ -78,35 +90,35 @@ public class GFlowJob {
         this.errMsg = errMsg;
     }
 
-    public int getRetryCnt() {
+    public Integer getRetryCnt() {
         return retryCnt;
     }
 
-    public void setRetryCnt(int retryCnt) {
+    public void setRetryCnt(Integer retryCnt) {
         this.retryCnt = retryCnt;
     }
 
-    public int getResult() {
-        return result;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setResult(int result) {
-        this.result = result;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
-    public long getRetryJobId() {
+    public Long getRetryJobId() {
         return retryJobId;
     }
 
-    public void setRetryJobId(long retryJobId) {
+    public void setRetryJobId(Long retryJobId) {
         this.retryJobId = retryJobId;
     }
 
-    public int getCreateTime() {
+    public Integer getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(Integer createTime) {
         this.createTime = createTime;
     }
 }

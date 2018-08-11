@@ -27,7 +27,7 @@ public class TExecutorClient {
         this.context = context;
     }
 
-    public void ack(TJobDesc desc, boolean ok) {
+    public void ack(long jobId, boolean ok) {
         TTransport transport = null;
         try {
             List<IpAddress> list = context.getZkContext().getScheduleIps();
@@ -36,7 +36,7 @@ public class TExecutorClient {
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             TScheduleService.Client client = new TScheduleService.Client(protocol);
-            client.ack(desc, ok);
+            client.ack(jobId, ok);
         } catch (TException e) {
             logger.error("TExecutorClient.ack", e);
         } finally {

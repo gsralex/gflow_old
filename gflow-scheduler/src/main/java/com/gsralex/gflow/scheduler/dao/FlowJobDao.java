@@ -23,6 +23,10 @@ public interface FlowJobDao {
 
     boolean saveJob(GFlowJob job);
 
+    boolean updateJob(GFlowJob job);
+
+    GFlowJob getJob(long id);
+
     int batchSaveJob(List<GFlowJob> jobList);
 
 }
