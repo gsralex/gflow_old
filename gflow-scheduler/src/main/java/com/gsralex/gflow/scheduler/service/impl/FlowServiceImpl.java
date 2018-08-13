@@ -74,10 +74,6 @@ public class FlowServiceImpl implements FlowService {
         Parameter gflowParameter = new Parameter(parameter);
         gflowParameter.put("actionClass", action.getClassName());
 
-        TJobDesc jobDesc = new TJobDesc();
-        jobDesc.setJobGroupId(jobGroupId);
-        jobDesc.setActionId(actionId);
-        jobDesc.setParameter(gflowParameter.toString());
 
         GFlowJob job = new GFlowJob();
         job.setJobGroupId(jobGroupId);
@@ -85,12 +81,18 @@ public class FlowServiceImpl implements FlowService {
         job.setActionId(actionId);
         job.setCreateTime(DtUtils.getUnixTime());
         job.setStartTime(DtUtils.getUnixTime());
+        flowJobDao.saveJob(job);
+        TJobDesc jobDesc = new TJobDesc();
+        jobDesc.setJobGroupId(jobGroupId);
+        jobDesc.setActionId(actionId);
+        jobDesc.setParameter(gflowParameter.toString());
+        jobDesc.setJobId(job.getId());
         if (rpcClient.schedule(jobDesc).isOk()) {
             job.setStatus(JobStatusEnum.SENDOK.getValue());
         } else {
             job.setStatus(JobStatusEnum.SENDERR.getValue());
         }
-        flowJobDao.saveJob(job);
+        flowJobDao.updateJob(job);
 
     }
 

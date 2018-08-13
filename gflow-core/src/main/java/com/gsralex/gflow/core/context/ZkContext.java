@@ -40,14 +40,20 @@ public class ZkContext {
 
 
     private void initData() {
-        this.zkClient.create(ZkConstants.ZKPATH_EXECUTOR_IP + "/" + "ip1", "127.0.0.1:10001", CreateMode.PERSISTENT);
-        this.zkClient.create(ZkConstants.ZKPATH_SCHEDULER_IP + "/" + "ip1", "127.0.0.1:20001", CreateMode.PERSISTENT);
+
+        String executorPath = ZkConstants.ZKPATH_EXECUTOR_IP + "/" + "ip1";
+        String schedulerPath = ZkConstants.ZKPATH_SCHEDULER_IP + "/" + "ip1";
+        this.zkClient.delete(executorPath);
+        this.zkClient.delete(schedulerPath);
+
+        this.zkClient.create(executorPath, "127.0.0.1:10002", CreateMode.PERSISTENT);
+        this.zkClient.create(schedulerPath, "127.0.0.1:20001", CreateMode.PERSISTENT);
     }
 
     public void init() {
         if (this.config != null && !StringUtils.isEmpty(this.config.getZkServer())) {
             zkClient = new ZkClient(this.config.getZkServer());
-//            initData();
+            initData();
             updateExecutorIp();
             updateScheduletorIp();
 

@@ -14,20 +14,21 @@ public class TimeProcess {
     private ExecuteService executeService;
     private FlowService flowService;
     private GFlowContext context;
-    public TimeProcess(GFlowContext context){
-        this.context=context;
-        this.executeService=new ExecuteServiceImpl(context);
-        this.flowService=new FlowServiceImpl(context);
+
+    public TimeProcess(GFlowContext context) {
+        this.context = context;
+        this.executeService = new ExecuteServiceImpl(context);
+        this.flowService = new FlowServiceImpl(context);
     }
 
 
-    public void start(){
-        while(true) {
-            List<GFlowExecuteConfig> list= executeService.getNeedExecuteConfig();
-            for(GFlowExecuteConfig config:list){
-                flowService.startGroup(config.getTriggerGroupId(),config.getParameter(),config.getId());
-            }
+    public void start() {
+//        while(true) {
+        List<GFlowExecuteConfig> list = executeService.getNeedExecuteConfig();
+        for (GFlowExecuteConfig config : list) {
+            flowService.startGroup(config.getTriggerGroupId(), config.getParameter(), config.getId());
         }
+//        }
     }
 
 

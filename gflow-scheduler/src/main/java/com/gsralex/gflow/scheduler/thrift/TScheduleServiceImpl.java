@@ -10,6 +10,9 @@ import com.gsralex.gflow.scheduler.service.FlowService;
 import com.gsralex.gflow.scheduler.service.impl.FlowServiceImpl;
 import org.apache.thrift.TException;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * @author gsralex
  * @version 2018/3/18
@@ -21,11 +24,15 @@ public class TScheduleServiceImpl implements TScheduleService.Iface {
 
     private GFlowContext context;
 
+    private ExecutorService threadPool;
+
 
     public TScheduleServiceImpl(GFlowContext context) {
         this.context = context;
         this.flowService = new FlowServiceImpl(context);
+        this.threadPool = Executors.newCachedThreadPool();
     }
+
 
     @Override
     public TResult schedule(TJobDesc desc) throws TException {
@@ -34,6 +41,7 @@ public class TScheduleServiceImpl implements TScheduleService.Iface {
         tResult.setOk(true);
         return tResult;
     }
+
 
     @Override
     public TResult scheduleGroup(TGroupJobDesc desc) throws TException {

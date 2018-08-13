@@ -42,7 +42,7 @@ public class ConfigDaoImpl implements ConfigDao {
 
 
     public List<GFlowTrigger> getNeedActionList(long triggerGroupId, long triggerId) {
-        String sql = "select * from gflow_trigger where triggergroupid=? and trigger_action_id=?";
+        String sql = "select * from gflow_trigger where trigger_group_id=? and trigger_action_id=?";
         return jdbcUtils.queryForList(sql, new Object[]{triggerGroupId, triggerId}, GFlowTrigger.class);
     }
 }

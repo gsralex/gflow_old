@@ -18,9 +18,8 @@ import java.util.Properties;
  */
 public class PropertiesUtils {
 
-    public static <T> T getConfig(String filePath, Class<T> type) throws IOException, IllegalAccessException, InstantiationException {
+    public static <T> T getConfig(InputStream is, Class<T> type) throws IOException, IllegalAccessException, InstantiationException {
         Properties prop = new Properties();
-        InputStream is = new BufferedInputStream(new FileInputStream(new File(filePath)));
         prop.load(is);
 
 

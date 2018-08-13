@@ -12,7 +12,7 @@ import com.gsralex.gdata.bean.annotation.Table;
 public class GFlowJob {
 
     @Id
-    private Long id;
+    private Integer id;
     @Column(name = "action_id")
     private Long actionId;
     @Column(name = "trigger_group_id")
@@ -34,11 +34,11 @@ public class GFlowJob {
     @Column(name = "create_time")
     private Integer createTime;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
