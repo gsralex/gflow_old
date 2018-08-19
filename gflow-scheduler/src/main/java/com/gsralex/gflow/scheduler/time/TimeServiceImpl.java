@@ -4,6 +4,7 @@ import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.enums.ExecuteTimeEnum;
 import com.gsralex.gflow.core.domain.GFlowExecuteConfig;
 import com.gsralex.gflow.core.util.DtUtils;
+import com.gsralex.gflow.scheduler.TimeService;
 import com.gsralex.gflow.scheduler.sql.ExecuteDao;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
 import com.gsralex.gflow.scheduler.sql.impl.ExecuteDaoImpl;
@@ -14,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class TimeServiceImpl {
+public class TimeServiceImpl implements TimeService {
 
     private ExecuteDao executeDao;
     private FlowJobDao flowJobDao;
@@ -25,7 +26,7 @@ public class TimeServiceImpl {
     }
 
     public List<GFlowExecuteConfig> listNeedActionGroup() {
-        List<GFlowExecuteConfig> list = new ArrayList<>();
+            List<GFlowExecuteConfig> list = new ArrayList<>();
         List<GFlowExecuteConfig> configList = executeDao.listExecuteConfig();
         for (GFlowExecuteConfig config : configList) {
             if (config.getActive()) {
