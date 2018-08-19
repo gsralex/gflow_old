@@ -7,6 +7,7 @@ import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.core.thriftgen.TResult;
 import com.gsralex.gflow.executor.ExecutorProcess;
 import com.gsralex.gflow.executor.ExecutorThread;
+import org.apache.thrift.TException;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,5 +50,10 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
         TResult tResult = new TResult();
         tResult.setOk(true);
         return tResult;
+    }
+
+    @Override
+    public TResult heartbeat() throws TException {
+        return null;
     }
 }

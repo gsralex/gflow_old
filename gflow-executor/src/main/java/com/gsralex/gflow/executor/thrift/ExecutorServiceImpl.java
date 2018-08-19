@@ -14,4 +14,9 @@ public class ExecutorServiceImpl implements TExecutorService.Iface {
     public TResult schedule(TJobDesc desc) throws TException {
         return null;
     }
+
+    @Override
+    public TResult heartbeat() throws TException {
+        return null;
+    }
 }

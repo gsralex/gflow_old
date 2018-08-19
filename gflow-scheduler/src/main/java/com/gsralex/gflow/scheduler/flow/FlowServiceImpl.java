@@ -12,10 +12,10 @@ import com.gsralex.gflow.core.flow.FlowNode;
 import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.core.util.DtUtils;
 import com.gsralex.gflow.scheduler.FlowService;
-import com.gsralex.gflow.scheduler.dao.ConfigDao;
-import com.gsralex.gflow.scheduler.dao.FlowJobDao;
-import com.gsralex.gflow.scheduler.dao.impl.ConfigDaoImpl;
-import com.gsralex.gflow.scheduler.dao.impl.FlowJobDaoImpl;
+import com.gsralex.gflow.scheduler.sql.ConfigDao;
+import com.gsralex.gflow.scheduler.sql.FlowJobDao;
+import com.gsralex.gflow.scheduler.sql.impl.ConfigDaoImpl;
+import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
 import com.gsralex.gflow.scheduler.thrift.TRpcClient;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class FlowServiceImpl implements FlowService {
         FlowGuide flowGuide = flowMapHandle.initGroup(jobGroupId, triggerGroupId);
         List<FlowNode> rootList = flowGuide.listRoot();
         for (FlowNode node : rootList) {
-            startAction(jobGroup.getId(), triggerGroupId, node.getActionId(), "");
+            startAction(jobGroup.getId(), triggerGroupId, node.getActionId(), node.getIndex(), "");
         }
     }
 
@@ -69,10 +69,10 @@ public class FlowServiceImpl implements FlowService {
 
     @Override
     public void startAction(long actionId, String parameter) {
-        startAction(0, 0, actionId, parameter);
+        startAction(0, 0, actionId, 0, parameter);
     }
 
-    private void startAction(long jobGroupId, long triggerGroupId, long actionId, String parameter) {
+    private void startAction(long jobGroupId, long triggerGroupId, long actionId, int index, String parameter) {
         GFlowAction action = configDao.getAction(actionId);
         Parameter gflowParameter = new Parameter(parameter);
         gflowParameter.put("actionClass", action.getClassName());
@@ -84,12 +84,14 @@ public class FlowServiceImpl implements FlowService {
         job.setCreateTime(DtUtils.getUnixTime());
         job.setStartTime(DtUtils.getUnixTime());
         job.setRetryCnt(0);
+        job.setIndex(index);
         flowJobDao.saveJob(job);
         TJobDesc jobDesc = new TJobDesc();
         jobDesc.setJobGroupId(jobGroupId);
         jobDesc.setActionId(actionId);
         jobDesc.setParameter(gflowParameter.toString());
-        jobDesc.setJobId(job.getId());
+        jobDesc.setId(job.getId());
+        jobDesc.setIndex(index);
         if (rpcClient.schedule(jobDesc).isOk()) {
             job.setStatus(JobStatusEnum.Executing.getValue());
         } else {
@@ -109,11 +111,13 @@ public class FlowServiceImpl implements FlowService {
                 flowGuide.updateNodeOk(job.getIndex(), jobOk);
                 List<FlowNode> needActionList = flowGuide.listNeedAction(job.getIndex());
                 for (FlowNode action : needActionList) {
-                    startAction(job.getJobGroupId(), job.getTriggerGroupId(), action.getActionId(), "");
+                    startAction(job.getJobGroupId(), job.getTriggerGroupId(), action.getActionId(),
+                            action.getIndex(), "");
                 }
             } else {
                 if (job.getRetryCnt() < retryCnt) {
-                    startAction(job.getJobGroupId(), job.getTriggerGroupId(), job.getActionId(), "");
+                    startAction(job.getJobGroupId(), job.getTriggerGroupId(), job.getActionId(),
+                            job.getIndex(), "");
                     job.setRetryCnt(job.getRetryCnt() + 1);
                     flowJobDao.updateJob(job);
                 }

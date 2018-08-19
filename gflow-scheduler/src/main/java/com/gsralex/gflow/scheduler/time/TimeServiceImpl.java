@@ -4,10 +4,10 @@ import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.enums.ExecuteTimeEnum;
 import com.gsralex.gflow.core.domain.GFlowExecuteConfig;
 import com.gsralex.gflow.core.util.DtUtils;
-import com.gsralex.gflow.scheduler.dao.ExecuteDao;
-import com.gsralex.gflow.scheduler.dao.FlowJobDao;
-import com.gsralex.gflow.scheduler.dao.impl.ExecuteDaoImpl;
-import com.gsralex.gflow.scheduler.dao.impl.FlowJobDaoImpl;
+import com.gsralex.gflow.scheduler.sql.ExecuteDao;
+import com.gsralex.gflow.scheduler.sql.FlowJobDao;
+import com.gsralex.gflow.scheduler.sql.impl.ExecuteDaoImpl;
+import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
 
 import java.util.ArrayList;
 import java.util.Date;

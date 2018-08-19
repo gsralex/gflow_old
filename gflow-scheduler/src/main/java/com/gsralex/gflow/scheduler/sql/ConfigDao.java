@@ -1,4 +1,4 @@
-package com.gsralex.gflow.scheduler.dao;
+package com.gsralex.gflow.scheduler.sql;
 
 import com.gsralex.gflow.core.domain.GFlowAction;
 import com.gsralex.gflow.core.domain.GFlowExecuteConfig;

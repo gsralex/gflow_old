@@ -27,11 +27,8 @@ public class SchedulerServer {
         ThriftSchedulerServer server = new ThriftSchedulerServer(context);
         server.start(context.getConfig().getPort());
 
-
         TimeProcess timeProcess = new TimeProcess(context);
         timeProcess.start();
-
-
     }
 }
 

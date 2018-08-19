@@ -6,10 +6,10 @@ import com.gsralex.gflow.core.domain.GFlowJob;
 import com.gsralex.gflow.core.domain.GFlowJobGroup;
 import com.gsralex.gflow.core.domain.GFlowTrigger;
 import com.gsralex.gflow.core.flow.FlowGuide;
-import com.gsralex.gflow.scheduler.dao.ConfigDao;
-import com.gsralex.gflow.scheduler.dao.FlowJobDao;
-import com.gsralex.gflow.scheduler.dao.impl.ConfigDaoImpl;
-import com.gsralex.gflow.scheduler.dao.impl.FlowJobDaoImpl;
+import com.gsralex.gflow.scheduler.sql.ConfigDao;
+import com.gsralex.gflow.scheduler.sql.FlowJobDao;
+import com.gsralex.gflow.scheduler.sql.impl.ConfigDaoImpl;
+import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
 
 import java.util.List;
 
@@ -47,10 +47,13 @@ public class FlowMapHandle {
                 List<GFlowTrigger> triggerList = configDao.getTriggerList(jobGroup.getTriggerGroupId());
                 flowGuide = new FlowGuide(jobGroup.getTriggerGroupId(), triggerList, jobList);
                 scheduleContext.putFlowMap(jobGroup.getId(), flowGuide);
-
+                return flowGuide;
+            } else {
+                return null;
             }
+        } else {
+            return flowGuide;
         }
-        return null;
     }
 
 }

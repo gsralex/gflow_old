@@ -1,8 +1,8 @@
-package com.gsralex.gflow.scheduler.dao.impl;
+package com.gsralex.gflow.scheduler.sql.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
 import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.scheduler.dao.ConfigDao;
+import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.core.domain.GFlowAction;
 import com.gsralex.gflow.core.domain.GFlowExecuteConfig;
 import com.gsralex.gflow.core.domain.GFlowTrigger;

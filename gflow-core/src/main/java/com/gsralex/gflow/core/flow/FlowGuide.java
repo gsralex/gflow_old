@@ -65,11 +65,6 @@ public class FlowGuide {
     public List<FlowNode> listNeedAction(int position) {
         List<FlowNode> needActionList = new ArrayList<>();
         FlowNode node = posMap.get(position);
-        for (FlowNode pre : node.getPre()) {
-            if (!pre.isOk()) {
-                return needActionList;
-            }
-        }
         //检查后置节点的前置节点是否都已完成
         for (FlowNode next : node.getNext()) {
             boolean finish = true;
@@ -80,7 +75,12 @@ public class FlowGuide {
                 }
             }
             if (finish) {
-                needActionList.add(next);
+                synchronized (next) {
+                    if (!next.isSchedule()) {
+                        next.setSchedule(true);
+                        needActionList.add(next);
+                    }
+                }
             }
         }
         return needActionList;
