@@ -2,12 +2,12 @@ package com.gsralex.gflow.scheduler.thrift;
 
 
 import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.core.thrift.gen.TGroupJobDesc;
-import com.gsralex.gflow.core.thrift.gen.TJobDesc;
-import com.gsralex.gflow.core.thrift.gen.TResult;
-import com.gsralex.gflow.core.thrift.gen.TScheduleService;
-import com.gsralex.gflow.scheduler.service.FlowService;
-import com.gsralex.gflow.scheduler.service.impl.FlowServiceImpl;
+import com.gsralex.gflow.core.thriftgen.TGroupJobDesc;
+import com.gsralex.gflow.core.thriftgen.TJobDesc;
+import com.gsralex.gflow.core.thriftgen.TResult;
+import com.gsralex.gflow.core.thriftgen.TScheduleService;
+import com.gsralex.gflow.scheduler.FlowService;
+import com.gsralex.gflow.scheduler.flow.FlowServiceImpl;
 import org.apache.thrift.TException;
 
 import java.util.concurrent.ExecutorService;

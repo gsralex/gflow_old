@@ -14,7 +14,7 @@ struct TJobDesc{
     2:i64 actionId,
     3:i64 jobGroupId,
     4:string parameter,
-    5:i64 jobId
+    5:i32 index
 }
 
 //任务组描述
@@ -39,4 +39,6 @@ service TScheduleService{
 
 service TExecutorService{
     TResult schedule(1:TJobDesc desc);
+    TResult heartbeat();
 }
+

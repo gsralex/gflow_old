@@ -2,7 +2,7 @@ package com.gsralex.gflow.scheduler.dao.impl;
 
 import com.gsralex.gflow.core.context.JdbcContext;
 import com.gsralex.gflow.scheduler.dao.ExecuteDao;
-import com.gsralex.gflow.scheduler.domain.flow.GFlowExecuteConfig;
+import com.gsralex.gflow.core.domain.GFlowExecuteConfig;
 
 import java.util.List;
 

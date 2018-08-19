@@ -2,13 +2,11 @@ package com.gsralex.gflow.scheduler.thrift;
 
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
-import com.gsralex.gflow.core.thrift.gen.TExecutorService;
-import com.gsralex.gflow.core.thrift.gen.TJobDesc;
-import com.gsralex.gflow.core.thrift.gen.TResult;
-import com.gsralex.gflow.scheduler.domain.job.JobResult;
+import com.gsralex.gflow.core.thriftgen.TExecutorService;
+import com.gsralex.gflow.core.thriftgen.TJobDesc;
+import com.gsralex.gflow.core.thriftgen.TResult;
 import org.apache.log4j.Logger;
 import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;

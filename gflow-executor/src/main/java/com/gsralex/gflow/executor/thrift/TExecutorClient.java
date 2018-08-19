@@ -2,8 +2,7 @@ package com.gsralex.gflow.executor.thrift;
 
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
-import com.gsralex.gflow.core.thrift.gen.TJobDesc;
-import com.gsralex.gflow.core.thrift.gen.TScheduleService;
+import com.gsralex.gflow.core.thriftgen.TScheduleService;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;

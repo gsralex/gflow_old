@@ -28,7 +28,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.gsralex.gflow.scheduler.MainJob</mainClass>
+                            <mainClass>com.gsralex.gflow.scheduler.SchedulerServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

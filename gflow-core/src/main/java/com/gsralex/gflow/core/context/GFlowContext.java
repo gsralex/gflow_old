@@ -20,6 +20,7 @@ public class GFlowContext {
     private JdbcContext jdbcContext;
     private ZkContext zkContext;
 
+    private ScheduleContext scheduleContext;
 
     public void init() {
         initConfig();
@@ -46,5 +47,23 @@ public class GFlowContext {
 
     public GFlowConfig getConfig() {
         return config;
+    }
+
+
+    public void setScheduleContext(ScheduleContext scheduleContext) {
+        this.scheduleContext = scheduleContext;
+    }
+
+    public ScheduleContext getScheduleContext() {
+        return this.scheduleContext;
+    }
+
+    public static GFlowContext getContext() {
+        return GFlowContextHolder.instance;
+    }
+
+
+    private static class GFlowContextHolder {
+        private static final GFlowContext instance = new GFlowContext();
     }
 }

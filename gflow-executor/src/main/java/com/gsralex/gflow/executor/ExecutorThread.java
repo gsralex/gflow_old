@@ -1,7 +1,7 @@
 package com.gsralex.gflow.executor;
 
 import com.gsralex.gflow.core.context.Parameter;
-import com.gsralex.gflow.core.thrift.gen.TJobDesc;
+import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.executor.thrift.TExecutorClient;
 import org.apache.log4j.Logger;
 

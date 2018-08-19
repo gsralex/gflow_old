@@ -2,9 +2,9 @@ package com.gsralex.gflow.executor.thrift;
 
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.Parameter;
-import com.gsralex.gflow.core.thrift.gen.TExecutorService;
-import com.gsralex.gflow.core.thrift.gen.TJobDesc;
-import com.gsralex.gflow.core.thrift.gen.TResult;
+import com.gsralex.gflow.core.thriftgen.TExecutorService;
+import com.gsralex.gflow.core.thriftgen.TJobDesc;
+import com.gsralex.gflow.core.thriftgen.TResult;
 import com.gsralex.gflow.executor.ExecutorProcess;
 import com.gsralex.gflow.executor.ExecutorThread;
 

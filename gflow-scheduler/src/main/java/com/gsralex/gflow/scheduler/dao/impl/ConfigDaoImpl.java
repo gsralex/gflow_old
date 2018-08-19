@@ -3,9 +3,9 @@ package com.gsralex.gflow.scheduler.dao.impl;
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.scheduler.dao.ConfigDao;
-import com.gsralex.gflow.scheduler.domain.flow.GFlowAction;
-import com.gsralex.gflow.scheduler.domain.flow.GFlowExecuteConfig;
-import com.gsralex.gflow.scheduler.domain.flow.GFlowTrigger;
+import com.gsralex.gflow.core.domain.GFlowAction;
+import com.gsralex.gflow.core.domain.GFlowExecuteConfig;
+import com.gsralex.gflow.core.domain.GFlowTrigger;
 
 import java.util.List;
 
@@ -36,13 +36,8 @@ public class ConfigDaoImpl implements ConfigDao {
 
     @Override
     public List<GFlowTrigger> getTriggerList(long triggerGroupId) {
-        String sql = "select * from gflow_trigger where trigger_group_id=?";
+        String sql = "select * from gflow_trigger where action_group_id=?";
         return jdbcUtils.queryForList(sql, new Object[]{triggerGroupId}, GFlowTrigger.class);
     }
 
-
-    public List<GFlowTrigger> getNeedActionList(long triggerGroupId, long triggerId) {
-        String sql = "select * from gflow_trigger where trigger_group_id=? and trigger_action_id=?";
-        return jdbcUtils.queryForList(sql, new Object[]{triggerGroupId, triggerId}, GFlowTrigger.class);
-    }
 }

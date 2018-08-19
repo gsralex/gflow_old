@@ -2,9 +2,10 @@ package com.gsralex.gflow.scheduler.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
 import com.gsralex.gflow.core.context.GFlowContext;
+import com.gsralex.gflow.core.util.SqlUtils;
 import com.gsralex.gflow.scheduler.dao.FlowJobDao;
-import com.gsralex.gflow.scheduler.domain.flow.GFlowJob;
-import com.gsralex.gflow.scheduler.domain.flow.GFlowJobGroup;
+import com.gsralex.gflow.core.domain.GFlowJob;
+import com.gsralex.gflow.core.domain.GFlowJobGroup;
 
 import java.util.List;
 
@@ -38,10 +39,9 @@ public class FlowJobDaoImpl implements FlowJobDao {
 
 
     @Override
-    public int getJobGroupByExecute(long triggerGroupId, int date) {
-        String sql = "select count(1) from gflow_jobgroup where trigger_group_id=? and date=? " +
-                "and execute_config_id>0";
-        return jdbcUtils.queryForObject(sql, new Object[]{triggerGroupId, date}, Integer.class);
+    public int getJobGroupByExecute(long executeConfigId, int date) {
+        String sql = "select count(1) from gflow_jobgroup where execute_config_id=? and date=?";
+        return jdbcUtils.queryForObject(sql, new Object[]{executeConfigId, date}, Integer.class);
     }
 
     @Override
@@ -63,6 +63,18 @@ public class FlowJobDaoImpl implements FlowJobDao {
     @Override
     public int batchSaveJob(List<GFlowJob> jobList) {
         return jdbcUtils.batchInsert(jobList, true);
+    }
+
+    @Override
+    public List<GFlowJob> getJobNeedRetryList(int[] statusArray, int retryCnt) {
+        String status = SqlUtils.idToInt(statusArray);
+        String sql = "select * from gflow_job where status in (" + status + ") and retrycnt<?";
+        return jdbcUtils.queryForList(sql, new Object[]{retryCnt}, GFlowJob.class);
+    }
+
+    @Override
+    public List<GFlowJob> listJob(long jobGroupId) {
+        return null;
     }
 
 

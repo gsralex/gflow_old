@@ -27,7 +27,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.gsralex.gflow.executor.ExecutorMainJob</mainClass>
+                            <mainClass>com.gsralex.gflow.executor.ExecutorServer</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

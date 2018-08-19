@@ -1,8 +1,8 @@
 package com.gsralex.gflow.scheduler.dao;
 
 
-import com.gsralex.gflow.scheduler.domain.flow.GFlowJob;
-import com.gsralex.gflow.scheduler.domain.flow.GFlowJobGroup;
+import com.gsralex.gflow.core.domain.GFlowJob;
+import com.gsralex.gflow.core.domain.GFlowJobGroup;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public interface FlowJobDao {
 
     GFlowJobGroup getJobGroup(long id);
 
-    int getJobGroupByExecute(long triggerGroupId, int date);
+    int getJobGroupByExecute(long executeId, int date);
 
     boolean saveJob(GFlowJob job);
 
@@ -29,4 +29,8 @@ public interface FlowJobDao {
 
     int batchSaveJob(List<GFlowJob> jobList);
 
+    List<GFlowJob> getJobNeedRetryList(int[] statusArray, int retryCnt);
+
+
+    List<GFlowJob> listJob(long jobGroupId);
 }

@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.dao;
 
-import com.gsralex.gflow.scheduler.domain.flow.GFlowExecuteConfig;
+import com.gsralex.gflow.core.domain.GFlowExecuteConfig;
 
 import java.util.List;
 
