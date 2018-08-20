@@ -29,8 +29,8 @@ public class ConfigDaoImpl implements ConfigDao {
     }
 
     @Override
-    public List<GFlowExecuteConfig> getExecuteActiveList() {
-        String sql = "select * from gflow_executeconfig where active=1";
+    public List<GFlowExecuteConfig> listExecuteConfig() {
+        String sql = "select * from gflow_executeconfig";
         return jdbcUtils.queryForList(sql, null, GFlowExecuteConfig.class);
     }
 

@@ -3,10 +3,12 @@ package com.gsralex.gflow.core.context;
 
 import com.gsralex.gflow.core.config.GFlowConfig;
 import com.gsralex.gflow.core.util.PropertiesUtils;
+import com.gsralex.gflow.core.zk.ZkContext;
 import org.apache.log4j.Logger;
 
 import java.io.InputStream;
-import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author gsralex
@@ -19,6 +21,7 @@ public class GFlowContext {
     private GFlowConfig config;
     private JdbcContext jdbcContext;
     private ZkContext zkContext;
+    private ExecutorService executorService;
 
     private ScheduleContext scheduleContext;
 
@@ -26,6 +29,7 @@ public class GFlowContext {
         initConfig();
         jdbcContext = new JdbcContext(this.config);
         zkContext = new ZkContext(this.config);
+        executorService = Executors.newCachedThreadPool();
     }
 
     private void initConfig() {
@@ -35,6 +39,10 @@ public class GFlowContext {
         } catch (Exception e) {
             logger.error("GflowContext.initConfig", e);
         }
+    }
+
+    public void execute(Runnable runnable){
+        executorService.execute(runnable);
     }
 
     public JdbcContext getJdbcContext() {

@@ -1,12 +1,11 @@
 package com.gsralex.gflow.scheduler.time;
 
 import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.core.domain.GFlowExecuteConfig;
 import com.gsralex.gflow.scheduler.FlowService;
-import com.gsralex.gflow.scheduler.TimeService;
 import com.gsralex.gflow.scheduler.flow.FlowServiceImpl;
+import com.gsralex.gflow.scheduler.impl.TimerTask;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * 执行定时任务
@@ -16,23 +15,21 @@ import java.util.List;
  */
 public class TimeProcess {
 
-    private TimeService timeService;
     private FlowService flowService;
     private GFlowContext context;
+
+
+    /**
+     * 今日执行次数 key:20180820，value->key:configId,value:executeCnt
+     */
+    private Map<Integer, Map<Long, Integer>> timeMap;
 
     public TimeProcess(GFlowContext context) {
         this.context = context;
         this.flowService = new FlowServiceImpl(context);
-        this.timeService = new TimeServiceImpl(context);
     }
 
-
     public void start() {
-        while (true) {
-            List<GFlowExecuteConfig> list = timeService.listNeedActionGroup();
-            for (GFlowExecuteConfig config : list) {
-                flowService.startGroup(config.getTriggerGroupId(), config.getParameter(), config.getId());
-            }
-        }
+        
     }
 }
