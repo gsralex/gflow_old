@@ -9,7 +9,7 @@ public class ExecuteConfig {
     private Long id;
     private Long groupId;
     private Integer timeType;
-    private Integer interval;
+    private Long interval;
     private String time;
     private Boolean active;
 
@@ -37,11 +37,11 @@ public class ExecuteConfig {
         this.timeType = timeType;
     }
 
-    public Integer getInterval() {
+    public Long getInterval() {
         return interval;
     }
 
-    public void setInterval(Integer interval) {
+    public void setInterval(Long interval) {
         this.interval = interval;
     }
 
