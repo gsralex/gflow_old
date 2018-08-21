@@ -41,6 +41,10 @@ public class DtUtils {
         return new Date(unixTime * 1000);
     }
 
+    public static Date parseUnixTimeMs(long unixTime) {
+        return new Date(unixTime);
+    }
+
     public static String formatBizDate(Date date) {
         return DateFormatUtils.format(date, DF_YYYYMMDD);
     }

@@ -75,7 +75,6 @@ public class FlowServiceImpl implements FlowService {
     private void startAction(long jobGroupId, long triggerGroupId, long actionId, int index, String parameter) {
         GFlowAction action = configDao.getAction(actionId);
         Parameter gflowParameter = new Parameter(parameter);
-        gflowParameter.put("actionClass", action.getClassName());
 
         GFlowJob job = new GFlowJob();
         job.setJobGroupId(jobGroupId);
@@ -92,6 +91,7 @@ public class FlowServiceImpl implements FlowService {
         jobDesc.setParameter(gflowParameter.toString());
         jobDesc.setId(job.getId());
         jobDesc.setIndex(index);
+        jobDesc.setClassName(action.getClassName());
         if (rpcClient.schedule(jobDesc).isOk()) {
             job.setStatus(JobStatusEnum.Executing.getValue());
         } else {

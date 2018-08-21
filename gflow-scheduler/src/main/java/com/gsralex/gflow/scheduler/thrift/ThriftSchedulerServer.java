@@ -1,6 +1,7 @@
 package com.gsralex.gflow.scheduler.thrift;
 
 import com.gsralex.gflow.core.context.GFlowContext;
+import com.gsralex.gflow.core.thriftgen.TScheduleAckService;
 import com.gsralex.gflow.core.thriftgen.TScheduleService;
 import com.gsralex.gflow.scheduler.SchedulerServer;
 import org.apache.thrift.TMultiplexedProcessor;
@@ -27,18 +28,19 @@ public class ThriftSchedulerServer {
         TServerTransport tServerSocket;
         try {
             tServerSocket = new TServerSocket(port);
-
             TMultiplexedProcessor processor = new TMultiplexedProcessor();
-
             TScheduleService.Processor<TScheduleServiceImpl> schedule =
                     new TScheduleService.Processor<>(new TScheduleServiceImpl(context));
             processor.registerProcessor("schedule", schedule);
+
+            TScheduleAckService.Processor<TScheduleAckServiceImpl> scheduleAck =
+                    new TScheduleAckService.Processor<>(new TScheduleAckServiceImpl(context));
+            processor.registerProcessor("scheduleAck", scheduleAck);
 
             TThreadPoolServer.Args args = new TThreadPoolServer.Args(tServerSocket);
             args.processor(processor);
             args.protocolFactory(new TBinaryProtocol.Factory());
             TServer tServer = new TThreadPoolServer(args);
-
             new Thread(() -> {
                 tServer.serve();
             }).start();

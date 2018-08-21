@@ -50,13 +50,4 @@ public class TScheduleServiceImpl implements TScheduleService.Iface {
         tResult.setOk(true);
         return tResult;
     }
-
-    @Override
-    public TResult ack(long jobId, boolean ok) throws TException {
-        flowService.actionAck(jobId, ok);
-        TResult tResult = new TResult();
-        tResult.setOk(true);
-        return tResult;
-    }
-
 }

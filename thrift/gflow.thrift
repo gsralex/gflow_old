@@ -13,8 +13,10 @@ struct TJobDesc{
     1:i64 id,
     2:i64 actionId,
     3:i64 jobGroupId,
-    4:string parameter,
-    5:i32 index
+    4:string className,
+    5:string parameter,
+    6:i32 index
+
 }
 
 //任务组描述
@@ -34,6 +36,9 @@ struct TJobResult{
 service TScheduleService{
     TResult schedule(1:TJobDesc desc);
     TResult scheduleGroup(1:TGroupJobDesc desc);
+}
+
+service TScheduleAckService{
     TResult ack(1:i64 jobId,2:bool ok)
 }
 

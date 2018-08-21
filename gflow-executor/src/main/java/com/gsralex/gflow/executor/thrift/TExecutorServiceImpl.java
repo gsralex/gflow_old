@@ -32,9 +32,8 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
     @Override
     public TResult schedule(TJobDesc desc) {
         Parameter parameter = new Parameter(desc.getParameter());
-        String className = parameter.getString("actionClass");
         try {
-            Class type = Class.forName(className);
+            Class type = Class.forName(desc.getClassName());
             ExecutorProcess process = (ExecutorProcess) type.newInstance();
             ExecutorThread thread = new ExecutorThread(process, client);
             thread.setTJobDesc(desc);

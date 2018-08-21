@@ -2,6 +2,7 @@ package com.gsralex.gflow.executor.thrift;
 
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.thriftgen.TScheduleAckService;
 import com.gsralex.gflow.core.thriftgen.TScheduleService;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
@@ -36,7 +37,7 @@ public class TExecutorClient {
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "schedule");
-            TScheduleService.Client client = new TScheduleService.Client(multiProtocol);
+            TScheduleAckService.Client client = new TScheduleAckService.Client(multiProtocol);
             client.ack(jobId, ok);
         } catch (TException e) {
             logger.error("TExecutorClient.ack", e);
