@@ -3,25 +3,25 @@ package com.gsralex.gflow.scheduler.thrift;
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.thriftgen.TResult;
 import com.gsralex.gflow.core.thriftgen.TScheduleAckService;
-import com.gsralex.gflow.scheduler.FlowService;
+import com.gsralex.gflow.scheduler.schedule.ScheduleLinkHandle;
 import org.apache.thrift.TException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author gsralex
  * @version 2018/8/21
  */
+@Service
 public class TScheduleAckServiceImpl implements TScheduleAckService.Iface {
 
     private GFlowContext context;
-    private FlowService flowService;
-
-    public TScheduleAckServiceImpl(GFlowContext context) {
-        this.context = context;
-    }
+    @Autowired
+    private ScheduleLinkHandle scheduleLinkHandle;
 
     @Override
     public TResult ack(long jobId, boolean ok) throws TException {
-        flowService.actionAck(jobId, ok);
+        scheduleLinkHandle.ackAction(jobId, ok);
         TResult tResult = new TResult();
         tResult.setOk(true);
         return tResult;

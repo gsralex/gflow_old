@@ -6,6 +6,8 @@ import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.core.domain.GFlowAction;
 import com.gsralex.gflow.core.domain.GFlowExecuteConfig;
 import com.gsralex.gflow.core.domain.GFlowTrigger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -13,14 +15,11 @@ import java.util.List;
  * @author gsralex
  * @version 2018/6/2
  */
+@Repository
 public class ConfigDaoImpl implements ConfigDao {
 
+    @Autowired
     private JdbcUtils jdbcUtils;
-
-
-    public ConfigDaoImpl(GFlowContext context) {
-        jdbcUtils = context.getJdbcContext().getJdbcUtils();
-    }
 
     @Override
     public GFlowAction getAction(long id) {

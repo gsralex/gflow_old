@@ -5,7 +5,8 @@ import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.thriftgen.TExecutorService;
 import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.core.thriftgen.TResult;
-import com.gsralex.gflow.executor.ExecutorProcess;
+import com.gsralex.gflow.executor.ExecuteProcess;
+import com.gsralex.gflow.executor.ExecutorContext;
 import com.gsralex.gflow.executor.ExecutorThread;
 import org.apache.thrift.TException;
 
@@ -34,7 +35,12 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
         Parameter parameter = new Parameter(desc.getParameter());
         try {
             Class type = Class.forName(desc.getClassName());
-            ExecutorProcess process = (ExecutorProcess) type.newInstance();
+            ExecuteProcess process;
+            if (ExecutorContext.getContext().containsBean(type)) {
+                process = (ExecuteProcess) ExecutorContext.getContext().getSpringBean(type);
+            } else {
+                process = (ExecuteProcess) type.newInstance();
+            }
             ExecutorThread thread = new ExecutorThread(process, client);
             thread.setTJobDesc(desc);
             thread.setParameter(parameter);
@@ -53,6 +59,6 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
 
     @Override
     public TResult heartbeat() throws TException {
-        return null;
+        return new TResult(true, "heartbeat ok");
     }
 }

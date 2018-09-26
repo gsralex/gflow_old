@@ -1,15 +1,12 @@
-package com.gsralex.gflow.scheduler.flow;
+package com.gsralex.gflow.scheduler.schedule;
 
-import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.core.context.ScheduleContext;
 import com.gsralex.gflow.core.domain.GFlowJob;
 import com.gsralex.gflow.core.domain.GFlowJobGroup;
 import com.gsralex.gflow.core.domain.GFlowTrigger;
 import com.gsralex.gflow.core.flow.FlowGuide;
+import com.gsralex.gflow.core.flow.FlowGuideMap;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
-import com.gsralex.gflow.scheduler.sql.impl.ConfigDaoImpl;
-import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
 
 import java.util.List;
 
@@ -20,33 +17,28 @@ import java.util.List;
 public class FlowMapHandle {
 
 
-    private ScheduleContext scheduleContext;
+    private FlowGuideMap flowGuideMap;
     private ConfigDao configDao;
     private FlowJobDao flowJobDao;
 
-    public FlowMapHandle(GFlowContext context) {
-        this.configDao = new ConfigDaoImpl(context);
-        this.flowJobDao = new FlowJobDaoImpl(context);
-        this.scheduleContext = context.getScheduleContext();
-    }
 
 
     public FlowGuide initGroup(long jobGroupId, long triggerGroupId) {
         List<GFlowTrigger> triggerList = configDao.getTriggerList(triggerGroupId);
         FlowGuide flowGuide = new FlowGuide(triggerGroupId, triggerList);
-        scheduleContext.putFlowMap(jobGroupId, flowGuide);
+        flowGuideMap.putFlowMap(jobGroupId, flowGuide);
         return flowGuide;
     }
 
     public FlowGuide getFlowGuide(long jobGroupId) {
-        FlowGuide flowGuide = scheduleContext.getFlowMap(jobGroupId);
+        FlowGuide flowGuide = flowGuideMap.getFlowMap(jobGroupId);
         if (flowGuide == null) {
             GFlowJobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
             if (jobGroup != null) {
                 List<GFlowJob> jobList = flowJobDao.listJob(jobGroupId);
                 List<GFlowTrigger> triggerList = configDao.getTriggerList(jobGroup.getTriggerGroupId());
                 flowGuide = new FlowGuide(jobGroup.getTriggerGroupId(), triggerList, jobList);
-                scheduleContext.putFlowMap(jobGroup.getId(), flowGuide);
+                flowGuideMap.putFlowMap(jobGroup.getId(), flowGuide);
                 return flowGuide;
             } else {
                 return null;

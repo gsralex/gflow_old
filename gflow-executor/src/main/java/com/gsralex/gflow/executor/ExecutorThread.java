@@ -12,12 +12,12 @@ import org.apache.log4j.Logger;
 public class ExecutorThread implements Runnable {
 
     private static final Logger logger = Logger.getLogger(ExecutorThread.class);
-    private ExecutorProcess process;
+    private ExecuteProcess process;
     private TExecutorClient client;
     private Parameter parameter;
     private TJobDesc jobDesc;
 
-    public ExecutorThread(ExecutorProcess process, TExecutorClient client) {
+    public ExecutorThread(ExecuteProcess process, TExecutorClient client) {
         this.process = process;
         this.client = client;
     }

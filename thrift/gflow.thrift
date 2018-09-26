@@ -16,6 +16,7 @@ struct TJobDesc{
     4:string className,
     5:string parameter,
     6:i32 index
+    7:i64 retryJobId //重试任务Id，如果不是重试任务，此值为0
 
 }
 

@@ -11,9 +11,11 @@ import java.util.Map;
  * @version 2018/8/5
  */
 public class Parameter {
-
-
     private Map<String, String> map;
+
+    public Parameter() {
+        this("");
+    }
 
     public Parameter(String str) {
         map = new HashMap<>();
@@ -23,7 +25,7 @@ public class Parameter {
                 String[] kv = StringUtils.split(item, "=");
                 String key = "", value = "";
                 if (kv.length >= 1) {
-                    key = kv[0];
+                    key = StringUtils.lowerCase(kv[0]);
                 }
                 if (kv.length >= 2) {
                     value = kv[1];
@@ -33,18 +35,27 @@ public class Parameter {
         }
     }
 
-
     public String getString(String key) {
+        key = StringUtils.lowerCase(key);
         return map.get(key);
+    }
+
+    public int getInt(String key) {
+        return getInt(key, 0);
     }
 
     public int getInt(String key, int defaultValue) {
         return NumberUtils.toInt(getString(key), defaultValue);
     }
 
+    public long getLong(String key) {
+        return getLong(key, 0);
+    }
+
     public long getLong(String key, long defaultValue) {
         return NumberUtils.toLong(getString(key), defaultValue);
     }
+
 
     public void put(String key, String value) {
         map.put(key, value);

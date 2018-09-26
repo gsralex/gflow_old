@@ -2,6 +2,7 @@ package com.gsralex.gflow.core.flow;
 
 import com.gsralex.gflow.core.domain.GFlowJob;
 import com.gsralex.gflow.core.domain.GFlowTrigger;
+import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.core.enums.JobStatusEnum;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class FlowGuide {
     private Map<Integer, FlowNode> posMap;
     private Map<Long, List<FlowNode>> actionMap;
     private long groupId;
+    private JobGroupStatusEnum status;
 
     public FlowGuide(long groupId, List<GFlowTrigger> triggers) {
         this(groupId, triggers, null);
@@ -86,6 +88,25 @@ public class FlowGuide {
         return needActionList;
     }
 
+    public List<FlowNode> listContinueAction() {
+        List<FlowNode> continueActionList = new ArrayList<>();
+        for (Map.Entry<Integer, FlowNode> entry : posMap.entrySet()) {
+            if (!entry.getValue().isOk()) {
+                boolean finish = true;
+                for (FlowNode pre : entry.getValue().getPre()) {
+                    if (!pre.isOk()) {
+                        finish = false;
+                        break;
+                    }
+                }
+                if (finish) {
+                    continueActionList.add(entry.getValue());
+                }
+            }
+        }
+        return continueActionList;
+    }
+
 
     private FlowNode putPosNode(int index, long actionId) {
         FlowNode node;
@@ -107,5 +128,11 @@ public class FlowGuide {
         actionMap.get(actionId).add(node);
     }
 
+    public JobGroupStatusEnum getStatus() {
+        return status;
+    }
 
+    public void setStatus(JobGroupStatusEnum status) {
+        this.status = status;
+    }
 }

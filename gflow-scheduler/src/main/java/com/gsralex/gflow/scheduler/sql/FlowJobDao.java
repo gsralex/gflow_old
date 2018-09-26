@@ -12,14 +12,23 @@ import java.util.List;
  */
 public interface FlowJobDao {
 
-
+    /**
+     * 保存任务
+     *
+     * @param jobGroup
+     * @return
+     */
     boolean saveJobGroup(GFlowJobGroup jobGroup);
 
+    /**
+     * 更新任务
+     *
+     * @param jobGroup
+     * @return
+     */
     boolean updateJobGroup(GFlowJobGroup jobGroup);
 
     GFlowJobGroup getJobGroup(long id);
-
-    int getJobGroupByExecute(long executeId, int date);
 
     boolean saveJob(GFlowJob job);
 
@@ -29,8 +38,7 @@ public interface FlowJobDao {
 
     int batchSaveJob(List<GFlowJob> jobList);
 
-    List<GFlowJob> getJobNeedRetryList(int[] statusArray, int retryCnt);
-
+    List<GFlowJobGroup> listJobGroupExecuting();
 
     List<GFlowJob> listJob(long jobGroupId);
 }

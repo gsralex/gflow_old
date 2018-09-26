@@ -15,11 +15,21 @@ import java.util.concurrent.Executors;
  * @date 2018/2/21
  */
 public class GFlowContext {
+
+    private static GFlowContext currentContext = new GFlowContext();
+
+    private GFlowContext() {
+    }
+
+
+    public static GFlowContext getContext() {
+        return currentContext;
+    }
+
     private static final Logger logger = Logger.getLogger(GFlowContext.class);
 
-    private static final String CONFIG_FILEPATH = "/gflow.properties";
+    private static String CONFIG_FILEPATH = "/gflow.properties";
     private GFlowConfig config;
-    private JdbcContext jdbcContext;
     private ZkContext zkContext;
     private ExecutorService executorService;
 
@@ -27,7 +37,6 @@ public class GFlowContext {
 
     public void init() {
         initConfig();
-        jdbcContext = new JdbcContext(this.config);
         zkContext = new ZkContext(this.config);
         executorService = Executors.newCachedThreadPool();
     }
@@ -41,12 +50,8 @@ public class GFlowContext {
         }
     }
 
-    public void execute(Runnable runnable){
+    public void execute(Runnable runnable) {
         executorService.execute(runnable);
-    }
-
-    public JdbcContext getJdbcContext() {
-        return jdbcContext;
     }
 
     public ZkContext getZkContext() {
@@ -57,7 +62,6 @@ public class GFlowContext {
         return config;
     }
 
-
     public void setScheduleContext(ScheduleContext scheduleContext) {
         this.scheduleContext = scheduleContext;
     }
@@ -66,12 +70,4 @@ public class GFlowContext {
         return this.scheduleContext;
     }
 
-    public static GFlowContext getContext() {
-        return GFlowContextHolder.instance;
-    }
-
-
-    private static class GFlowContextHolder {
-        private static final GFlowContext instance = new GFlowContext();
-    }
 }

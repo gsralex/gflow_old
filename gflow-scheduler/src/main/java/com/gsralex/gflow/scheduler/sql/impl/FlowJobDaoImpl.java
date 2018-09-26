@@ -2,10 +2,12 @@ package com.gsralex.gflow.scheduler.sql.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
 import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.core.util.SqlUtils;
-import com.gsralex.gflow.scheduler.sql.FlowJobDao;
 import com.gsralex.gflow.core.domain.GFlowJob;
 import com.gsralex.gflow.core.domain.GFlowJobGroup;
+import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
+import com.gsralex.gflow.scheduler.sql.FlowJobDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -13,13 +15,15 @@ import java.util.List;
  * @author gsralex
  * @version 2018/5/12
  */
+@Repository
 public class FlowJobDaoImpl implements FlowJobDao {
 
+    @Autowired
     private JdbcUtils jdbcUtils;
 
-    public FlowJobDaoImpl(GFlowContext context) {
-        this.jdbcUtils = context.getJdbcContext().getJdbcUtils();
-    }
+//    public FlowJobDaoImpl(GFlowContext context) {
+//        this.jdbcUtils = context.getJdbcContext().getJdbcUtils();
+//    }
 
     @Override
     public boolean saveJobGroup(GFlowJobGroup jobGroup) {
@@ -37,12 +41,6 @@ public class FlowJobDaoImpl implements FlowJobDao {
         return jdbcUtils.queryForObject(sql, new Object[]{id}, GFlowJobGroup.class);
     }
 
-
-    @Override
-    public int getJobGroupByExecute(long executeConfigId, int date) {
-        String sql = "select count(1) from gflow_jobgroup where execute_config_id=? and date=?";
-        return jdbcUtils.queryForObject(sql, new Object[]{executeConfigId, date}, Integer.class);
-    }
 
     @Override
     public boolean saveJob(GFlowJob job) {
@@ -66,10 +64,9 @@ public class FlowJobDaoImpl implements FlowJobDao {
     }
 
     @Override
-    public List<GFlowJob> getJobNeedRetryList(int[] statusArray, int retryCnt) {
-        String status = SqlUtils.idToInt(statusArray);
-        String sql = "select * from gflow_job where status in (" + status + ") and retrycnt<?";
-        return jdbcUtils.queryForList(sql, new Object[]{retryCnt}, GFlowJob.class);
+    public List<GFlowJobGroup> listJobGroupExecuting() {
+        String sql = "select * from gflow_jobgroup where status=?";
+        return jdbcUtils.queryForList(sql, new Object[]{JobGroupStatusEnum.EXECUTING.getValue()}, GFlowJobGroup.class);
     }
 
     @Override

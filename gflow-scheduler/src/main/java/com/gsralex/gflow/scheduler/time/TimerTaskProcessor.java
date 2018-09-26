@@ -1,9 +1,10 @@
 package com.gsralex.gflow.scheduler.time;
 
+import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.enums.ExecuteTimeEnum;
 import com.gsralex.gflow.core.model.ExecuteConfig;
 import com.gsralex.gflow.core.util.DtUtils;
-import com.gsralex.gflow.scheduler.FlowService;
+import com.gsralex.gflow.scheduler.schedule.ScheduleLinkHandle;
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.Date;
@@ -19,7 +20,7 @@ public class TimerTaskProcessor {
     private Map<Long, TimerTask> map = new HashMap<>();
 
     private final Object lock = new Object();
-    private FlowService flowService;
+    private ScheduleLinkHandle scheduleLinkHandle;
 
     public void start() {
         new Thread(new Runnable() {
@@ -105,14 +106,12 @@ public class TimerTaskProcessor {
                     if (timerTask == null) {
                         map.wait();
                     }
-                    if (getInterval(timerTask) < 0) {
+                    long interval = getInterval(timerTask);
+                    if (interval < 0) {
                         ExecuteConfig config = timerTask.getConfig();
-                        flowService.startGroup(config.getGroupId(), "", config.getId());
+                        scheduleLinkHandle.scheduleGroup(config.getGroupId(), new Parameter(), config.getId());
                         timerTask.setLastExecutionTime(System.currentTimeMillis());
-                    }
-                    TimerTask timerTask1 = getMin();
-                    long interval = getInterval(timerTask1);
-                    if (interval > 0) {
+                    } else {
                         map.wait(interval);
                     }
                 }

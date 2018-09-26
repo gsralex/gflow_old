@@ -4,9 +4,9 @@ import com.gsralex.gflow.core.context.Parameter;
 
 /**
  * @author gsralex
- * @version 2018/8/4
+ * @version 2018/8/30
  */
-public interface ExecutorProcess {
+public interface AsyncExecutorProcess {
 
-    boolean process(long id, Parameter parameter);
+    void process(long id, Parameter parameter);
 }

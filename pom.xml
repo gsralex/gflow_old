@@ -13,6 +13,7 @@
         <module>gflow-executor</module>
     </modules>
     <properties>
+        <spring.version>5.0.3.RELEASE</spring.version>
         <junit.version>4.12</junit.version>
         <commonslang3.version>3.4</commonslang3.version>
         <log4j.version>1.2.17</log4j.version>
@@ -89,6 +90,24 @@
                 <groupId>com.gsralex</groupId>
                 <artifactId>gflow-core</artifactId>
                 <version>${gflow.version}</version>
+            </dependency>
+
+            <!--spring-->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-core</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

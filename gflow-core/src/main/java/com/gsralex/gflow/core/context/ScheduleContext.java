@@ -1,9 +1,6 @@
 package com.gsralex.gflow.core.context;
 
-import com.gsralex.gflow.core.flow.FlowGuide;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.gsralex.gflow.core.flow.FlowGuideMap;
 
 /**
  * @author gsralex
@@ -12,21 +9,11 @@ import java.util.Map;
 
 public class ScheduleContext {
 
-    private Map<Long, FlowGuide> flowGuideMap;
+    private FlowGuideMap flowGuideMap = new FlowGuideMap();
 
-    public ScheduleContext() {
-        this.flowGuideMap = new HashMap<>();
+
+    public FlowGuideMap getFlowGuideMap() {
+        return flowGuideMap;
     }
 
-    public void putFlowMap(long jobGroupId, FlowGuide flowGuide) {
-        flowGuideMap.put(jobGroupId, flowGuide);
-    }
-
-    public FlowGuide getFlowMap(long jobGroupId) {
-        return flowGuideMap.get(jobGroupId);
-    }
-
-    public void finishFlowMap(long jobId) {
-        flowGuideMap.remove(jobId);
-    }
 }

@@ -3,6 +3,7 @@ package com.gsralex.gflow.scheduler;
 
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.ScheduleContext;
+import com.gsralex.gflow.scheduler.retry.RetryProcessor;
 import com.gsralex.gflow.scheduler.thrift.ThriftSchedulerServer;
 import com.gsralex.gflow.scheduler.time.TimerTaskProcessor;
 
@@ -18,17 +19,20 @@ public class SchedulerServer {
     }
 
     public void start() {
-        GFlowContext context = new GFlowContext();
+        GFlowContext context = GFlowContext.getContext();
         context.init();
 
         ScheduleContext scheduleContext = new ScheduleContext();
         context.setScheduleContext(scheduleContext);
 
         ThriftSchedulerServer server = new ThriftSchedulerServer(context);
-        server.start(context.getConfig().getPort());
+        server.start();
 
         TimerTaskProcessor timeProcess = new TimerTaskProcessor();
         timeProcess.start();
+
+        RetryProcessor retryProcessor = new RetryProcessor(context);
+        retryProcessor.start();
     }
 }
 
