@@ -19,14 +19,11 @@ import java.util.concurrent.Executors;
  */
 public class TExecutorServiceImpl implements TExecutorService.Iface {
 
-
-    private GFlowContext context;
     private ExecutorService executorService = Executors.newCachedThreadPool();
     private TExecutorClient client;
 
 
-    public TExecutorServiceImpl(GFlowContext context) {
-        this.context = context;
+    public TExecutorServiceImpl(ExecutorContext context) {
         this.client = new TExecutorClient(context);
     }
 

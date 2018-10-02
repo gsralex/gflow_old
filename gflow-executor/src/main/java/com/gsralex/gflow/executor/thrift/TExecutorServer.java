@@ -1,7 +1,7 @@
 package com.gsralex.gflow.executor.thrift;
 
-import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.thriftgen.TExecutorService;
+import com.gsralex.gflow.executor.ExecutorContext;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
@@ -15,9 +15,9 @@ import org.apache.thrift.transport.TTransportException;
  */
 public class TExecutorServer implements ExecutorServer {
 
-    private GFlowContext context;
+    private ExecutorContext context;
 
-    public TExecutorServer(GFlowContext context) {
+    public TExecutorServer(ExecutorContext context) {
         this.context = context;
     }
 

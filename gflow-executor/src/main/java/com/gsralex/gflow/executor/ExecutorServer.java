@@ -23,11 +23,16 @@ public class ExecutorServer {
 
 
     public void start() {
-
         GFlowContext context = GFlowContext.getContext();
-        context.init();
+        context.initConfig();
+        if (context.getConfig().getZkActive() != null && context.getConfig().getZkActive()) {
+            context.initZk();
+        }
 
-        TExecutorServer server = new TExecutorServer(context);
+        ExecutorContext executorContext = ExecutorContext.getContext();
+        executorContext.setGflowContext(context);
+
+        TExecutorServer server = new TExecutorServer(executorContext);
         server.start(context.getConfig().getPort());
     }
 

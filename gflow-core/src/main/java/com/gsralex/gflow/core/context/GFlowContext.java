@@ -21,53 +21,46 @@ public class GFlowContext {
     private GFlowContext() {
     }
 
-
     public static GFlowContext getContext() {
         return currentContext;
     }
 
     private static final Logger logger = Logger.getLogger(GFlowContext.class);
-
     private static String CONFIG_FILEPATH = "/gflow.properties";
     private GFlowConfig config;
     private ZkContext zkContext;
-    private ExecutorService executorService;
+    private JdbcContext jdbcContext;
 
-    private ScheduleContext scheduleContext;
-
-    public void init() {
-        initConfig();
-        zkContext = new ZkContext(this.config);
-        executorService = Executors.newCachedThreadPool();
-    }
-
-    private void initConfig() {
+    public void initConfig() {
         InputStream is = PropertiesUtils.class.getResourceAsStream(CONFIG_FILEPATH);
         try {
             config = PropertiesUtils.getConfig(is, GFlowConfig.class);
         } catch (Exception e) {
-            logger.error("GflowContext.initConfig", e);
+            //TODO:加入异常
         }
     }
 
-    public void execute(Runnable runnable) {
-        executorService.execute(runnable);
+    public void initZk() {
+        zkContext = new ZkContext(config);
     }
+
+    public void initJdbc() {
+        jdbcContext = new JdbcContext(config);
+    }
+
 
     public ZkContext getZkContext() {
         return zkContext;
+    }
+
+
+    public void setConfig(GFlowConfig config) {
+        this.config = config;
     }
 
     public GFlowConfig getConfig() {
         return config;
     }
 
-    public void setScheduleContext(ScheduleContext scheduleContext) {
-        this.scheduleContext = scheduleContext;
-    }
-
-    public ScheduleContext getScheduleContext() {
-        return this.scheduleContext;
-    }
 
 }

@@ -19,30 +19,13 @@ import java.util.List;
  */
 public class ZkContext {
 
-    private GFlowConfig config;
-    private static ZkClient zkClient;
-    private ZkData zkData = new ZkData();
-
+    private ZkClient zkClient;
     public ZkContext(GFlowConfig config) {
-        this.config = config;
-        zkClient = new ZkClient(this.config.getZkServer());
-
-        ZkListener ipListener = new ZkIpListener(zkClient, zkData);
-        ipListener.subscribeListen();
-        ZkListener executeConfigListener = new ZkExecuteConfigListener(zkClient, zkData);
-        executeConfigListener.subscribeListen();
+        zkClient = new ZkClient(config.getZkServer());
     }
 
-    public List<IpAddress> getExecutorIps() {
-        return zkData.getExecutorIps();
-    }
-
-    public List<IpAddress> getScheduleIps() {
-        return zkData.getScheduleIps();
-    }
-
-    public List<ExecuteConfig> getExecuteConfigList() {
-        return zkData.getExecuteConfigList();
+    public ZkClient getZkClient() {
+        return zkClient;
     }
 
 

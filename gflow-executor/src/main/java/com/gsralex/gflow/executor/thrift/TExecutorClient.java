@@ -2,8 +2,10 @@ package com.gsralex.gflow.executor.thrift;
 
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.context.ScheduleContext;
 import com.gsralex.gflow.core.thriftgen.TScheduleAckService;
 import com.gsralex.gflow.core.thriftgen.TScheduleService;
+import com.gsralex.gflow.executor.ExecutorContext;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -22,16 +24,16 @@ public class TExecutorClient {
 
     private static final Logger logger = Logger.getLogger(TExecutorClient.class);
 
-    private GFlowContext context;
+    private ExecutorContext context;
 
-    public TExecutorClient(GFlowContext context) {
+    public TExecutorClient(ExecutorContext context) {
         this.context = context;
     }
 
     public void ack(long jobId, boolean ok) {
         TTransport transport = null;
         try {
-            List<IpAddress> list = context.getZkContext().getScheduleIps();
+            List<IpAddress> list = context.getScheduleIps();
             IpAddress ip = list.get(0);
             transport = new TSocket(ip.getIp(), ip.getPort());
             transport.open();

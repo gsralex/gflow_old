@@ -33,6 +33,12 @@ public class GFlowConfig {
     private Long retryInterval;
     @PropertyName(name = "gflow.execute.timeout")
     private Long jobTimeout;
+    @PropertyName(name = "gflow.zk.active")
+    private Boolean zkActive;
+    @PropertyName(name = "gflow.ip.scheduler")
+    private String schedulerIps;
+    @PropertyName(name = "gflow.ip.executor")
+    private String executorIps;
 
     public String getDbDriver() {
         return dbDriver;
@@ -120,5 +126,29 @@ public class GFlowConfig {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public Boolean getZkActive() {
+        return zkActive;
+    }
+
+    public void setZkActive(Boolean zkActive) {
+        this.zkActive = zkActive;
+    }
+
+    public String getSchedulerIps() {
+        return schedulerIps;
+    }
+
+    public void setSchedulerIps(String schedulerIps) {
+        this.schedulerIps = schedulerIps;
+    }
+
+    public String getExecutorIps() {
+        return executorIps;
+    }
+
+    public void setExecutorIps(String executorIps) {
+        this.executorIps = executorIps;
     }
 }
