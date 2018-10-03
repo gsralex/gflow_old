@@ -1,9 +1,6 @@
-package com.gsralex.gflow.executor.zk;
+package com.gsralex.gflow.core.zk;
 
-import com.gsralex.gflow.core.constants.ZkConstants;
 import com.gsralex.gflow.core.context.IpAddress;
-import com.gsralex.gflow.core.zk.ZkContext;
-import com.gsralex.gflow.core.zk.ZkListener;
 import org.I0Itec.zkclient.IZkDataListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.apache.commons.lang3.StringUtils;
@@ -16,18 +13,20 @@ import java.util.List;
  * @author gsralex
  * @version 2018/9/27
  */
-public class ZkExecutor {
+public class ZkIpData {
 
     private ZkClient zkClient;
     private ZkListener<List<IpAddress>> ipListener;
+    private String zkPath;
 
-    public ZkExecutor(ZkContext zkContext) {
+    public ZkIpData(ZkContext zkContext, String zkPath) {
         this.zkClient = zkContext.getZkClient();
+        this.zkPath = zkPath;
     }
 
     public void setScheduleIpListener(ZkListener<List<IpAddress>> zkListener) {
         this.ipListener = zkListener;
-        this.zkClient.subscribeDataChanges(ZkConstants.ZKPATH_SCHEDULER_IP, new IZkDataListener() {
+        this.zkClient.subscribeDataChanges(this.zkPath, new IZkDataListener() {
             @Override
             public void handleDataChange(String s, Object o) throws Exception {
                 if (ipListener != null) {
@@ -50,7 +49,6 @@ public class ZkExecutor {
             ips += ip.toString() + ",";
         }
         ips = StringUtils.removeEnd(ips, ",");
-        String zkPath = ZkConstants.ZKPATH_SCHEDULER_IP;
         if (!zkClient.exists(zkPath)) {
             zkClient.create(zkPath, ips, CreateMode.PERSISTENT);
         } else {
@@ -60,7 +58,6 @@ public class ZkExecutor {
 
 
     public List<IpAddress> getIps() {
-        String zkPath = ZkConstants.ZKPATH_SCHEDULER_IP;
         List<IpAddress> ipList = new ArrayList<>();
         if (zkClient.exists(zkPath)) {
             String ips = zkClient.readData(zkPath);

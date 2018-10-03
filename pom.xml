@@ -11,6 +11,7 @@
     <modules>
         <module>gflow-scheduler</module>
         <module>gflow-executor</module>
+        <module>gflow-schedulerapi</module>
     </modules>
     <properties>
         <spring.version>5.0.3.RELEASE</spring.version>

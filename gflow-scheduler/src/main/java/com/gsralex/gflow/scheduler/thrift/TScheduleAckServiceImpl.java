@@ -1,6 +1,5 @@
 package com.gsralex.gflow.scheduler.thrift;
 
-import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.thriftgen.TResult;
 import com.gsralex.gflow.core.thriftgen.TScheduleAckService;
 import com.gsralex.gflow.scheduler.schedule.ScheduleLinkHandle;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class TScheduleAckServiceImpl implements TScheduleAckService.Iface {
 
-    private GFlowContext context;
     @Autowired
     private ScheduleLinkHandle scheduleLinkHandle;
 

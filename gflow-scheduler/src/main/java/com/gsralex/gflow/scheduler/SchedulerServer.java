@@ -2,8 +2,8 @@ package com.gsralex.gflow.scheduler;
 
 
 import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.core.context.ScheduleContext;
 import com.gsralex.gflow.scheduler.retry.RetryProcessor;
+import com.gsralex.gflow.scheduler.spring.SpringContextUtils;
 import com.gsralex.gflow.scheduler.thrift.ThriftSchedulerServer;
 import com.gsralex.gflow.scheduler.time.TimerTaskProcessor;
 
@@ -20,18 +20,22 @@ public class SchedulerServer {
 
     public void start() {
         GFlowContext context = GFlowContext.getContext();
-        context.init();
+        context.initConfig();
+        if (context.getConfig().getZkActive() != null && context.getConfig().getZkActive()) {
+            context.initZk();
+        }
 
-        ScheduleContext scheduleContext = new ScheduleContext();
-        context.setScheduleContext(scheduleContext);
+        SpringContextUtils.init();
 
-        ThriftSchedulerServer server = new ThriftSchedulerServer(context);
+        SchedulerContext scheduleContext = new SchedulerContext();
+        scheduleContext.setGflowContext(context);
+        ThriftSchedulerServer server = new ThriftSchedulerServer();
         server.start();
 
-        TimerTaskProcessor timeProcess = new TimerTaskProcessor();
+        TimerTaskProcessor timeProcess = SpringContextUtils.getBean(TimerTaskProcessor.class);
         timeProcess.start();
 
-        RetryProcessor retryProcessor = new RetryProcessor(context);
+        RetryProcessor retryProcessor = SpringContextUtils.getBean(RetryProcessor.class);
         retryProcessor.start();
     }
 }

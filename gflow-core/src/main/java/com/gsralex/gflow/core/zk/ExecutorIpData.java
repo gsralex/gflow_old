@@ -1,36 +1,34 @@
-package com.gsralex.gflow.executor;
+package com.gsralex.gflow.core.zk;
 
 import com.gsralex.gflow.core.config.GFlowConfig;
+import com.gsralex.gflow.core.constants.ZkConstants;
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
-import com.gsralex.gflow.core.zk.ZkListener;
-import com.gsralex.gflow.executor.zk.ZkExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author gsralex
- * @version 2018/9/29
+ * @version 2018/10/3
  */
-public class IpData {
-    //调度者地址
-    private List<IpAddress> scheduleIps = new ArrayList<>();
+public class ExecutorIpData {
+    private List<IpAddress> ips = new ArrayList<>();
     private GFlowContext context;
 
-    public IpData(GFlowContext context) {
+    public ExecutorIpData(GFlowContext context) {
         this.context = context;
         GFlowConfig config = context.getConfig();
         if (config.getZkActive() != null && config.getZkActive()) {
             //启用zk
             zk();
         } else {
-            scheduleIps.addAll(IpAddress.getIpsByConfig(config.getSchedulerIps()));
+            ips.addAll(IpAddress.getIpsByConfig(config.getExecutorIps()));
         }
     }
 
     private void zk() {
-        ZkExecutor listener = new ZkExecutor(context.getZkContext());
+        ZkIpData listener = new ZkIpData(context.getZkContext(), ZkConstants.ZKPATH_EXECUTOR_IP);
         listener.setScheduleIpListener(new ZkListener<List<IpAddress>>() {
             @Override
             public void subscribeListen(List<IpAddress> value) {
@@ -41,13 +39,13 @@ public class IpData {
     }
 
     private void copyData(List<IpAddress> value) {
-        synchronized (scheduleIps) {
-            scheduleIps = value;
+        synchronized (ips) {
+            ips = value;
         }
     }
 
 
     public List<IpAddress> getIps() {
-        return scheduleIps;
+        return ips;
     }
 }

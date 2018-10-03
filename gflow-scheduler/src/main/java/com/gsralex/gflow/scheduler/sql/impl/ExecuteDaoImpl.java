@@ -16,10 +16,6 @@ public class ExecuteDaoImpl implements ExecuteDao {
     @Autowired
     private JdbcUtils jdbcUtils;
 
-//    public ExecuteDaoImpl(GFlowContext context) {
-//        this.jdbcUtils = context.getJdbcContext().getJdbcUtils();
-//    }
-
     @Override
     public List<GFlowExecuteConfig> listExecuteConfig() {
         String sql = "select * from gflow_executeconfig";

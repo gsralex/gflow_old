@@ -6,7 +6,7 @@ import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.schedule.ScheduleResult;
 import com.gsralex.gflow.scheduler.service.FlowJobService;
 
-import java.util.*;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -16,14 +16,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RetryProcessor {
 
     private Map<Long, RetryTask> taskMap = new ConcurrentHashMap<>();
-    private GFlowContext context;
-    private GFlowConfig config;
     private FlowJobService flowJobService;
-
-    public RetryProcessor(GFlowContext context) {
-        this.context = context;
-        this.config = context.getConfig();
-    }
+    private GFlowConfig config = GFlowContext.getContext().getConfig();
 
     public void start() {
         new Thread(new Runnable() {

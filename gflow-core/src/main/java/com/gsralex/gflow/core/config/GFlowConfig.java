@@ -27,18 +27,18 @@ public class GFlowConfig {
     @PropertyName(name = "gflow.port")
     private Integer port;
 
-    @PropertyName(name = "gflow.schedule.retrycnt")
+    @PropertyName(name = "gflow.scheduler.retrycnt")
     private Integer retryCnt;
-    @PropertyName(name = "gflow.schedule.retryinterval")
+    @PropertyName(name = "gflow.scheduler.retryinterval")
     private Long retryInterval;
-    @PropertyName(name = "gflow.execute.timeout")
+    @PropertyName(name = "gflow.scheduler.ips")
+    private String schedulerIps;
+    @PropertyName(name = "gflow.executer.timeout")
     private Long jobTimeout;
+    @PropertyName(name = "gflow.executer.ips")
+    private String executorIps;
     @PropertyName(name = "gflow.zk.active")
     private Boolean zkActive;
-    @PropertyName(name = "gflow.ip.scheduler")
-    private String schedulerIps;
-    @PropertyName(name = "gflow.ip.executor")
-    private String executorIps;
 
     public String getDbDriver() {
         return dbDriver;

@@ -21,19 +21,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class ThriftSchedulerServer {
 
-    private GFlowContext context;
     @Autowired
     private TScheduleAckServiceImpl scheduleAckService;
     @Autowired
     private TScheduleServiceImpl scheduleService;
 
-    public ThriftSchedulerServer(GFlowContext context) {
-        this.context = context;
-    }
-
     public void start() {
         TServerTransport tServerSocket;
         try {
+            GFlowContext context=GFlowContext.getContext();
             tServerSocket = new TServerSocket(context.getConfig().getPort());
             TMultiplexedProcessor processor = new TMultiplexedProcessor();
             TScheduleService.Processor<TScheduleServiceImpl> schedule =

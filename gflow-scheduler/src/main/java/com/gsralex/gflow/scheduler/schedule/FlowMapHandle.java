@@ -5,8 +5,11 @@ import com.gsralex.gflow.core.domain.GFlowJobGroup;
 import com.gsralex.gflow.core.domain.GFlowTrigger;
 import com.gsralex.gflow.core.flow.FlowGuide;
 import com.gsralex.gflow.core.flow.FlowGuideMap;
+import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -14,23 +17,26 @@ import java.util.List;
  * @author gsralex
  * @version 2018/8/19
  */
+@Service
 public class FlowMapHandle {
 
 
-    private FlowGuideMap flowGuideMap;
+    @Autowired
     private ConfigDao configDao;
+    @Autowired
     private FlowJobDao flowJobDao;
-
 
 
     public FlowGuide initGroup(long jobGroupId, long triggerGroupId) {
         List<GFlowTrigger> triggerList = configDao.getTriggerList(triggerGroupId);
         FlowGuide flowGuide = new FlowGuide(triggerGroupId, triggerList);
+        FlowGuideMap flowGuideMap = SchedulerContext.getContext().getFlowGuideMap();
         flowGuideMap.putFlowMap(jobGroupId, flowGuide);
         return flowGuide;
     }
 
     public FlowGuide getFlowGuide(long jobGroupId) {
+        FlowGuideMap flowGuideMap = SchedulerContext.getContext().getFlowGuideMap();
         FlowGuide flowGuide = flowGuideMap.getFlowMap(jobGroupId);
         if (flowGuide == null) {
             GFlowJobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);

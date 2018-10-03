@@ -1,10 +1,7 @@
 package com.gsralex.gflow.executor.thrift;
 
-import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
-import com.gsralex.gflow.core.context.ScheduleContext;
 import com.gsralex.gflow.core.thriftgen.TScheduleAckService;
-import com.gsralex.gflow.core.thriftgen.TScheduleService;
 import com.gsralex.gflow.executor.ExecutorContext;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;

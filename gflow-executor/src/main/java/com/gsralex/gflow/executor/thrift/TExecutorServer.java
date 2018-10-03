@@ -13,7 +13,7 @@ import org.apache.thrift.transport.TTransportException;
  * @author gsralex
  * @version 2018/8/4
  */
-public class TExecutorServer implements ExecutorServer {
+public class TExecutorServer {
 
     private ExecutorContext context;
 

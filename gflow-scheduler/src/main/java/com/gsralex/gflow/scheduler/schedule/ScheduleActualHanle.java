@@ -1,6 +1,5 @@
 package com.gsralex.gflow.scheduler.schedule;
 
-import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.domain.GFlowAction;
 import com.gsralex.gflow.core.domain.GFlowJob;
@@ -13,9 +12,9 @@ import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.core.util.DtUtils;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
-import com.gsralex.gflow.scheduler.sql.impl.ConfigDaoImpl;
-import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
 import com.gsralex.gflow.scheduler.thrift.TRpcClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,16 +24,19 @@ import java.util.List;
  * @author gsralex
  * @version 2018/6/2
  */
+@Service
 public class ScheduleActualHanle {
 
+
+    @Autowired
     private ConfigDao configDao;
+    @Autowired
     private FlowJobDao flowJobDao;
+    @Autowired
     private TRpcClient rpcClient;
+    @Autowired
     private FlowMapHandle flowMapHandle;
 
-
-    public ScheduleActualHanle(GFlowContext context) {
-    }
 
 
     public List<ScheduleResult> scheduleGroup(long triggerGroupId, Parameter parameter, long executeConfigId) {

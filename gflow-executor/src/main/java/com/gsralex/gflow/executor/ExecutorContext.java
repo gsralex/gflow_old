@@ -2,6 +2,7 @@ package com.gsralex.gflow.executor;
 
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.zk.SchedulerIpData;
 import com.gsralex.gflow.executor.spring.SpringContextHolder;
 import org.springframework.context.ApplicationContext;
 
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public class ExecutorContext {
     private static ExecutorContext currentContext = new ExecutorContext();
-    private IpData ipData;
+    private SchedulerIpData ipData;
     private GFlowContext gFlowContext;
 
     public static ExecutorContext getContext() {
@@ -22,7 +23,7 @@ public class ExecutorContext {
 
     public void setGflowContext(GFlowContext context) {
         gFlowContext = context;
-        ipData = new IpData(context);
+        ipData = new SchedulerIpData(context);
     }
 
 
