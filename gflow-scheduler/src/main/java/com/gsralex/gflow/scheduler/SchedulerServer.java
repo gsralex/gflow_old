@@ -29,7 +29,7 @@ public class SchedulerServer {
 
         SchedulerContext scheduleContext = new SchedulerContext();
         scheduleContext.setGflowContext(context);
-        ThriftSchedulerServer server = new ThriftSchedulerServer();
+        ThriftSchedulerServer server = SpringContextUtils.getBean(ThriftSchedulerServer.class);
         server.start();
 
         TimerTaskProcessor timeProcess = SpringContextUtils.getBean(TimerTaskProcessor.class);

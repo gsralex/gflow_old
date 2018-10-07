@@ -5,6 +5,7 @@ import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.schedule.ScheduleResult;
 import com.gsralex.gflow.scheduler.service.FlowJobService;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author gsralex
  * @version 2018/8/21
  */
+@Component
 public class RetryProcessor {
 
     private Map<Long, RetryTask> taskMap = new ConcurrentHashMap<>();

@@ -35,7 +35,7 @@ public class TExecutorClient {
             transport = new TSocket(ip.getIp(), ip.getPort());
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
-            TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "schedule");
+            TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "scheduleAck");
             TScheduleAckService.Client client = new TScheduleAckService.Client(multiProtocol);
             client.ack(jobId, ok);
         } catch (TException e) {

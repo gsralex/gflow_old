@@ -29,10 +29,8 @@ public class TExecutorServer {
                 TServerSocket serverSocket;
                 try {
                     serverSocket = new TServerSocket(port);
-                    //TMultiplexedProcessor processor = new TMultiplexedProcessor();
                     TExecutorService.Processor<TExecutorServiceImpl> schedule =
                             new TExecutorService.Processor<>(new TExecutorServiceImpl(context));
-//                    processor.registerProcessor("schedule", schedule);
 
                     TProcessor processor = new TExecutorService.Processor(new TExecutorServiceImpl(context));
                     TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverSocket);

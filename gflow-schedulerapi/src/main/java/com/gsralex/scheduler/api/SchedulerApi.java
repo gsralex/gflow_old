@@ -1,13 +1,14 @@
 package com.gsralex.scheduler.api;
 
-import com.gsralex.gflow.core.context.GFlowContext;
+import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.thriftgen.TGroupJobDesc;
 import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.core.thriftgen.TResult;
 import com.gsralex.gflow.core.thriftgen.TScheduleService;
-import com.gsralex.gflow.core.zk.SchedulerIpData;
+import org.apache.log4j.Logger;
 import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
@@ -18,34 +19,23 @@ import org.apache.thrift.transport.TTransport;
  */
 public class SchedulerApi {
 
-
-    public SchedulerApi() {
-        GFlowContext context = GFlowContext.getContext();
-        if (context.getConfig() == null) {
-            context.initConfig();
-            if(context.getConfig().getZkActive()!=null && context.getConfig().getZkActive()){
-                context.initZk();
-            }
-
-            SchedulerIpData ipData=new SchedulerIpData(context);
-        }
-    }
+    private static final Logger logger = Logger.getLogger(SchedulerApi.class);
 
     public boolean scheduleGroup(long groupId, Parameter parameter) {
-        String ip = "";
-        int port = 0;
-        TTransport transport = new TSocket(ip, port);
+        IpAddress ip = getIpAddress();
+        TTransport transport = new TSocket(ip.getIp(), ip.getPort());
         try {
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
-            TScheduleService.Client client = new TScheduleService.Client(protocol);
+            TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "schedule");
+            TScheduleService.Client client = new TScheduleService.Client(multiProtocol);
             TGroupJobDesc groupJobDesc = new TGroupJobDesc();
             groupJobDesc.setParameter(parameter.toString());
             groupJobDesc.setGroupId(groupId);
             TResult result = client.scheduleGroup(groupJobDesc);
             return result.isOk();
         } catch (Throwable e) {
-
+            logger.error("SchedulerApi.scheduleGroup", e);
         } finally {
             if (transport != null)
                 transport.close();
@@ -55,13 +45,13 @@ public class SchedulerApi {
     }
 
     public boolean scheduleAction(long actionId, Parameter parameter) {
-        String ip = "";
-        int port = 0;
-        TTransport transport = new TSocket(ip, port);
+        IpAddress ip = getIpAddress();
+        TTransport transport = new TSocket(ip.getIp(), ip.getPort());
         try {
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
-            TScheduleService.Client client = new TScheduleService.Client(protocol);
+            TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "schedule");
+            TScheduleService.Client client = new TScheduleService.Client(multiProtocol);
             TJobDesc jobDesc = new TJobDesc();
             jobDesc.setParameter(parameter.toString());
             jobDesc.setActionId(actionId);
@@ -74,6 +64,11 @@ public class SchedulerApi {
                 transport.close();
         }
         return false;
+    }
+
+    private IpAddress getIpAddress() {
+        SchedulerApiContext apiContext = SchedulerApiContext.getContext();
+        return apiContext.getIps().get(0);
     }
 
     public static void main(String[] args) {

@@ -6,6 +6,8 @@ import com.gsralex.gflow.core.model.ExecuteConfig;
 import com.gsralex.gflow.core.util.DtUtils;
 import com.gsralex.gflow.scheduler.schedule.ScheduleLinkHandle;
 import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -15,11 +17,13 @@ import java.util.Map;
  * @author gsralex
  * @version 2018/8/21
  */
+@Component
 public class TimerTaskProcessor {
 
     private Map<Long, TimerTask> map = new HashMap<>();
 
     private final Object lock = new Object();
+    @Autowired
     private ScheduleLinkHandle scheduleLinkHandle;
 
     public void start() {
