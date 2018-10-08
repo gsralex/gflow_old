@@ -4,7 +4,6 @@ import com.gsralex.gflow.core.config.GFlowConfig;
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.schedule.ScheduleResult;
-import com.gsralex.gflow.scheduler.service.FlowJobService;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -18,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RetryProcessor {
 
     private Map<Long, RetryTask> taskMap = new ConcurrentHashMap<>();
-    private FlowJobService flowJobService;
     private GFlowConfig config = GFlowContext.getContext().getConfig();
 
     public void start() {
@@ -140,7 +138,6 @@ public class RetryProcessor {
                     } else {
                         taskMap.remove(task.getRetryJobId());
                         //TODO:更新至删除
-                        flowJobService.updateJobGroup(task.getJobGroupId(), JobGroupStatusEnum.STOP);
                         continue;
                     }
                     long interval = getInterval(task);
