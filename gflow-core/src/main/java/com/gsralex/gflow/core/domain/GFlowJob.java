@@ -20,9 +20,9 @@ public class GFlowJob {
     @Column(name = "job_group_id")
     private Long jobGroupId;
     @Column(name = "start_time")
-    private Integer startTime;
+    private Long startTime;
     @Column(name = "end_time")
-    private Integer endTime;
+    private Long endTime;
     @Column(name = "err_msg")
     private String errMsg;
     @Column(name = "retry_cnt")
@@ -32,7 +32,7 @@ public class GFlowJob {
     @Column(name = "retry_job_id")
     private Long retryJobId;
     @Column(name = "create_time")
-    private Integer createTime;
+    private Long createTime;
     @Column(name = "index")
     private Integer index;
 
@@ -68,19 +68,19 @@ public class GFlowJob {
         this.jobGroupId = jobGroupId;
     }
 
-    public Integer getStartTime() {
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Integer startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
 
-    public Integer getEndTime() {
+    public Long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Integer endTime) {
+    public void setEndTime(Long endTime) {
         this.endTime = endTime;
     }
 
@@ -116,11 +116,11 @@ public class GFlowJob {
         this.retryJobId = retryJobId;
     }
 
-    public Integer getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 

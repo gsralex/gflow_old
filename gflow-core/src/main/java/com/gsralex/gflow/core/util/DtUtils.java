@@ -49,10 +49,6 @@ public class DtUtils {
         return DateFormatUtils.format(date, DF_YYYYMMDD);
     }
 
-    public static int getUnixTime() {
-        return (int) (new Date().getTime() / 1000);
-    }
-
     public static int getBizDate() {
         return Integer.parseInt(formatBizDate(new Date()));
     }

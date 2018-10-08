@@ -1,6 +1,7 @@
 package com.gsralex.gflow.executor;
 
 import com.gsralex.gflow.core.context.GFlowContext;
+import com.gsralex.gflow.executor.demo.SpringConfiguration;
 import com.gsralex.gflow.executor.thrift.TExecutorServer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -16,7 +17,7 @@ public class ExecutorServer {
 
     public static void main(String[] args) throws IOException {
         ExecutorServer server = new ExecutorServer();
-        ApplicationContext context = new AnnotationConfigApplicationContext();
+        ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
         ExecutorContext.getContext().setSpringApplicationContext(context);
         server.start();
     }
@@ -25,13 +26,8 @@ public class ExecutorServer {
     public void start() {
         GFlowContext context = GFlowContext.getContext();
         context.initConfig();
-        if (context.getConfig().getZkActive() != null && context.getConfig().getZkActive()) {
-            context.initZk();
-        }
-
         ExecutorContext executorContext = ExecutorContext.getContext();
         executorContext.setGflowContext(context);
-
         TExecutorServer server = new TExecutorServer(executorContext);
         server.start(context.getConfig().getPort());
     }

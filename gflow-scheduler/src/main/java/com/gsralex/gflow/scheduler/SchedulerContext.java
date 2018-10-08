@@ -2,7 +2,7 @@ package com.gsralex.gflow.scheduler;
 
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
-import com.gsralex.gflow.core.flow.FlowGuideMap;
+import com.gsralex.gflow.scheduler.flow.FlowGuideMap;
 import com.gsralex.gflow.core.zk.ExecutorIpData;
 import com.gsralex.gflow.scheduler.retry.RetryProcessor;
 import com.gsralex.gflow.scheduler.time.TimerTaskProcessor;
@@ -22,7 +22,11 @@ public class SchedulerContext {
     private RetryProcessor retryProcessor;
     private TimerTaskProcessor timerTaskProcessor;
 
-    private FlowGuideMap flowGuideMap=new FlowGuideMap();
+    private FlowGuideMap flowGuideMap = new FlowGuideMap();
+
+    private SchedulerContext() {
+
+    }
 
     public void setGflowContext(GFlowContext context) {
         gFlowContext = context;

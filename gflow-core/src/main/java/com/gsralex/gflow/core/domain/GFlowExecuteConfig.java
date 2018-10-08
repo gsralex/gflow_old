@@ -21,7 +21,7 @@ public class GFlowExecuteConfig {
     private String time;
     private Boolean active;
     @Column(name = "create_time")
-    private Integer createTime;
+    private Long createTime;
     @Column(name = "parameter")
     private String parameter;
 
@@ -73,11 +73,11 @@ public class GFlowExecuteConfig {
         this.active = active;
     }
 
-    public Integer getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 

@@ -12,9 +12,9 @@ public class GFlowAction {
     @Column(name = "class_name")
     private String className;
     @Column(name = "create_time")
-    private int createTime;
+    private Long createTime;
     @Column(name = "mod_time")
-    private int modTime;
+    private Long modTime;
 
     public long getId() {
         return id;
@@ -40,19 +40,19 @@ public class GFlowAction {
         this.className = className;
     }
 
-    public int getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 
-    public int getModTime() {
+    public Long getModTime() {
         return modTime;
     }
 
-    public void setModTime(int modTime) {
+    public void setModTime(Long modTime) {
         this.modTime = modTime;
     }
 }

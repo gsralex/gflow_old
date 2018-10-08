@@ -47,6 +47,7 @@ public class RetryProcessor {
         task.setActionId(result.getActionId());
         task.setIndex(result.getIndex());
         task.setRetryTime(System.currentTimeMillis());
+        task.setRetryJobId(result.getJobId());
         task.setRetryCnt(0);
 
         switch (result.getStatus()) {
@@ -70,7 +71,7 @@ public class RetryProcessor {
             if (taskMap.containsKey(jobId)) {
                 RetryTask task = taskMap.get(jobId);
                 if (ok) {
-                    taskMap.remove(jobId);
+                    task.setOk(true);
                 } else {
                     //更新重试时间
                     task.setTimeoutTime(0);
@@ -87,6 +88,9 @@ public class RetryProcessor {
         long minInterval = 0;
         for (Map.Entry<Long, RetryTask> entry : taskMap.entrySet()) {
             RetryTask task = entry.getValue();
+            if (task.isOk()) {//过滤掉所有成功的任务
+                continue;
+            }
             Long interval = getInterval(task);
             if (minTask == null) {
                 minTask = task;
@@ -101,17 +105,22 @@ public class RetryProcessor {
         return minTask;
     }
 
-    private Long getInterval(RetryTask task) {
+    public Long getInterval(RetryTask task) {
         long currentTime = System.currentTimeMillis();
-        //重试时间
-        long retryWaitTime = Math.round(Math.pow(2, (task.getRetryCnt() - 1)) * config.getRetryInterval()); //2^retrycnt*interval
+        //重试时间 2^retrycnt*retryintervalmills
+        //1:2^0*10=10s
+        //2:2^1*10=20s
+        //3:2^2*10=40s
+        //4:2^3*10=80s
+        //5:2^4*10=160s
+        long retryWaitTime = Math.round(Math.pow(2, task.getRetryCnt()) * config.getRetryIntervalMills()); //2^retrycnt*interval
         //下次执行时间=放入时间+任务超时时间+重试等待时间
         long nextExecutionTime = task.getRetryTime() + task.getTimeoutTime() + retryWaitTime;
         return nextExecutionTime - currentTime;
     }
 
 
-    public void mainLoop() {
+    private void mainLoop() {
         while (true) {
             try {
                 synchronized (taskMap) {

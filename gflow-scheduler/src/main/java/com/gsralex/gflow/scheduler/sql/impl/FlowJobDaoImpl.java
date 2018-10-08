@@ -37,7 +37,6 @@ public class FlowJobDaoImpl implements FlowJobDao {
         return jdbcUtils.queryForObject(sql, new Object[]{id}, GFlowJobGroup.class);
     }
 
-
     @Override
     public boolean saveJob(GFlowJob job) {
         return jdbcUtils.insert(job, true);

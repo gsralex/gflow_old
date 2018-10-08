@@ -3,8 +3,9 @@ package com.gsralex.gflow.scheduler.schedule;
 import com.gsralex.gflow.core.domain.GFlowJob;
 import com.gsralex.gflow.core.domain.GFlowJobGroup;
 import com.gsralex.gflow.core.domain.GFlowTrigger;
-import com.gsralex.gflow.core.flow.FlowGuide;
-import com.gsralex.gflow.core.flow.FlowGuideMap;
+import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
+import com.gsralex.gflow.scheduler.flow.FlowGuide;
+import com.gsralex.gflow.scheduler.flow.FlowGuideMap;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
@@ -29,7 +30,7 @@ public class FlowMapHandle {
 
     public FlowGuide initGroup(long jobGroupId, long triggerGroupId) {
         List<GFlowTrigger> triggerList = configDao.getTriggerList(triggerGroupId);
-        FlowGuide flowGuide = new FlowGuide(triggerGroupId, triggerList);
+        FlowGuide flowGuide = new FlowGuide(triggerGroupId, triggerList, JobGroupStatusEnum.EXECUTING);
         FlowGuideMap flowGuideMap = SchedulerContext.getContext().getFlowGuideMap();
         flowGuideMap.putFlowMap(jobGroupId, flowGuide);
         return flowGuide;
@@ -43,7 +44,8 @@ public class FlowMapHandle {
             if (jobGroup != null) {
                 List<GFlowJob> jobList = flowJobDao.listJob(jobGroupId);
                 List<GFlowTrigger> triggerList = configDao.getTriggerList(jobGroup.getTriggerGroupId());
-                flowGuide = new FlowGuide(jobGroup.getTriggerGroupId(), triggerList, jobList);
+                JobGroupStatusEnum status = JobGroupStatusEnum.valueOf(jobGroup.getStatus());
+                flowGuide = new FlowGuide(jobGroup.getTriggerGroupId(), triggerList, jobList, status);
                 flowGuideMap.putFlowMap(jobGroup.getId(), flowGuide);
                 return flowGuide;
             } else {

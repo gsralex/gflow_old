@@ -26,14 +26,25 @@ public class GFlowConfig {
     private String zkServer;
     @PropertyName(name = "gflow.port")
     private Integer port;
-
     @PropertyName(name = "gflow.scheduler.retrycnt")
     private Integer retryCnt;
-    @PropertyName(name = "gflow.scheduler.retryinterval")
-    private Long retryInterval;
+    /**
+     * 如果不设置任务超时时间，则重试时间应该完全覆盖任务超时时间
+     */
+    @PropertyName(name = "gflow.scheduler.retryintervalmills")
+    private Long retryIntervalMills;
     @PropertyName(name = "gflow.scheduler.ips")
     private String schedulerIps;
-    @PropertyName(name = "gflow.executer.timeout")
+    /**
+     * 调度重试是否开启
+     */
+    @PropertyName(name = "gflow.scheduler.retryactive")
+    private Boolean retryActive;
+    /**
+     * 任务执行超时时间，比如一个任务正常运行时10分钟，那么可以设定任务超时时间为11-15分钟，当超过超时时间，
+     * 任务依然没有返回的时候，则理解为失败
+     */
+    @PropertyName(name = "gflow.executer.jobtimeout")
     private Long jobTimeout;
     @PropertyName(name = "gflow.executer.ips")
     private String executorIps;
@@ -104,36 +115,12 @@ public class GFlowConfig {
         this.retryCnt = retryCnt;
     }
 
-    public Long getRetryInterval() {
-        return retryInterval;
+    public Long getRetryIntervalMills() {
+        return retryIntervalMills;
     }
 
-    public void setRetryInterval(Long retryInterval) {
-        this.retryInterval = retryInterval;
-    }
-
-    public Long getJobTimeout() {
-        return jobTimeout;
-    }
-
-    public void setJobTimeout(Long jobTimeout) {
-        this.jobTimeout = jobTimeout;
-    }
-
-    public static GFlowConfig getConfig(String path) {
-        try {
-            return PropertiesUtils.getConfig(path, GFlowConfig.class);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public Boolean getZkActive() {
-        return zkActive;
-    }
-
-    public void setZkActive(Boolean zkActive) {
-        this.zkActive = zkActive;
+    public void setRetryIntervalMills(Long retryIntervalMills) {
+        this.retryIntervalMills = retryIntervalMills;
     }
 
     public String getSchedulerIps() {
@@ -144,11 +131,43 @@ public class GFlowConfig {
         this.schedulerIps = schedulerIps;
     }
 
+    public Boolean getRetryActive() {
+        return retryActive;
+    }
+
+    public void setRetryActive(Boolean retryActive) {
+        this.retryActive = retryActive;
+    }
+
+    public Long getJobTimeout() {
+        return jobTimeout;
+    }
+
+    public void setJobTimeout(Long jobTimeout) {
+        this.jobTimeout = jobTimeout;
+    }
+
     public String getExecutorIps() {
         return executorIps;
     }
 
     public void setExecutorIps(String executorIps) {
         this.executorIps = executorIps;
+    }
+
+    public Boolean getZkActive() {
+        return zkActive;
+    }
+
+    public void setZkActive(Boolean zkActive) {
+        this.zkActive = zkActive;
+    }
+
+    public static GFlowConfig getConfig(String path) {
+        try {
+            return PropertiesUtils.getConfig(path, GFlowConfig.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

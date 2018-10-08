@@ -9,18 +9,41 @@ public class RetryTask {
      * 失败的任务id
      */
     private long retryJobId;
+    /**
+     * 任务组id
+     */
     private long jobGroupId;
+    /**
+     * 配置组id
+     */
     private long groupId;
+    /**
+     * actionId
+     */
     private long actionId;
+    /**
+     * 在流程组的位置
+     */
     private int index;
+    /**
+     * 携带参数，用于重现
+     */
     private String parameter;
 
     /**
      * 任务超时时间ms
      */
     private long timeoutTime;
+    /**
+     * 重试的时间（进入队列的时间）
+     */
     private long retryTime;
+    /**
+     * 当前重试次数
+     */
     private int retryCnt;
+
+    private boolean ok;
 
     public long getRetryJobId() {
         return retryJobId;
@@ -93,4 +116,14 @@ public class RetryTask {
     public void setRetryCnt(int retryCnt) {
         this.retryCnt = retryCnt;
     }
+
+    public boolean isOk() {
+        return ok;
+    }
+
+    public void setOk(boolean ok) {
+        this.ok = ok;
+    }
 }
+
+

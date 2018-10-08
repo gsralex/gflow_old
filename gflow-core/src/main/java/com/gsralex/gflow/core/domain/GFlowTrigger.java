@@ -22,7 +22,7 @@ public class GFlowTrigger {
     @Column(name = "index")
     private int index;
     @Column(name = "create_time")
-    private int createTime;
+    private Long createTime;
 
     public long getId() {
         return id;
@@ -80,11 +80,11 @@ public class GFlowTrigger {
         this.index = index;
     }
 
-    public int getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 }

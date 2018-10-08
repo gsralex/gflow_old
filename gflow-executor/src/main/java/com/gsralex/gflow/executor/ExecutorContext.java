@@ -2,8 +2,8 @@ package com.gsralex.gflow.executor;
 
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.spring.SpringContextHolder;
 import com.gsralex.gflow.core.zk.SchedulerIpData;
-import com.gsralex.gflow.executor.spring.SpringContextHolder;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;
@@ -17,6 +17,7 @@ public class ExecutorContext {
     private SchedulerIpData ipData;
     private GFlowContext gFlowContext;
 
+
     public static ExecutorContext getContext() {
         return currentContext;
     }
@@ -27,18 +28,12 @@ public class ExecutorContext {
     }
 
 
-    private SpringContextHolder contextHolder = new SpringContextHolder();
-
     public <T> T getSpringBean(Class<T> type) {
-        return contextHolder.getBean(type);
-    }
-
-    public boolean containsBean(Class type) {
-        return contextHolder.containsBean(type);
+        return SpringContextHolder.getBean(type);
     }
 
     public void setSpringApplicationContext(ApplicationContext springContext) {
-        contextHolder.setApplicationContext(springContext);
+        SpringContextHolder.setApplicationContext(springContext);
     }
 
     public List<IpAddress> getScheduleIps() {

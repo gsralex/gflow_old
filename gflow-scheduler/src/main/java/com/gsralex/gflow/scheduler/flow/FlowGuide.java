@@ -1,4 +1,4 @@
-package com.gsralex.gflow.core.flow;
+package com.gsralex.gflow.scheduler.flow;
 
 import com.gsralex.gflow.core.domain.GFlowJob;
 import com.gsralex.gflow.core.domain.GFlowTrigger;
@@ -23,14 +23,22 @@ public class FlowGuide {
     private long groupId;
     private JobGroupStatusEnum status;
 
-    public FlowGuide(long groupId, List<GFlowTrigger> triggers) {
-        this(groupId, triggers, null);
+    public FlowGuide(long groupId, List<GFlowTrigger> triggers, JobGroupStatusEnum status) {
+        this(groupId, triggers, null, status);
     }
 
-    public FlowGuide(long groupId, List<GFlowTrigger> triggers, List<GFlowJob> jobs) {
+    /**
+     * 初始化流程向导
+     *
+     * @param groupId  流程组id
+     * @param triggers 触发器配置
+     * @param jobs     所有流程组的执行的任务
+     */
+    public FlowGuide(long groupId, List<GFlowTrigger> triggers, List<GFlowJob> jobs, JobGroupStatusEnum status) {
         this.groupId = groupId;
         this.posMap = new HashMap<>();
         this.actionMap = new HashMap<>();
+        this.status = status;
 
         for (GFlowTrigger trigger : triggers) {
             long actionId = trigger.getActionId();

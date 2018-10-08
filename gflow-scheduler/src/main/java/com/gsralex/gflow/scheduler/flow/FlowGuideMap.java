@@ -1,4 +1,4 @@
-package com.gsralex.gflow.core.flow;
+package com.gsralex.gflow.scheduler.flow;
 
 import java.util.HashMap;
 import java.util.Map;

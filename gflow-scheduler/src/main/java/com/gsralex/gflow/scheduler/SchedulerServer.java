@@ -3,7 +3,8 @@ package com.gsralex.gflow.scheduler;
 
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.scheduler.retry.RetryProcessor;
-import com.gsralex.gflow.scheduler.spring.SpringContextUtils;
+import com.gsralex.gflow.core.spring.SpringContextHolder;
+import com.gsralex.gflow.scheduler.spring.SpringConfiguration;
 import com.gsralex.gflow.scheduler.thrift.ThriftSchedulerServer;
 import com.gsralex.gflow.scheduler.time.TimerTaskProcessor;
 
@@ -25,18 +26,23 @@ public class SchedulerServer {
             context.initZk();
         }
 
-        SpringContextUtils.init();
-
-        SchedulerContext scheduleContext = new SchedulerContext();
+        SpringContextHolder.init(SpringConfiguration.class);
+        SchedulerContext scheduleContext = SchedulerContext.getContext();
         scheduleContext.setGflowContext(context);
-        ThriftSchedulerServer server = SpringContextUtils.getBean(ThriftSchedulerServer.class);
+        ThriftSchedulerServer server = SpringContextHolder.getBean(ThriftSchedulerServer.class);
         server.start();
 
-        TimerTaskProcessor timeProcess = SpringContextUtils.getBean(TimerTaskProcessor.class);
+        //定时任务
+        TimerTaskProcessor timeProcess = SpringContextHolder.getBean(TimerTaskProcessor.class);
+        scheduleContext.setTimerTaskProcessor(timeProcess);
         timeProcess.start();
 
-        RetryProcessor retryProcessor = SpringContextUtils.getBean(RetryProcessor.class);
-        retryProcessor.start();
+        //当开启重试的时候才做重试任务执行
+        if (context.getConfig().getRetryActive() != null && context.getConfig().getRetryActive()) {
+            RetryProcessor retryProcessor = SpringContextHolder.getBean(RetryProcessor.class);
+            scheduleContext.setRetryProcessor(retryProcessor);
+            retryProcessor.start();
+        }
     }
 }
 

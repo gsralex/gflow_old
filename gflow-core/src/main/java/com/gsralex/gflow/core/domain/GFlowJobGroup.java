@@ -12,13 +12,13 @@ import com.gsralex.gdata.bean.annotation.Table;
 @Table(name = "gflow_jobgroup")
 public class GFlowJobGroup {
     @Id
-    private Integer id;
+    private Long id;
     @Column(name = "start_time")
-    private Integer startTime;
+    private Long startTime;
     @Column(name="end_time")
-    private Integer endTime;
+    private Long endTime;
     @Column(name="create_time")
-    private Integer createTime;
+    private Long createTime;
     @Column(name="trigger_group_id")
     private Long triggerGroupId;
     @Column(name="start_trigger_id")
@@ -30,35 +30,35 @@ public class GFlowJobGroup {
     @Column(name = "execute_config_id")
     private Long executeConfigId;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getStartTime() {
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Integer startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
 
-    public Integer getEndTime() {
+    public Long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Integer endTime) {
+    public void setEndTime(Long endTime) {
         this.endTime = endTime;
     }
 
-    public Integer getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 

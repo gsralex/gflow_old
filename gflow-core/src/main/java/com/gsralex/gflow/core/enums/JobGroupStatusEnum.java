@@ -14,4 +14,24 @@ public enum JobGroupStatusEnum {
         return value;
     }
 
+    public static JobGroupStatusEnum valueOf(int value) {
+        switch (value) {
+            case 1: {
+                return EXECUTING;
+            }
+            case 2: {
+                return PAUSE;
+            }
+            case 3: {
+                return STOP;
+            }
+            case 4: {
+                return FINISH;
+            }
+            default: {
+                return EXECUTING;
+            }
+        }
+    }
+
 }

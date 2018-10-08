@@ -1,4 +1,4 @@
-package com.gsralex.gflow.core.flow;
+package com.gsralex.gflow.scheduler.flow;
 
 import java.util.ArrayList;
 import java.util.List;

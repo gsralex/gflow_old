@@ -3,6 +3,8 @@ package com.gsralex.gflow.scheduler.schedule;
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.domain.GFlowJob;
+import com.gsralex.gflow.core.enums.JobStatusEnum;
+import com.gsralex.gflow.core.util.DtUtils;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.retry.RetryProcessor;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
@@ -27,7 +29,7 @@ public class ScheduleLinkHandle {
 
 
     public void scheduleGroup(long groupId, Parameter parameter, long executeConfigId) {
-        List<ScheduleResult> r = scheduleActualHanle.scheduleGroup(groupId, parameter, executeConfigId);
+        FlowResult r = scheduleActualHanle.scheduleGroup(groupId, parameter, executeConfigId);
         setupRetryTask(r);
     }
 
@@ -36,7 +38,7 @@ public class ScheduleLinkHandle {
     }
 
     public void continueGroup(long jobGroupId) {
-        List<ScheduleResult> r = scheduleActualHanle.continueGroup(jobGroupId);
+        FlowResult r = scheduleActualHanle.continueGroup(jobGroupId);
         setupRetryTask(r);
     }
 
@@ -46,36 +48,35 @@ public class ScheduleLinkHandle {
     }
 
     public void ackAction(long jobId, boolean ok) {
-        RetryProcessor retryProcessor = SchedulerContext.getContext().getRetryProcessor();
-        if (ok) {
-            GFlowJob job = flowJobDao.getJob(jobId);
-            if (job != null) {
-                List<ScheduleResult> r = scheduleActualHanle.actionAck(jobId, ok);
-                setupRetryTask(r);
-                if (job.getRetryJobId() != 0) {
-                    jobId = job.getRetryJobId();
-                }
-
-
-                retryProcessor.update(jobId, true);
-                //TODO:持久化到sql
+        FlowResult r = scheduleActualHanle.actionAck(jobId, ok);
+        GFlowJob job = flowJobDao.getJob(jobId);
+        if (job != null) {
+            setupRetryTask(r);
+            if (job.getRetryJobId() != 0) {
+                jobId = job.getRetryJobId();
             }
-        } else {
-            GFlowJob job = flowJobDao.getJob(jobId);
-            if (job != null) {
-                if (job.getRetryJobId() != 0) {
-                    jobId = job.getRetryJobId();
-                }
-                retryProcessor.update(jobId, false);
-                //TODO:持久化到sql
+            updateRetryTask(jobId, ok);
+        }
+    }
+
+    private void setupRetryTask(FlowResult r) {
+        GFlowContext context = GFlowContext.getContext();
+        if (context.getConfig().getRetryActive() != null
+                && context.getConfig().getRetryActive()) {
+            RetryProcessor retryProcessor = SchedulerContext.getContext().getRetryProcessor();
+            for (ScheduleResult result : r.getNextResults()) {
+                retryProcessor.put(result);
             }
         }
     }
 
-    private void setupRetryTask(List<ScheduleResult> r) {
-        RetryProcessor retryProcessor = SchedulerContext.getContext().getRetryProcessor();
-        for (ScheduleResult result : r) {
-            retryProcessor.put(result);
+    private void updateRetryTask(long jobId, boolean ok) {
+        GFlowContext context = GFlowContext.getContext();
+        if (context.getConfig().getRetryActive() != null
+                && context.getConfig().getRetryActive()) {
+            RetryProcessor retryProcessor = SchedulerContext.getContext().getRetryProcessor();
+            retryProcessor.update(jobId, ok);
         }
+
     }
 }

@@ -1,6 +1,4 @@
-package com.gsralex.gflow.core.flow;
-
-import static org.junit.Assert.*;
+package com.gsralex.gflow.scheduler.flow;
 
 /**
  * @author gsralex
