@@ -1,7 +1,10 @@
 package com.gsralex.gflow.executor.thrift;
 
+import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.thriftgen.TAckDesc;
 import com.gsralex.gflow.core.thriftgen.TScheduleAckService;
+import com.gsralex.gflow.core.util.AccessTokenUtils;
 import com.gsralex.gflow.executor.ExecutorContext;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
@@ -37,7 +40,18 @@ public class TExecutorClient {
             TProtocol protocol = new TBinaryProtocol(transport);
             TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "scheduleAck");
             TScheduleAckService.Client client = new TScheduleAckService.Client(multiProtocol);
-            client.ack(jobId, ok);
+            TAckDesc ackDesc = new TAckDesc();
+            ackDesc.setJobId(jobId);
+            String accessKey = context.getGFlowContext().getConfig().getAccessKey();
+            ackDesc.setAccessToken(AccessTokenUtils.encrypt(accessKey));
+            if (ok) {
+                ackDesc.setCode(ErrConstants.OK);
+                ackDesc.setErrmsg(ErrConstants.MSG_OK);
+            } else {
+                ackDesc.setCode(ErrConstants.ERR_EXECUTEFAIL);
+                ackDesc.setErrmsg(ErrConstants.MSG_ERREXECUTEFAIL);
+            }
+            client.ack(ackDesc);
         } catch (TException e) {
             logger.error("TExecutorClient.ack", e);
         } finally {

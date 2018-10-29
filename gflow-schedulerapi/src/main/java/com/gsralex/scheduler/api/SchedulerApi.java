@@ -1,11 +1,14 @@
 package com.gsralex.scheduler.api;
 
+import com.gsralex.gflow.core.constants.ErrConstants;
+import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.thriftgen.TGroupJobDesc;
 import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.core.thriftgen.TResult;
 import com.gsralex.gflow.core.thriftgen.TScheduleService;
+import com.gsralex.gflow.core.util.AccessTokenUtils;
 import org.apache.log4j.Logger;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
@@ -21,6 +24,13 @@ public class SchedulerApi {
 
     private static final Logger logger = Logger.getLogger(SchedulerApi.class);
 
+    private GFlowContext context;
+
+    public SchedulerApi() {
+        context = SchedulerApiContext.getContext().getGFlowContext();
+    }
+
+
     public boolean scheduleGroup(long groupId, Parameter parameter) {
         IpAddress ip = getIpAddress();
         TTransport transport = new TSocket(ip.getIp(), ip.getPort());
@@ -32,8 +42,10 @@ public class SchedulerApi {
             TGroupJobDesc groupJobDesc = new TGroupJobDesc();
             groupJobDesc.setParameter(parameter.toString());
             groupJobDesc.setGroupId(groupId);
+            String accessKey = context.getConfig().getAccessKey();
+            groupJobDesc.setAccessToken(AccessTokenUtils.encrypt(accessKey));
             TResult result = client.scheduleGroup(groupJobDesc);
-            return result.isOk();
+            return result.getCode() == ErrConstants.OK;
         } catch (Throwable e) {
             logger.error("SchedulerApi.scheduleGroup", e);
         } finally {
@@ -55,8 +67,10 @@ public class SchedulerApi {
             TJobDesc jobDesc = new TJobDesc();
             jobDesc.setParameter(parameter.toString());
             jobDesc.setActionId(actionId);
+            String accessKey = context.getConfig().getAccessKey();
+            jobDesc.setAccessToken(AccessTokenUtils.encrypt(accessKey));
             TResult result = client.schedule(jobDesc);
-            return result.isOk();
+            return result.getCode() == ErrConstants.OK;
         } catch (Throwable e) {
 
         } finally {

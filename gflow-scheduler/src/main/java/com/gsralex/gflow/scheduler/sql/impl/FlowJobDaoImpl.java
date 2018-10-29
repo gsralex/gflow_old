@@ -5,8 +5,10 @@ import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.domain.GFlowJob;
 import com.gsralex.gflow.core.domain.GFlowJobGroup;
 import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
+import com.gsralex.gflow.core.enums.JobStatusEnum;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.SystemEnvironmentPropertySource;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -48,14 +50,21 @@ public class FlowJobDaoImpl implements FlowJobDao {
     }
 
     @Override
+    public boolean updateJobStatus(long id, int status) {
+        String sql = "update gflow_job set status=? and mod_time=? where id=?";
+        return jdbcUtils.executeUpdate(sql, new Object[]{status, System.currentTimeMillis(), id}) != 0 ? true : false;
+    }
+
+    @Override
     public GFlowJob getJob(long id) {
         String sql = "select * from gflow_job where id=?";
         return jdbcUtils.queryForObject(sql, new Object[]{id}, GFlowJob.class);
     }
 
     @Override
-    public int batchSaveJob(List<GFlowJob> jobList) {
-        return jdbcUtils.batchInsert(jobList, true);
+    public boolean incrJobRetryCnt(long id) {
+        String sql = "update gflow_job set retry_cnt=retry_cnt+1 and mod_time=?  where id=?";
+        return jdbcUtils.executeUpdate(sql, new Object[]{System.currentTimeMillis(), id}) != 0 ? true : false;
     }
 
     @Override
@@ -67,6 +76,12 @@ public class FlowJobDaoImpl implements FlowJobDao {
     @Override
     public List<GFlowJob> listJob(long jobGroupId) {
         return null;
+    }
+
+    @Override
+    public List<GFlowJob> listJobNeedRetry(int maxRetryCnt) {
+        String sql = "select * from gflow_job where `status`<>? and retry_cnt<?";
+        return jdbcUtils.queryForList(sql, new Object[]{JobStatusEnum.ExecuteOk, maxRetryCnt}, GFlowJob.class);
     }
 
 

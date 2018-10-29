@@ -9,13 +9,13 @@ import java.util.List;
  */
 public class FlowResult {
 
-    private List<ScheduleResult> nextResults;
+    private List<ActionResult> results;
 
     public FlowResult() {
-        nextResults = new ArrayList<>();
+        results = new ArrayList<>();
     }
 
-    public List<ScheduleResult> getNextResults() {
-        return nextResults;
+    public List<ActionResult> getResults() {
+        return results;
     }
 }

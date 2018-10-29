@@ -2,12 +2,17 @@ package com.gsralex.gflow.scheduler.retry;
 
 import com.gsralex.gflow.core.config.GFlowConfig;
 import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
-import com.gsralex.gflow.scheduler.schedule.ScheduleResult;
+import com.gsralex.gflow.core.domain.GFlowJob;
+import com.gsralex.gflow.scheduler.schedule.ActionDesc;
+import com.gsralex.gflow.scheduler.schedule.ActionResult;
+import com.gsralex.gflow.scheduler.schedule.ScheduleActualHanle;
+import com.gsralex.gflow.scheduler.sql.FlowJobDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author gsralex
@@ -16,10 +21,18 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class RetryProcessor {
 
-    private Map<Long, RetryTask> taskMap = new ConcurrentHashMap<>();
+
+    //key->taskId,value->task，重试任务
+    private Map<Long, RetryTask> retryTaskMap = new HashMap<>();
     private GFlowConfig config = GFlowContext.getContext().getConfig();
 
+    @Autowired
+    private ScheduleActualHanle actualHanle;
+    @Autowired
+    private FlowJobDao flowJobDao;
+
     public void start() {
+        recover();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -28,67 +41,62 @@ public class RetryProcessor {
         }).start();
     }
 
+    private void recover() {
+        List<GFlowJob> retryJobList = flowJobDao.listJobNeedRetry(config.getRetryCnt());
+        for (GFlowJob job : retryJobList) {
+            RetryTask retryTask = new RetryTask();
+            retryTask.setJobId(job.getId());
+            retryTask.setRetryTime(System.currentTimeMillis());
+            retryTask.setRetryCnt(job.getRetryCnt());
+            ActionDesc desc = new ActionDesc();
+            desc.setTriggerGroupId(job.getTriggerGroupId());
+            desc.setJobGroupId(job.getJobGroupId());
+            desc.setIndex(job.getIndex());
+            desc.setActionId(job.getActionId());
+            desc.setParameter(job.getParameter());
+            desc.setRetryJobId(job.getId()); //设置重试任务id
+            retryTask.setActionDesc(desc);
+            put(retryTask);
+        }
+    }
+
     public void put(RetryTask task) {
-        synchronized (taskMap) {
-            long key = task.getRetryJobId();
-            if (!taskMap.containsKey(key)) {
-                taskMap.put(key, task);
-                taskMap.notify();
+        synchronized (retryTaskMap) {
+            long key = task.getJobId();
+            if (!retryTaskMap.containsKey(key)) {
+                retryTaskMap.put(key, task);
+                retryTaskMap.notify();
             }
         }
     }
 
-    public void put(ScheduleResult result) {
-        RetryTask task = new RetryTask();
-        task.setGroupId(result.getGroupId());
-        task.setJobGroupId(result.getJobGroupId());
-        task.setActionId(result.getActionId());
-        task.setIndex(result.getIndex());
-        task.setRetryTime(System.currentTimeMillis());
-        task.setRetryJobId(result.getJobId());
-        task.setRetryCnt(0);
-
-        switch (result.getStatus()) {
-            //任务状态在schedule，不需要设置timeout时间
-            case SendErr:
-            case ExecuteErr: {
-                task.setTimeoutTime(0);
-                break;
+    public void mark(long jobId, long retryJobId, boolean ok) {
+        synchronized (retryTaskMap) {
+            long id;
+            if (retryJobId != 0) {
+                id = retryJobId;
+            } else {
+                id = jobId;
             }
-            case SendOk: {
-                task.setTimeoutTime(config.getJobTimeout());
-                break;
-            }
-        }
-        task.setRetryTime(System.currentTimeMillis());
-        this.put(task);
-    }
-
-    public void update(long jobId, boolean ok) {
-        synchronized (taskMap) {
-            if (taskMap.containsKey(jobId)) {
-                RetryTask task = taskMap.get(jobId);
+            if (retryTaskMap.containsKey(id)) {
+                RetryTask task = retryTaskMap.get(id);
                 if (ok) {
-                    task.setOk(true);
+                    retryTaskMap.remove(id);
                 } else {
                     //更新重试时间
                     task.setTimeoutTime(0);
                     task.setRetryTime(System.currentTimeMillis());
                 }
-                task.notify();
+                retryTaskMap.notify();
             }
         }
     }
 
-
     private RetryTask getMin() {
         RetryTask minTask = null;
         long minInterval = 0;
-        for (Map.Entry<Long, RetryTask> entry : taskMap.entrySet()) {
+        for (Map.Entry<Long, RetryTask> entry : retryTaskMap.entrySet()) {
             RetryTask task = entry.getValue();
-            if (task.isOk()) {//过滤掉所有成功的任务
-                continue;
-            }
             Long interval = getInterval(task);
             if (minTask == null) {
                 minTask = task;
@@ -121,38 +129,33 @@ public class RetryProcessor {
     private void mainLoop() {
         while (true) {
             try {
-                synchronized (taskMap) {
-                    if (taskMap.size() == 0) {
-                        taskMap.wait();
+                synchronized (retryTaskMap) {
+                    if (retryTaskMap.size() == 0) {
+                        retryTaskMap.wait();
                     }
                     RetryTask task = getMin();
                     if (task == null) {
-                        taskMap.wait();
+                        retryTaskMap.wait();
                     }
-                    if (task.getRetryCnt() < config.getRetryCnt()) {
+                    if (task.getRetryCnt() >= config.getRetryCnt()) {
+                        retryTaskMap.remove(task.getJobId());
+                        continue;
+                    }
+
+                    long interval = getInterval(task);
+                    if (interval < 0) {
                         //调度执行
                         task.setRetryCnt(task.getRetryCnt() + 1);
                         task.setRetryTime(System.currentTimeMillis());
-                        task.setTimeoutTime(config.getJobTimeout());
-                        //TODO:更新持久化重试次数
+                        //加入重试次数
+                        flowJobDao.incrJobRetryCnt(task.getJobId());
+                        ActionResult result = actualHanle.scheduleAction(task.getActionDesc(), false);
                     } else {
-                        taskMap.remove(task.getRetryJobId());
-                        //TODO:更新至删除
-                        continue;
-                    }
-                    long interval = getInterval(task);
-                    if (interval < 0) {
-                        execute(task);
-                    } else {
-                        taskMap.wait(interval);
+                        retryTaskMap.wait(interval);
                     }
                 }
             } catch (InterruptedException e) {
             }
         }
-    }
-
-    private void execute(RetryTask task) {
-
     }
 }

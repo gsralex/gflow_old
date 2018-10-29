@@ -13,13 +13,16 @@ public class ExecutorThread implements Runnable {
 
     private static final Logger logger = Logger.getLogger(ExecutorThread.class);
     private ExecuteProcess process;
-    private TExecutorClient client;
+    private AckExecuteProcess ackProcess;
     private Parameter parameter;
     private TJobDesc jobDesc;
 
-    public ExecutorThread(ExecuteProcess process, TExecutorClient client) {
+    public ExecutorThread(ExecuteProcess process) {
         this.process = process;
-        this.client = client;
+    }
+
+    public ExecutorThread(AckExecuteProcess ackProcess) {
+        this.ackProcess = ackProcess;
     }
 
     public void setParameter(Parameter parameter) {
@@ -32,12 +35,20 @@ public class ExecutorThread implements Runnable {
 
     @Override
     public void run() {
-        boolean ok = false;
-        try {
-            ok = process.process(jobDesc.getId(), parameter);
-        } catch (Exception e) {
-            logger.error("ExecutorThread.run" + jobDesc.getId());
+        if (process != null) {
+            boolean ok = false;
+            try {
+                ok = process.process(jobDesc.getId(), parameter);
+            } catch (Exception e) {
+                logger.error(process.getClass().getName() + ":" + e);
+            }
+            ExecutorContext.getContext().ack(jobDesc.getId(), ok);
+        } else if (ackProcess != null) {
+            try {
+                ackProcess.process(jobDesc.getId(), parameter);
+            } catch (Exception e) {
+                logger.error(ackProcess.getClass().getName() + ":" + e);
+            }
         }
-        client.ack(jobDesc.getId(), ok);
     }
 }

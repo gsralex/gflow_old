@@ -82,6 +82,12 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>${commonslang3.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.gsralex</groupId>
+                <artifactId>gdata</artifactId>
+                <version>${gdata.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.gsralex</groupId>
                 <artifactId>gdata-bean</artifactId>

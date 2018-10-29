@@ -48,8 +48,12 @@ public class GFlowConfig {
     private Long jobTimeout;
     @PropertyName(name = "gflow.executer.ips")
     private String executorIps;
+    @PropertyName(name = "gflow.executor.threads")
+    private Integer executorThreads;
     @PropertyName(name = "gflow.zk.active")
     private Boolean zkActive;
+    @PropertyName(name = "gflow.accesskey")
+    private String accessKey;
 
     public String getDbDriver() {
         return dbDriver;
@@ -155,6 +159,14 @@ public class GFlowConfig {
         this.executorIps = executorIps;
     }
 
+    public Integer getExecutorThreads() {
+        return executorThreads;
+    }
+
+    public void setExecutorThreads(Integer executorThreads) {
+        this.executorThreads = executorThreads;
+    }
+
     public Boolean getZkActive() {
         return zkActive;
     }
@@ -169,5 +181,13 @@ public class GFlowConfig {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public String getAccessKey() {
+        return accessKey;
+    }
+
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
     }
 }

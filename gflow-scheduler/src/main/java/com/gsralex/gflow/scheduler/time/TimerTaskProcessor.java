@@ -113,7 +113,7 @@ public class TimerTaskProcessor {
                     long interval = getInterval(timerTask);
                     if (interval < 0) {
                         ExecuteConfig config = timerTask.getConfig();
-                        scheduleLinkHandle.scheduleGroup(config.getGroupId(), new Parameter(), config.getId());
+                        scheduleLinkHandle.scheduleGroup(config.getGroupId(), "", config.getId());
                         timerTask.setLastExecutionTime(System.currentTimeMillis());
                     } else {
                         map.wait(interval);

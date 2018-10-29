@@ -29,10 +29,7 @@ public class TExecutorServer {
                 TServerSocket serverSocket;
                 try {
                     serverSocket = new TServerSocket(port);
-                    TExecutorService.Processor<TExecutorServiceImpl> schedule =
-                            new TExecutorService.Processor<>(new TExecutorServiceImpl(context));
-
-                    TProcessor processor = new TExecutorService.Processor(new TExecutorServiceImpl(context));
+                    TProcessor processor = new TExecutorService.Processor(new TExecutorServiceImpl());
                     TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverSocket);
                     args.processor(processor);
                     args.protocolFactory(new TBinaryProtocol.Factory());

@@ -1,34 +1,19 @@
 package com.gsralex.gflow.scheduler.retry;
 
+import com.gsralex.gflow.scheduler.schedule.ActionDesc;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author gsralex
  * @version 2018/8/21
  */
 public class RetryTask {
-    /**
-     * 失败的任务id
-     */
-    private long retryJobId;
-    /**
-     * 任务组id
-     */
-    private long jobGroupId;
-    /**
-     * 配置组id
-     */
-    private long groupId;
-    /**
-     * actionId
-     */
-    private long actionId;
-    /**
-     * 在流程组的位置
-     */
-    private int index;
-    /**
-     * 携带参数，用于重现
-     */
-    private String parameter;
+
+    private long jobId;
+
+    private ActionDesc actionDesc;
 
     /**
      * 任务超时时间ms
@@ -43,54 +28,21 @@ public class RetryTask {
      */
     private int retryCnt;
 
-    private boolean ok;
-
-    public long getRetryJobId() {
-        return retryJobId;
+    public long getJobId() {
+        return jobId;
     }
 
-    public void setRetryJobId(long retryJobId) {
-        this.retryJobId = retryJobId;
+    public void setJobId(long jobId) {
+        this.jobId = jobId;
     }
 
-    public long getJobGroupId() {
-        return jobGroupId;
+
+    public ActionDesc getActionDesc() {
+        return actionDesc;
     }
 
-    public void setJobGroupId(long jobGroupId) {
-        this.jobGroupId = jobGroupId;
-    }
-
-    public long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(long groupId) {
-        this.groupId = groupId;
-    }
-
-    public long getActionId() {
-        return actionId;
-    }
-
-    public void setActionId(long actionId) {
-        this.actionId = actionId;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public String getParameter() {
-        return parameter;
-    }
-
-    public void setParameter(String parameter) {
-        this.parameter = parameter;
+    public void setActionDesc(ActionDesc actionDesc) {
+        this.actionDesc = actionDesc;
     }
 
     public long getTimeoutTime() {
@@ -117,13 +69,6 @@ public class RetryTask {
         this.retryCnt = retryCnt;
     }
 
-    public boolean isOk() {
-        return ok;
-    }
-
-    public void setOk(boolean ok) {
-        this.ok = ok;
-    }
 }
 
 

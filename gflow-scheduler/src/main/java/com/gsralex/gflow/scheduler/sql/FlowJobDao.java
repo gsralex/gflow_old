@@ -34,11 +34,15 @@ public interface FlowJobDao {
 
     boolean updateJob(GFlowJob job);
 
+    boolean updateJobStatus(long id, int status);
+
     GFlowJob getJob(long id);
 
-    int batchSaveJob(List<GFlowJob> jobList);
+    boolean incrJobRetryCnt(long id);
 
     List<GFlowJobGroup> listJobGroupExecuting();
 
     List<GFlowJob> listJob(long jobGroupId);
+
+    List<GFlowJob> listJobNeedRetry(int maxRetryCnt);
 }

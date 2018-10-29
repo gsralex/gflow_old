@@ -3,15 +3,11 @@ package com.gsralex.gflow.scheduler.schedule;
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.domain.GFlowJob;
-import com.gsralex.gflow.core.enums.JobStatusEnum;
-import com.gsralex.gflow.core.util.DtUtils;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.retry.RetryProcessor;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * 调度链路
@@ -27,10 +23,14 @@ public class ScheduleLinkHandle {
     @Autowired
     private FlowJobDao flowJobDao;
 
+    private boolean retry;
 
-    public void scheduleGroup(long groupId, Parameter parameter, long executeConfigId) {
-        FlowResult r = scheduleActualHanle.scheduleGroup(groupId, parameter, executeConfigId);
-        setupRetryTask(r);
+    public ScheduleLinkHandle() {
+        retry = getRetry();
+    }
+
+    public void scheduleGroup(long groupId, String parameter, long executeConfigId) {
+        scheduleActualHanle.scheduleGroup(groupId, parameter, executeConfigId, retry);
     }
 
     public void pauseGroup(long jobGroupId) {
@@ -38,45 +38,24 @@ public class ScheduleLinkHandle {
     }
 
     public void continueGroup(long jobGroupId) {
-        FlowResult r = scheduleActualHanle.continueGroup(jobGroupId);
-        setupRetryTask(r);
+        scheduleActualHanle.continueGroup(jobGroupId, retry);
     }
 
-
-    public void scheduleAction(long actionId, Parameter parameter) {
-        scheduleActualHanle.scheduleAction(actionId, parameter);
+    public void scheduleAction(long actionId, String parameter) {
+        scheduleActualHanle.scheduleAction(actionId, parameter, retry);
     }
 
     public void ackAction(long jobId, boolean ok) {
-        FlowResult r = scheduleActualHanle.actionAck(jobId, ok);
-        GFlowJob job = flowJobDao.getJob(jobId);
-        if (job != null) {
-            setupRetryTask(r);
-            if (job.getRetryJobId() != 0) {
-                jobId = job.getRetryJobId();
-            }
-            updateRetryTask(jobId, ok);
-        }
+        scheduleActualHanle.actionAck(jobId, ok, retry);
     }
 
-    private void setupRetryTask(FlowResult r) {
+
+    private boolean getRetry() {
         GFlowContext context = GFlowContext.getContext();
         if (context.getConfig().getRetryActive() != null
                 && context.getConfig().getRetryActive()) {
-            RetryProcessor retryProcessor = SchedulerContext.getContext().getRetryProcessor();
-            for (ScheduleResult result : r.getNextResults()) {
-                retryProcessor.put(result);
-            }
+            return true;
         }
-    }
-
-    private void updateRetryTask(long jobId, boolean ok) {
-        GFlowContext context = GFlowContext.getContext();
-        if (context.getConfig().getRetryActive() != null
-                && context.getConfig().getRetryActive()) {
-            RetryProcessor retryProcessor = SchedulerContext.getContext().getRetryProcessor();
-            retryProcessor.update(jobId, ok);
-        }
-
+        return false;
     }
 }

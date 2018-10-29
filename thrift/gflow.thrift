@@ -4,7 +4,7 @@ namespace java com.gsralex.gflow.core.thrift.gen
 
 //调度结果
 struct TResult{
-    1:bool ok,
+    1:i32 code,
     2:string errmsg
 }
 
@@ -15,8 +15,9 @@ struct TJobDesc{
     3:i64 jobGroupId,
     4:string className,
     5:string parameter,
-    6:i32 index
-    7:i64 retryJobId //重试任务Id，如果不是重试任务，此值为0
+    6:i32 index,
+    7:i64 retryJobId, //重试任务Id，如果不是重试任务，此值为0
+    8:string accessToken
 
 }
 
@@ -24,12 +25,20 @@ struct TJobDesc{
 struct TGroupJobDesc{
     1:i64 groupId,
     2:string parameter
+    3:string accessToken
+}
+
+struct TAckDesc{
+    1:i64 jobId,
+    2:i32 code,
+    3:string errmsg,
+    4:string accessToken
 }
 
 //任务结果
 struct TJobResult{
     1:TJobDesc jobDesc
-    2:bool ok
+    2:i32 code
 }
 
 
@@ -40,7 +49,7 @@ service TScheduleService{
 }
 
 service TScheduleAckService{
-    TResult ack(1:i64 jobId,2:bool ok)
+    TResult ack(1:TAckDesc desc);
 }
 
 service TExecutorService{

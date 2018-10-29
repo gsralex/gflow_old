@@ -22,7 +22,6 @@ public class SchedulerApiContext {
             context.initConfig();
             ipData = new SchedulerIpData(context);
         }
-
     }
 
     private static SchedulerApiContext currentContext = new SchedulerApiContext();
