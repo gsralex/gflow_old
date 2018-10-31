@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.recover;
 
-import com.gsralex.gflow.core.domain.GFlowJobGroup;
+import com.gsralex.gflow.core.domain.JobGroup;
 import com.gsralex.gflow.scheduler.schedule.ScheduleLinkHandle;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,8 @@ public class RecoverHandle {
     private ScheduleLinkHandle scheduleLinkHandle;
 
     private void recoverTask() {
-        List<GFlowJobGroup> groupList = flowJobDao.listJobGroupExecuting();
-        for (GFlowJobGroup group : groupList) {
+        List<JobGroup> groupList = flowJobDao.listJobGroupExecuting();
+        for (JobGroup group : groupList) {
             scheduleLinkHandle.continueGroup(group.getId());
         }
     }

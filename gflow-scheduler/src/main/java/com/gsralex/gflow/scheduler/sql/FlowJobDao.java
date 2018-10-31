@@ -1,8 +1,8 @@
 package com.gsralex.gflow.scheduler.sql;
 
 
-import com.gsralex.gflow.core.domain.GFlowJob;
-import com.gsralex.gflow.core.domain.GFlowJobGroup;
+import com.gsralex.gflow.core.domain.Job;
+import com.gsralex.gflow.core.domain.JobGroup;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public interface FlowJobDao {
      * @param jobGroup
      * @return
      */
-    boolean saveJobGroup(GFlowJobGroup jobGroup);
+    boolean saveJobGroup(JobGroup jobGroup);
 
     /**
      * 更新任务
@@ -26,23 +26,23 @@ public interface FlowJobDao {
      * @param jobGroup
      * @return
      */
-    boolean updateJobGroup(GFlowJobGroup jobGroup);
+    boolean updateJobGroup(JobGroup jobGroup);
 
-    GFlowJobGroup getJobGroup(long id);
+    JobGroup getJobGroup(long id);
 
-    boolean saveJob(GFlowJob job);
+    boolean saveJob(Job job);
 
-    boolean updateJob(GFlowJob job);
+    boolean updateJob(Job job);
 
     boolean updateJobStatus(long id, int status);
 
-    GFlowJob getJob(long id);
+    Job getJob(long id);
 
     boolean incrJobRetryCnt(long id);
 
-    List<GFlowJobGroup> listJobGroupExecuting();
+    List<JobGroup> listJobGroupExecuting();
 
-    List<GFlowJob> listJob(long jobGroupId);
+    List<Job> listJob(long jobGroupId);
 
-    List<GFlowJob> listJobNeedRetry(int maxRetryCnt);
+    List<Job> listJobNeedRetry(int maxRetryCnt);
 }

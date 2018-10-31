@@ -10,7 +10,7 @@ import com.gsralex.gdata.bean.annotation.Table;
  * @date 2018/2/12
  */
 @Table(name = "gflow_jobgroup")
-public class GFlowJobGroup {
+public class JobGroup {
     @Id
     private Long id;
     @Column(name = "start_time")
@@ -19,8 +19,8 @@ public class GFlowJobGroup {
     private Long endTime;
     @Column(name="create_time")
     private Long createTime;
-    @Column(name="trigger_group_id")
-    private Long triggerGroupId;
+    @Column(name="flow_group_id")
+    private Long flowGroupId;
     @Column(name="start_trigger_id")
     private Long startTriggerId;
     @Column(name = "date")
@@ -62,12 +62,12 @@ public class GFlowJobGroup {
         this.createTime = createTime;
     }
 
-    public Long getTriggerGroupId() {
-        return triggerGroupId;
+    public Long getFlowGroupId() {
+        return flowGroupId;
     }
 
-    public void setTriggerGroupId(Long triggerGroupId) {
-        this.triggerGroupId = triggerGroupId;
+    public void setFlowGroupId(Long flowGroupId) {
+        this.flowGroupId = flowGroupId;
     }
 
     public Long getStartTriggerId() {

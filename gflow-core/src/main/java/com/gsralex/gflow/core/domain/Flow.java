@@ -6,7 +6,7 @@ import com.gsralex.gdata.bean.annotation.Column;
  * @author gsralex
  * @date 2017/12/25
  */
-public class GFlowTrigger {
+public class Flow {
 
     private long id;
     @Column(name = "pre_group_id")

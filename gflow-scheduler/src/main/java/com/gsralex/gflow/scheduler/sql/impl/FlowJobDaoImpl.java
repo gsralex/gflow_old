@@ -1,14 +1,12 @@
 package com.gsralex.gflow.scheduler.sql.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.core.domain.GFlowJob;
-import com.gsralex.gflow.core.domain.GFlowJobGroup;
+import com.gsralex.gflow.core.domain.Job;
+import com.gsralex.gflow.core.domain.JobGroup;
 import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.core.enums.JobStatusEnum;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.SystemEnvironmentPropertySource;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,28 +22,28 @@ public class FlowJobDaoImpl implements FlowJobDao {
     private JdbcUtils jdbcUtils;
 
     @Override
-    public boolean saveJobGroup(GFlowJobGroup jobGroup) {
+    public boolean saveJobGroup(JobGroup jobGroup) {
         return jdbcUtils.insert(jobGroup, true);
     }
 
     @Override
-    public boolean updateJobGroup(GFlowJobGroup jobGroup) {
+    public boolean updateJobGroup(JobGroup jobGroup) {
         return jdbcUtils.update(jobGroup);
     }
 
     @Override
-    public GFlowJobGroup getJobGroup(long id) {
+    public JobGroup getJobGroup(long id) {
         String sql = "select * from gflow_jobgroup where id=?";
-        return jdbcUtils.queryForObject(sql, new Object[]{id}, GFlowJobGroup.class);
+        return jdbcUtils.queryForObject(sql, new Object[]{id}, JobGroup.class);
     }
 
     @Override
-    public boolean saveJob(GFlowJob job) {
+    public boolean saveJob(Job job) {
         return jdbcUtils.insert(job, true);
     }
 
     @Override
-    public boolean updateJob(GFlowJob job) {
+    public boolean updateJob(Job job) {
         return jdbcUtils.update(job);
     }
 
@@ -56,9 +54,9 @@ public class FlowJobDaoImpl implements FlowJobDao {
     }
 
     @Override
-    public GFlowJob getJob(long id) {
+    public Job getJob(long id) {
         String sql = "select * from gflow_job where id=?";
-        return jdbcUtils.queryForObject(sql, new Object[]{id}, GFlowJob.class);
+        return jdbcUtils.queryForObject(sql, new Object[]{id}, Job.class);
     }
 
     @Override
@@ -68,20 +66,20 @@ public class FlowJobDaoImpl implements FlowJobDao {
     }
 
     @Override
-    public List<GFlowJobGroup> listJobGroupExecuting() {
+    public List<JobGroup> listJobGroupExecuting() {
         String sql = "select * from gflow_jobgroup where status=?";
-        return jdbcUtils.queryForList(sql, new Object[]{JobGroupStatusEnum.EXECUTING.getValue()}, GFlowJobGroup.class);
+        return jdbcUtils.queryForList(sql, new Object[]{JobGroupStatusEnum.EXECUTING.getValue()}, JobGroup.class);
     }
 
     @Override
-    public List<GFlowJob> listJob(long jobGroupId) {
+    public List<Job> listJob(long jobGroupId) {
         return null;
     }
 
     @Override
-    public List<GFlowJob> listJobNeedRetry(int maxRetryCnt) {
+    public List<Job> listJobNeedRetry(int maxRetryCnt) {
         String sql = "select * from gflow_job where `status`<>? and retry_cnt<?";
-        return jdbcUtils.queryForList(sql, new Object[]{JobStatusEnum.ExecuteOk, maxRetryCnt}, GFlowJob.class);
+        return jdbcUtils.queryForList(sql, new Object[]{JobStatusEnum.ExecuteOk, maxRetryCnt}, Job.class);
     }
 
 

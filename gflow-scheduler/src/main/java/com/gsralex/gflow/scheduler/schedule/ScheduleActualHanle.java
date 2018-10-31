@@ -1,9 +1,9 @@
 package com.gsralex.gflow.scheduler.schedule;
 
 import com.gsralex.gflow.core.constants.ErrConstants;
-import com.gsralex.gflow.core.domain.GFlowAction;
-import com.gsralex.gflow.core.domain.GFlowJob;
-import com.gsralex.gflow.core.domain.GFlowJobGroup;
+import com.gsralex.gflow.core.domain.Action;
+import com.gsralex.gflow.core.domain.Job;
+import com.gsralex.gflow.core.domain.JobGroup;
 import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.core.enums.JobStatusEnum;
 import com.gsralex.gflow.scheduler.SchedulerContext;
@@ -40,11 +40,11 @@ public class ScheduleActualHanle {
 
 
     public FlowResult scheduleGroup(long triggerGroupId, String parameter, long executeConfigId, boolean retry) {
-        GFlowJobGroup jobGroup = new GFlowJobGroup();
+        JobGroup jobGroup = new JobGroup();
         jobGroup.setStartTime(System.currentTimeMillis());
         jobGroup.setCreateTime(System.currentTimeMillis());
         jobGroup.setStatus(JobGroupStatusEnum.EXECUTING.getValue());
-        jobGroup.setTriggerGroupId(triggerGroupId);
+        jobGroup.setFlowGroupId(triggerGroupId);
         jobGroup.setDate(DtUtils.getBizDate());
         jobGroup.setExecuteConfigId(executeConfigId);
         flowJobDao.saveJobGroup(jobGroup);
@@ -71,7 +71,7 @@ public class ScheduleActualHanle {
 
 
     public void pauseGroup(long jobGroupId) {
-        GFlowJobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
+        JobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
         if (jobGroup != null) {
             FlowGuide flowGuide = flowMapHandle.getFlowGuide(jobGroupId);
             flowGuide.setStatus(JobGroupStatusEnum.PAUSE);
@@ -82,7 +82,7 @@ public class ScheduleActualHanle {
     }
 
     public FlowResult continueGroup(long jobGroupId, boolean retry) {
-        GFlowJobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
+        JobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
         if (jobGroup != null) {
             FlowGuide flowGuide = flowMapHandle.getFlowGuide(jobGroupId);
             boolean needAction = false;
@@ -101,7 +101,7 @@ public class ScheduleActualHanle {
             }
             if (needAction) {
                 List<FlowNode> actionList = flowGuide.listContinueAction();
-                return doActionList(jobGroup.getTriggerGroupId(), jobGroup.getId(), "", actionList, retry);
+                return doActionList(jobGroup.getFlowGroupId(), jobGroup.getId(), "", actionList, retry);
             }
         }
         return null;
@@ -115,10 +115,10 @@ public class ScheduleActualHanle {
     }
 
     public ActionResult scheduleAction(ActionDesc desc, boolean retry) {
-        GFlowAction action = configDao.getAction(desc.getActionId());
-        GFlowJob job = new GFlowJob();
+        Action action = configDao.getAction(desc.getActionId());
+        Job job = new Job();
         job.setJobGroupId(desc.getJobGroupId());
-        job.setTriggerGroupId(desc.getTriggerGroupId());
+        job.setFlowGroupId(desc.getTriggerGroupId());
         job.setActionId(desc.getActionId());
         job.setCreateTime(System.currentTimeMillis());
         job.setStartTime(System.currentTimeMillis());
@@ -158,7 +158,7 @@ public class ScheduleActualHanle {
 
     public FlowResult actionAck(long jobId, boolean jobOk, boolean retry) {
         FlowResult r = new FlowResult();
-        GFlowJob job = flowJobDao.getJob(jobId);
+        Job job = flowJobDao.getJob(jobId);
         if (job != null) {
             job.setEndTime(System.currentTimeMillis());//更新任务结束时间
             FlowGuide flowGuide = flowMapHandle.getFlowGuide(job.getJobGroupId());
@@ -173,7 +173,7 @@ public class ScheduleActualHanle {
                 if (flowGuide.getStatus() != JobGroupStatusEnum.PAUSE
                         && flowGuide.getStatus() != JobGroupStatusEnum.STOP) {
                     List<FlowNode> needActionList = flowGuide.listNeedAction(job.getIndex());
-                    doActionList(job.getTriggerGroupId(), job.getJobGroupId(), "", needActionList, retry);
+                    doActionList(job.getFlowGroupId(), job.getJobGroupId(), "", needActionList, retry);
                 }
             } else {
                 job.setStatus(JobStatusEnum.ExecuteErr.getValue());

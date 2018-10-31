@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.flow;
 
-import com.gsralex.gflow.core.domain.GFlowJob;
-import com.gsralex.gflow.core.domain.GFlowTrigger;
+import com.gsralex.gflow.core.domain.Job;
+import com.gsralex.gflow.core.domain.Flow;
 import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.core.enums.JobStatusEnum;
 
@@ -23,7 +23,7 @@ public class FlowGuide {
     private long groupId;
     private JobGroupStatusEnum status;
 
-    public FlowGuide(long groupId, List<GFlowTrigger> triggers, JobGroupStatusEnum status) {
+    public FlowGuide(long groupId, List<Flow> triggers, JobGroupStatusEnum status) {
         this(groupId, triggers, null, status);
     }
 
@@ -34,13 +34,13 @@ public class FlowGuide {
      * @param triggers 触发器配置
      * @param jobs     所有流程组的执行的任务
      */
-    public FlowGuide(long groupId, List<GFlowTrigger> triggers, List<GFlowJob> jobs, JobGroupStatusEnum status) {
+    public FlowGuide(long groupId, List<Flow> triggers, List<Job> jobs, JobGroupStatusEnum status) {
         this.groupId = groupId;
         this.posMap = new HashMap<>();
         this.actionMap = new HashMap<>();
         this.status = status;
 
-        for (GFlowTrigger trigger : triggers) {
+        for (Flow trigger : triggers) {
             long actionId = trigger.getActionId();
             long preActionId = trigger.getPreActionId();
             int preIndex = trigger.getPreIndex();
@@ -56,7 +56,7 @@ public class FlowGuide {
         }
 
         if (jobs != null) {
-            for (GFlowJob job : jobs) {
+            for (Job job : jobs) {
                 this.updateNodeOk(job.getIndex(), job.getStatus() == JobStatusEnum.ExecuteOk.getValue());
             }
         }

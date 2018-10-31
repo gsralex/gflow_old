@@ -2,7 +2,7 @@ package com.gsralex.gflow.scheduler.retry;
 
 import com.gsralex.gflow.core.config.GFlowConfig;
 import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.core.domain.GFlowJob;
+import com.gsralex.gflow.core.domain.Job;
 import com.gsralex.gflow.scheduler.schedule.ActionDesc;
 import com.gsralex.gflow.scheduler.schedule.ActionResult;
 import com.gsralex.gflow.scheduler.schedule.ScheduleActualHanle;
@@ -42,14 +42,14 @@ public class RetryProcessor {
     }
 
     private void recover() {
-        List<GFlowJob> retryJobList = flowJobDao.listJobNeedRetry(config.getRetryCnt());
-        for (GFlowJob job : retryJobList) {
+        List<Job> retryJobList = flowJobDao.listJobNeedRetry(config.getRetryCnt());
+        for (Job job : retryJobList) {
             RetryTask retryTask = new RetryTask();
             retryTask.setJobId(job.getId());
             retryTask.setRetryTime(System.currentTimeMillis());
             retryTask.setRetryCnt(job.getRetryCnt());
             ActionDesc desc = new ActionDesc();
-            desc.setTriggerGroupId(job.getTriggerGroupId());
+            desc.setTriggerGroupId(job.getFlowGroupId());
             desc.setJobGroupId(job.getJobGroupId());
             desc.setIndex(job.getIndex());
             desc.setActionId(job.getActionId());

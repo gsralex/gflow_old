@@ -1,10 +1,8 @@
 package com.gsralex.gflow.scheduler.sql.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.core.context.JdbcContext;
 import com.gsralex.gflow.scheduler.sql.ExecuteDao;
-import com.gsralex.gflow.core.domain.GFlowExecuteConfig;
+import com.gsralex.gflow.core.domain.ExecuteConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,8 +15,8 @@ public class ExecuteDaoImpl implements ExecuteDao {
     private JdbcUtils jdbcUtils;
 
     @Override
-    public List<GFlowExecuteConfig> listExecuteConfig() {
+    public List<ExecuteConfig> listExecuteConfig() {
         String sql = "select * from gflow_executeconfig";
-        return jdbcUtils.queryForList(sql, null, GFlowExecuteConfig.class);
+        return jdbcUtils.queryForList(sql, null, ExecuteConfig.class);
     }
 }

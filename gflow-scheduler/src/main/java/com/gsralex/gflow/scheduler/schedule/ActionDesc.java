@@ -1,7 +1,5 @@
 package com.gsralex.gflow.scheduler.schedule;
 
-import com.gsralex.gflow.core.domain.GFlowJob;
-
 /**
  * @author gsralex
  * @version 2018/10/25

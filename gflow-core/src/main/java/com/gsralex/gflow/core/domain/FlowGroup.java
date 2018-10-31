@@ -4,7 +4,7 @@ package com.gsralex.gflow.core.domain;
  * @author gsralex
  * @date 2018/2/13
  */
-public class GFlowTriggerGroup {
+public class FlowGroup {
 
     private long id;
     private String name;

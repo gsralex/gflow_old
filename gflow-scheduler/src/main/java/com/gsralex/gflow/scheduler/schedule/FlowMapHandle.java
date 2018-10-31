@@ -1,8 +1,8 @@
 package com.gsralex.gflow.scheduler.schedule;
 
-import com.gsralex.gflow.core.domain.GFlowJob;
-import com.gsralex.gflow.core.domain.GFlowJobGroup;
-import com.gsralex.gflow.core.domain.GFlowTrigger;
+import com.gsralex.gflow.core.domain.Job;
+import com.gsralex.gflow.core.domain.JobGroup;
+import com.gsralex.gflow.core.domain.Flow;
 import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.flow.FlowGuide;
 import com.gsralex.gflow.scheduler.flow.FlowGuideMap;
@@ -29,7 +29,7 @@ public class FlowMapHandle {
 
 
     public FlowGuide initGroup(long jobGroupId, long triggerGroupId) {
-        List<GFlowTrigger> triggerList = configDao.getTriggerList(triggerGroupId);
+        List<Flow> triggerList = configDao.getTriggerList(triggerGroupId);
         FlowGuide flowGuide = new FlowGuide(triggerGroupId, triggerList, JobGroupStatusEnum.EXECUTING);
         FlowGuideMap flowGuideMap = SchedulerContext.getContext().getFlowGuideMap();
         flowGuideMap.putFlowMap(jobGroupId, flowGuide);
@@ -40,12 +40,12 @@ public class FlowMapHandle {
         FlowGuideMap flowGuideMap = SchedulerContext.getContext().getFlowGuideMap();
         FlowGuide flowGuide = flowGuideMap.getFlowMap(jobGroupId);
         if (flowGuide == null) {
-            GFlowJobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
+            JobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
             if (jobGroup != null) {
-                List<GFlowJob> jobList = flowJobDao.listJob(jobGroupId);
-                List<GFlowTrigger> triggerList = configDao.getTriggerList(jobGroup.getTriggerGroupId());
+                List<Job> jobList = flowJobDao.listJob(jobGroupId);
+                List<Flow> triggerList = configDao.getTriggerList(jobGroup.getFlowGroupId());
                 JobGroupStatusEnum status = JobGroupStatusEnum.valueOf(jobGroup.getStatus());
-                flowGuide = new FlowGuide(jobGroup.getTriggerGroupId(), triggerList, jobList, status);
+                flowGuide = new FlowGuide(jobGroup.getFlowGroupId(), triggerList, jobList, status);
                 flowGuideMap.putFlowMap(jobGroup.getId(), flowGuide);
                 return flowGuide;
             } else {

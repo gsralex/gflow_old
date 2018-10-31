@@ -8,7 +8,7 @@ import com.gsralex.gdata.bean.annotation.Id;
  * @author gsralex
  * @date 2018/2/17
  */
-public class GFlowExecuteConfig {
+public class ExecuteConfig {
 
     @Id
     private Long id;

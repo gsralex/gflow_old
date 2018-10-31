@@ -6,7 +6,7 @@ import com.gsralex.gdata.bean.annotation.Column;
  * @author gsralex
  * @date 2017/12/25
  */
-public class GFlowAction {
+public class Action {
     private long id;
     private String name;
     @Column(name = "class_name")
