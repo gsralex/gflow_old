@@ -33,9 +33,9 @@ public class ConfigDaoImpl implements ConfigDao {
     }
 
     @Override
-    public List<Flow> getTriggerList(long triggerGroupId) {
-        String sql = "select * from gflow_trigger where action_group_id=?";
-        return jdbcUtils.queryForList(sql, new Object[]{triggerGroupId}, Flow.class);
+    public List<Flow> getFlowList(long flowGroupId) {
+        String sql = "select * from gflow_flow where action_group_id=?";
+        return jdbcUtils.queryForList(sql, new Object[]{flowGroupId}, Flow.class);
     }
 
 }

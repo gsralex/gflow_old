@@ -17,6 +17,6 @@ public interface ConfigDao {
 
     List<ExecuteConfig> listExecuteConfig();
 
-    List<Flow> getTriggerList(long triggerGroupId);
+    List<Flow> getFlowList(long triggerGroupId);
 
 }

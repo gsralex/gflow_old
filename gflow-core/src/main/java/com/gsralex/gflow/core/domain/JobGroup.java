@@ -21,8 +21,8 @@ public class JobGroup {
     private Long createTime;
     @Column(name="flow_group_id")
     private Long flowGroupId;
-    @Column(name="start_trigger_id")
-    private Long startTriggerId;
+    @Column(name="start_flow_id")
+    private Long startFlowId;
     @Column(name = "date")
     private Integer date;
     @Column(name = "status")
@@ -70,12 +70,12 @@ public class JobGroup {
         this.flowGroupId = flowGroupId;
     }
 
-    public Long getStartTriggerId() {
-        return startTriggerId;
+    public Long getStartFlowId() {
+        return startFlowId;
     }
 
-    public void setStartTriggerId(Long startTriggerId) {
-        this.startTriggerId = startTriggerId;
+    public void setStartFlowId(Long startFlowId) {
+        this.startFlowId = startFlowId;
     }
 
     public Integer getDate() {

@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.gsralex</groupId>
-    <artifactId>gflow</artifactId>
+    <groupId>com.gsralex.gflow</groupId>
+    <artifactId>gflow-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
@@ -21,7 +21,7 @@
         <thrift.verison>0.11.0</thrift.verison>
         <dbcp.version>1.4</dbcp.version>
         <mysql.version>5.1.39</mysql.version>
-        <gdata.version>1.073</gdata.version>
+        <gdata.version>1.078</gdata.version>
         <zkclient.version>0.10</zkclient.version>
         <gflow.version>1.0-SNAPSHOT</gflow.version>
         <!--maven-->
@@ -82,14 +82,8 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>${commonslang3.version}</version>
             </dependency>
-
             <dependency>
-                <groupId>com.gsralex</groupId>
-                <artifactId>gdata</artifactId>
-                <version>${gdata.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.gsralex</groupId>
+                <groupId>com.gsralex.gdata</groupId>
                 <artifactId>gdata-bean</artifactId>
                 <version>${gdata.version}</version>
             </dependency>

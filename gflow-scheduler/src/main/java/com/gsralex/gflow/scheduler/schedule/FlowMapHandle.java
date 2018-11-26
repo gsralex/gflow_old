@@ -29,7 +29,7 @@ public class FlowMapHandle {
 
 
     public FlowGuide initGroup(long jobGroupId, long triggerGroupId) {
-        List<Flow> triggerList = configDao.getTriggerList(triggerGroupId);
+        List<Flow> triggerList = configDao.getFlowList(triggerGroupId);
         FlowGuide flowGuide = new FlowGuide(triggerGroupId, triggerList, JobGroupStatusEnum.EXECUTING);
         FlowGuideMap flowGuideMap = SchedulerContext.getContext().getFlowGuideMap();
         flowGuideMap.putFlowMap(jobGroupId, flowGuide);
@@ -43,7 +43,7 @@ public class FlowMapHandle {
             JobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
             if (jobGroup != null) {
                 List<Job> jobList = flowJobDao.listJob(jobGroupId);
-                List<Flow> triggerList = configDao.getTriggerList(jobGroup.getFlowGroupId());
+                List<Flow> triggerList = configDao.getFlowList(jobGroup.getFlowGroupId());
                 JobGroupStatusEnum status = JobGroupStatusEnum.valueOf(jobGroup.getStatus());
                 flowGuide = new FlowGuide(jobGroup.getFlowGroupId(), triggerList, jobList, status);
                 flowGuideMap.putFlowMap(jobGroup.getId(), flowGuide);

@@ -15,11 +15,11 @@ public class DemoProcess1 implements ExecuteProcess {
 //        if (id % 2 == 0) {
 //            return false;
 //        }
-        try {
-            Thread.sleep(50000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(50000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         System.out.println("DemoProcess1");
         return true;
     }
