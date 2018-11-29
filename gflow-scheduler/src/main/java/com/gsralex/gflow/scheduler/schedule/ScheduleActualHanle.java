@@ -2,6 +2,7 @@ package com.gsralex.gflow.scheduler.schedule;
 
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.domain.Action;
+import com.gsralex.gflow.core.domain.FlowGroup;
 import com.gsralex.gflow.core.domain.Job;
 import com.gsralex.gflow.core.domain.JobGroup;
 import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
@@ -47,6 +48,7 @@ public class ScheduleActualHanle {
         jobGroup.setFlowGroupId(triggerGroupId);
         jobGroup.setDate(DtUtils.getBizDate());
         jobGroup.setExecuteConfigId(executeConfigId);
+        jobGroup.setParameter(parameter);
         flowJobDao.saveJobGroup(jobGroup);
 
         FlowGuide flowGuide = flowMapHandle.initGroup(jobGroup.getId(), triggerGroupId);
@@ -172,8 +174,16 @@ public class ScheduleActualHanle {
                 //加入判断，当任务暂停的时候
                 if (flowGuide.getStatus() != JobGroupStatusEnum.PAUSE
                         && flowGuide.getStatus() != JobGroupStatusEnum.STOP) {
-                    List<FlowNode> needActionList = flowGuide.listNeedAction(job.getIndex());
-                    doActionList(job.getFlowGroupId(), job.getJobGroupId(), "", needActionList, retry);
+
+                    JobGroup jobGroup = flowJobDao.getJobGroup(job.getJobGroupId());
+                    if (flowGuide.isFinish()) { //如果任务组已完成
+                        jobGroup.setStatus(JobGroupStatusEnum.FINISH.getValue());
+                        jobGroup.setEndTime(System.currentTimeMillis());
+                        flowJobDao.updateJobGroup(jobGroup);
+                    } else {
+                        List<FlowNode> needActionList = flowGuide.listNeedAction(job.getIndex());
+                        doActionList(job.getFlowGroupId(), job.getJobGroupId(), jobGroup.getParameter(), needActionList, retry);
+                    }
                 }
             } else {
                 job.setStatus(JobStatusEnum.ExecuteErr.getValue());

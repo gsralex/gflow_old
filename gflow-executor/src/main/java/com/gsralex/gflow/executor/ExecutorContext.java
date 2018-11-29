@@ -41,7 +41,7 @@ public class ExecutorContext {
         return SpringContextHolder.getBean(type);
     }
 
-    public void setSpringApplicationContext(ApplicationContext springContext) {
+    public void setSpringContext(ApplicationContext springContext) {
         SpringContextHolder.setApplicationContext(springContext);
     }
 

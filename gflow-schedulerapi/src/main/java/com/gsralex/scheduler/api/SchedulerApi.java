@@ -87,7 +87,7 @@ public class SchedulerApi {
 
     public static void main(String[] args) {
         SchedulerApi api = new SchedulerApi();
-        Parameter parameter = new Parameter();
+        Parameter parameter = new Parameter("bizdate=20181128");
         api.scheduleGroup(1, parameter);
     }
 }

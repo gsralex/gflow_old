@@ -29,6 +29,7 @@ public class JobGroup {
     private Integer status;
     @Column(name = "execute_config_id")
     private Long executeConfigId;
+    private String parameter;
 
     public Long getId() {
         return id;
@@ -100,5 +101,13 @@ public class JobGroup {
 
     public void setExecuteConfigId(Long executeConfigId) {
         this.executeConfigId = executeConfigId;
+    }
+
+    public String getParameter() {
+        return parameter;
+    }
+
+    public void setParameter(String parameter) {
+        this.parameter = parameter;
     }
 }

@@ -18,10 +18,14 @@ public class ExecutorServer {
     public static void main(String[] args) throws IOException {
         ExecutorServer server = new ExecutorServer();
         ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
-        ExecutorContext.getContext().setSpringApplicationContext(context);
+        ExecutorContext.getContext().setSpringContext(context);
         server.start();
     }
 
+
+    public void setSpringContext(ApplicationContext context) {
+        ExecutorContext.getContext().setSpringContext(context);
+    }
 
     public void start() {
         GFlowContext context = GFlowContext.getContext();

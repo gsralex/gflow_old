@@ -11,13 +11,16 @@ import java.util.Map;
  * @version 2018/8/5
  */
 public class Parameter {
+
+    private long flowId;
+    private long actionId;
     private Map<String, String> map;
 
     public Parameter() {
-        this("");
+        this("", 0, 0);
     }
 
-    public Parameter(String str) {
+    public Parameter(String str, long flowId, long actionId) {
         map = new HashMap<>();
         if (!StringUtils.isEmpty(str)) {
             String[] array = StringUtils.split(str, ",");
@@ -33,6 +36,8 @@ public class Parameter {
                 map.put(key, value);
             }
         }
+        this.flowId = flowId;
+        this.actionId = actionId;
     }
 
     public String getString(String key) {
@@ -56,9 +61,29 @@ public class Parameter {
         return NumberUtils.toLong(getString(key), defaultValue);
     }
 
+    public double getDouble(String key) {
+        return getDouble(key, 0);
+    }
+
+    public double getDouble(String key, double defaultValue) {
+        return NumberUtils.toDouble(getString(key), defaultValue);
+    }
+
+    public float getFloat(String key) {
+        return getFloat(key, 0);
+    }
+
+    public float getFloat(String key, float defaultValue) {
+        return NumberUtils.toFloat(getString(key), defaultValue);
+    }
 
     public void put(String key, String value) {
         map.put(key, value);
+    }
+
+
+    public Map<String, String> getMaps() {
+        return map;
     }
 
     @Override

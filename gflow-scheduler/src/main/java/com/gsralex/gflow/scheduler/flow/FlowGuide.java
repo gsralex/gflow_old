@@ -96,6 +96,20 @@ public class FlowGuide {
         return needActionList;
     }
 
+    public boolean isFinish() {
+        for (Map.Entry<Integer, FlowNode> entry : posMap.entrySet()) {
+            if (!entry.getValue().isOk()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 获取还有可以继续执行的任务
+     *
+     * @return
+     */
     public List<FlowNode> listContinueAction() {
         List<FlowNode> continueActionList = new ArrayList<>();
         for (Map.Entry<Integer, FlowNode> entry : posMap.entrySet()) {
