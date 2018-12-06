@@ -1,6 +1,7 @@
 package com.gsralex.gflow.scheduler.sql.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
+import com.gsralex.gflow.core.domain.ActionTag;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.core.domain.Action;
 import com.gsralex.gflow.core.domain.ExecuteConfig;
@@ -24,6 +25,12 @@ public class ConfigDaoImpl implements ConfigDao {
     public Action getAction(long id) {
         String sql = "select * from gflow_action where id=?";
         return jdbcUtils.queryForObject(sql, new Object[]{id}, Action.class);
+    }
+
+    @Override
+    public List<ActionTag> listActionTag() {
+        String sql = "select * from gflow_actiontag";
+        return jdbcUtils.queryForList(sql, null, ActionTag.class);
     }
 
     @Override

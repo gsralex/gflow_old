@@ -1,6 +1,7 @@
 package com.gsralex.gflow.scheduler.sql;
 
 import com.gsralex.gflow.core.domain.Action;
+import com.gsralex.gflow.core.domain.ActionTag;
 import com.gsralex.gflow.core.domain.ExecuteConfig;
 import com.gsralex.gflow.core.domain.Flow;
 
@@ -14,6 +15,8 @@ public interface ConfigDao {
 
 
     Action getAction(long id);
+
+    List<ActionTag> listActionTag();
 
     List<ExecuteConfig> listExecuteConfig();
 

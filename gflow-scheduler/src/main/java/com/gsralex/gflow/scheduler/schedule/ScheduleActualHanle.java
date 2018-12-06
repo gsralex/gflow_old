@@ -125,7 +125,7 @@ public class ScheduleActualHanle {
 
     public ActionResult scheduleAction(ActionDesc desc, boolean retry) {
         //转换参数
-        Parameter groupParam = new Parameter(desc.getParameter());
+        Parameter groupParam = new Parameter(desc.getGroupParameter());
         Parameter param = new Parameter(desc.getParameter());
         DynamicParamContext.getContext().parser(param);
 

@@ -9,7 +9,9 @@ import com.gsralex.gflow.scheduler.parameter.DynamicParamContext;
 import com.gsralex.gflow.scheduler.retry.RetryProcessor;
 import com.gsralex.gflow.scheduler.time.TimerTaskProcessor;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author gsralex
@@ -25,6 +27,8 @@ public class SchedulerContext {
     private TimerTaskProcessor timerTaskProcessor;
 
     private FlowGuideMap flowGuideMap = new FlowGuideMap();
+
+    private Map<Integer, List<String>> servers = new HashMap<>();
 
 
     private DynamicParamContext paramContext = DynamicParamContext.getContext();
