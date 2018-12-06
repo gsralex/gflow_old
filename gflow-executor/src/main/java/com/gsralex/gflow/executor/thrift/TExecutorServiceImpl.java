@@ -50,7 +50,10 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
                 code = ErrConstants.OK;
             } else if (AckExecuteProcess.class.isAssignableFrom(type)) {
                 AckExecuteProcess process = (AckExecuteProcess) getInstance(type);
-                process.process(desc.getId(), new Parameter(desc.getParameter()));
+                ExecutorThread thread = new ExecutorThread(process);
+                thread.setTJobDesc(desc);
+                thread.setParameter(parameter);
+                executorService.execute(thread);
                 code = ErrConstants.OK;
             } else {
                 //TODO:throw exception

@@ -47,6 +47,7 @@ public class FlowGuide {
             int index = trigger.getIndex();
             //处理前置节点
             FlowNode current = putPosNode(index, actionId);
+            current.setParameter(trigger.getParameter());
             if (preActionId != ROOT_ACTIONID) {
                 FlowNode pre = putPosNode(preIndex, preActionId);
                 pre.getNext().add(current);

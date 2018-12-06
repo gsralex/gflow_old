@@ -2,6 +2,7 @@ package com.gsralex.gflow.executor.demo;
 
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.executor.ExecuteProcess;
+import com.gsralex.gflow.executor.JobDesc;
 
 /**
  * @author gsralex
@@ -9,7 +10,7 @@ import com.gsralex.gflow.executor.ExecuteProcess;
  */
 public class DemoProcess2 implements ExecuteProcess {
     @Override
-    public boolean process(long id, Parameter parameter) {
+    public boolean process(JobDesc desc) {
         System.out.println("DemoProcess2");
         return true;
     }

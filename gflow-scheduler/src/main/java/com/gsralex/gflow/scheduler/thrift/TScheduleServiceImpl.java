@@ -3,7 +3,6 @@ package com.gsralex.gflow.scheduler.thrift;
 
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.thriftgen.TGroupJobDesc;
 import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.core.thriftgen.TResult;

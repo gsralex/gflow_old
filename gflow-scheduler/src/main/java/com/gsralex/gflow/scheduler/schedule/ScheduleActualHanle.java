@@ -1,8 +1,8 @@
 package com.gsralex.gflow.scheduler.schedule;
 
 import com.gsralex.gflow.core.constants.ErrConstants;
+import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.domain.Action;
-import com.gsralex.gflow.core.domain.FlowGroup;
 import com.gsralex.gflow.core.domain.Job;
 import com.gsralex.gflow.core.domain.JobGroup;
 import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
@@ -12,6 +12,8 @@ import com.gsralex.gflow.scheduler.flow.FlowGuide;
 import com.gsralex.gflow.scheduler.flow.FlowNode;
 import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.core.util.DtUtils;
+import com.gsralex.gflow.scheduler.parameter.DynamicParam;
+import com.gsralex.gflow.scheduler.parameter.DynamicParamContext;
 import com.gsralex.gflow.scheduler.retry.RetryTask;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
@@ -20,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 实际调度执行者
@@ -41,6 +44,9 @@ public class ScheduleActualHanle {
 
 
     public FlowResult scheduleGroup(long triggerGroupId, String parameter, long executeConfigId, boolean retry) {
+        Parameter param = new Parameter(parameter);
+        DynamicParamContext.getContext().parser(param);
+
         JobGroup jobGroup = new JobGroup();
         jobGroup.setStartTime(System.currentTimeMillis());
         jobGroup.setCreateTime(System.currentTimeMillis());
@@ -48,7 +54,7 @@ public class ScheduleActualHanle {
         jobGroup.setFlowGroupId(triggerGroupId);
         jobGroup.setDate(DtUtils.getBizDate());
         jobGroup.setExecuteConfigId(executeConfigId);
-        jobGroup.setParameter(parameter);
+        jobGroup.setParameter(param.toString());
         flowJobDao.saveJobGroup(jobGroup);
 
         FlowGuide flowGuide = flowMapHandle.initGroup(jobGroup.getId(), triggerGroupId);
@@ -56,7 +62,7 @@ public class ScheduleActualHanle {
         return doActionList(triggerGroupId, jobGroup.getId(), parameter, rootList, retry);
     }
 
-    private FlowResult doActionList(long triggerGroupId, long jobGroupId, String parameter, List<FlowNode> nodeList, boolean retry) {
+    private FlowResult doActionList(long triggerGroupId, long jobGroupId, String groupParameter, List<FlowNode> nodeList, boolean retry) {
         FlowResult r = new FlowResult();
         for (FlowNode node : nodeList) {
             ActionDesc desc = new ActionDesc();
@@ -64,7 +70,8 @@ public class ScheduleActualHanle {
             desc.setJobGroupId(jobGroupId);
             desc.setActionId(node.getActionId());
             desc.setIndex(node.getIndex());
-            desc.setParameter(parameter);
+            desc.setGroupParameter(groupParameter);
+            desc.setParameter(node.getParameter());
             ActionResult result = scheduleAction(desc, retry);
             r.getResults().add(result);
         }
@@ -103,7 +110,7 @@ public class ScheduleActualHanle {
             }
             if (needAction) {
                 List<FlowNode> actionList = flowGuide.listContinueAction();
-                return doActionList(jobGroup.getFlowGroupId(), jobGroup.getId(), "", actionList, retry);
+                return doActionList(jobGroup.getFlowGroupId(), jobGroup.getId(), jobGroup.getParameter(), actionList, retry);
             }
         }
         return null;
@@ -117,6 +124,19 @@ public class ScheduleActualHanle {
     }
 
     public ActionResult scheduleAction(ActionDesc desc, boolean retry) {
+        //转换参数
+        Parameter groupParam = new Parameter(desc.getParameter());
+        Parameter param = new Parameter(desc.getParameter());
+        DynamicParamContext.getContext().parser(param);
+
+        Set<String> groupParamSet = groupParam.listKeys();
+        Set<String> paramSet = param.listKeys();
+        for (String key : groupParamSet) {
+            if (!paramSet.contains(key)) { //如果任务的参数与任务组的参数一致，则参数的优先级当前任务>任务组
+                param.put(key, groupParam.getString(key));
+            }
+        }
+        String parameter = param.toString();
         Action action = configDao.getAction(desc.getActionId());
         Job job = new Job();
         job.setJobGroupId(desc.getJobGroupId());
@@ -128,6 +148,7 @@ public class ScheduleActualHanle {
         job.setIndex(desc.getIndex());
         job.setRetryJobId(desc.getRetryJobId());
         job.setStatus(JobStatusEnum.SendOk.getValue());
+        job.setParameter(parameter);
         flowJobDao.saveJob(job);
 
         if (retry) {
@@ -142,7 +163,7 @@ public class ScheduleActualHanle {
         TJobDesc jobDesc = new TJobDesc();
         jobDesc.setJobGroupId(desc.getJobGroupId());
         jobDesc.setActionId(desc.getActionId());
-        jobDesc.setParameter(desc.getParameter());
+        jobDesc.setParameter(parameter);
         jobDesc.setId(job.getId());
         jobDesc.setIndex(desc.getIndex());
         jobDesc.setClassName(action.getClassName());

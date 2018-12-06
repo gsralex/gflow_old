@@ -11,6 +11,10 @@ public class ActionDesc {
     private long actionId;
     private int index;
     private String parameter;
+    /**
+     * 组参数，当组任务参数与任务参数的key发生一样的时候，以任务的参数优先
+     */
+    private String groupParameter;
     private long retryJobId;
 
     public long getJobGroupId() {
@@ -43,6 +47,14 @@ public class ActionDesc {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public String getGroupParameter() {
+        return groupParameter;
+    }
+
+    public void setGroupParameter(String groupParameter) {
+        this.groupParameter = groupParameter;
     }
 
     public String getParameter() {

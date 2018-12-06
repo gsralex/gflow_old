@@ -4,7 +4,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author gsralex
@@ -12,15 +14,13 @@ import java.util.Map;
  */
 public class Parameter {
 
-    private long flowId;
-    private long actionId;
     private Map<String, String> map;
 
     public Parameter() {
-        this("", 0, 0);
+        this("");
     }
 
-    public Parameter(String str, long flowId, long actionId) {
+    public Parameter(String str) {
         map = new HashMap<>();
         if (!StringUtils.isEmpty(str)) {
             String[] array = StringUtils.split(str, ",");
@@ -36,8 +36,6 @@ public class Parameter {
                 map.put(key, value);
             }
         }
-        this.flowId = flowId;
-        this.actionId = actionId;
     }
 
     public String getString(String key) {
@@ -81,9 +79,12 @@ public class Parameter {
         map.put(key, value);
     }
 
+    public void remove(String key) {
+        map.remove(key);
+    }
 
-    public Map<String, String> getMaps() {
-        return map;
+    public Set<String> listKeys() {
+        return map.keySet();
     }
 
     @Override

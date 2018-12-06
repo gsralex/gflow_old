@@ -1,6 +1,6 @@
 package com.gsralex.gflow.executor.demo;
 
-import com.gsralex.gflow.core.context.Parameter;
+import com.gsralex.gflow.executor.JobDesc;
 import com.gsralex.gflow.executor.ExecuteProcess;
 import org.springframework.stereotype.Service;
 
@@ -10,16 +10,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DemoProcess1 implements ExecuteProcess {
+
+
     @Override
-    public boolean process(long id, Parameter parameter) {
-//        if (id % 2 == 0) {
-//            return false;
-//        }
-//        try {
-//            Thread.sleep(50000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+    public boolean process(JobDesc desc) {
         System.out.println("DemoProcess1");
         return true;
     }

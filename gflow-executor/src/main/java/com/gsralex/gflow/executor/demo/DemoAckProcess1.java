@@ -3,6 +3,7 @@ package com.gsralex.gflow.executor.demo;
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.executor.AckExecuteProcess;
 import com.gsralex.gflow.executor.ExecutorContext;
+import com.gsralex.gflow.executor.JobDesc;
 
 /**
  * @author gsralex
@@ -10,13 +11,13 @@ import com.gsralex.gflow.executor.ExecutorContext;
  */
 public class DemoAckProcess1 implements AckExecuteProcess {
     @Override
-    public void process(long id, Parameter parameter) {
+    public void process(JobDesc desc) {
         //TODO:业务代码
         try {
             Thread.sleep(100000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        ExecutorContext.getContext().ack(id, true);
+        ExecutorContext.getContext().ack(desc.getJobId(), true);
     }
 }

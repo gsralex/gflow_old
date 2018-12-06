@@ -17,6 +17,10 @@ public class FlowNode {
     private long actionId;
     private int index;
     private boolean schedule;
+    /**
+     * flow定义的参数
+     */
+    private String parameter;
 
     public FlowNode() {
         this.pre = new ArrayList<>();
@@ -69,5 +73,13 @@ public class FlowNode {
 
     public void setSchedule(boolean schedule) {
         this.schedule = schedule;
+    }
+
+    public String getParameter() {
+        return parameter;
+    }
+
+    public void setParameter(String parameter) {
+        this.parameter = parameter;
     }
 }

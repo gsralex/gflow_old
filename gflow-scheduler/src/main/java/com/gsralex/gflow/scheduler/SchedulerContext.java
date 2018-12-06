@@ -4,6 +4,8 @@ import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.scheduler.flow.FlowGuideMap;
 import com.gsralex.gflow.core.zk.ExecutorIpData;
+import com.gsralex.gflow.scheduler.parameter.DynamicParam;
+import com.gsralex.gflow.scheduler.parameter.DynamicParamContext;
 import com.gsralex.gflow.scheduler.retry.RetryProcessor;
 import com.gsralex.gflow.scheduler.time.TimerTaskProcessor;
 
@@ -23,6 +25,10 @@ public class SchedulerContext {
     private TimerTaskProcessor timerTaskProcessor;
 
     private FlowGuideMap flowGuideMap = new FlowGuideMap();
+
+
+    private DynamicParamContext paramContext = DynamicParamContext.getContext();
+
 
     private SchedulerContext() {
 
@@ -64,5 +70,18 @@ public class SchedulerContext {
 
     public FlowGuideMap getFlowGuideMap() {
         return flowGuideMap;
+    }
+
+    /**
+     * 添加参数
+     *
+     * @param param
+     */
+    public void addParam(DynamicParam param) {
+        this.paramContext.addParam(param);
+    }
+
+    public DynamicParamContext getParamContext() {
+        return paramContext;
     }
 }

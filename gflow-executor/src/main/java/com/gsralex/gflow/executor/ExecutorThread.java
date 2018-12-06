@@ -15,7 +15,7 @@ public class ExecutorThread implements Runnable {
     private ExecuteProcess process;
     private AckExecuteProcess ackProcess;
     private Parameter parameter;
-    private TJobDesc jobDesc;
+    private TJobDesc tJobDesc;
 
     public ExecutorThread(ExecuteProcess process) {
         this.process = process;
@@ -29,23 +29,24 @@ public class ExecutorThread implements Runnable {
         this.parameter = parameter;
     }
 
-    public void setTJobDesc(TJobDesc jobDesc) {
-        this.jobDesc = jobDesc;
+    public void setTJobDesc(TJobDesc tJobDesc) {
+        this.tJobDesc = tJobDesc;
     }
 
     @Override
     public void run() {
+        JobDesc jobDesc = new JobDesc(tJobDesc.getId(), parameter);
         if (process != null) {
             boolean ok = false;
             try {
-                ok = process.process(jobDesc.getId(), parameter);
+                ok = process.process(jobDesc);
             } catch (Exception e) {
                 logger.error(process.getClass().getName() + ":" + e);
             }
-            ExecutorContext.getContext().ack(jobDesc.getId(), ok);
+            ExecutorContext.getContext().ack(jobDesc.getJobId(), ok);
         } else if (ackProcess != null) {
             try {
-                ackProcess.process(jobDesc.getId(), parameter);
+                ackProcess.process(jobDesc);
             } catch (Exception e) {
                 logger.error(ackProcess.getClass().getName() + ":" + e);
             }

@@ -12,7 +12,7 @@
     <artifactId>gflow-schedulerapi</artifactId>
     <dependencies>
         <dependency>
-            <groupId>com.gsralex</groupId>
+            <groupId>com.gsralex.gflow</groupId>
             <artifactId>gflow-core</artifactId>
         </dependency>
         <dependency>

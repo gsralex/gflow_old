@@ -23,6 +23,7 @@ public class Flow {
     private int index;
     @Column(name = "create_time")
     private Long createTime;
+    private String parameter;
 
     public long getId() {
         return id;
@@ -86,5 +87,13 @@ public class Flow {
 
     public void setCreateTime(Long createTime) {
         this.createTime = createTime;
+    }
+
+    public String getParameter() {
+        return parameter;
+    }
+
+    public void setParameter(String parameter) {
+        this.parameter = parameter;
     }
 }
