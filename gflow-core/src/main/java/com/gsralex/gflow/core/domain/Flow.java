@@ -9,12 +9,6 @@ import com.gsralex.gdata.bean.annotation.Column;
 public class Flow {
 
     private long id;
-    @Column(name = "pre_group_id")
-    private long preGroupId;
-    @Column(name = "pre_action_id")
-    private long preActionId;
-    @Column(name = "pre_index")
-    private int preIndex;
     @Column(name = "action_group_id")
     private long actionGroupId;
     @Column(name = "action_id")
@@ -31,30 +25,6 @@ public class Flow {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public long getPreGroupId() {
-        return preGroupId;
-    }
-
-    public void setPreGroupId(long preGroupId) {
-        this.preGroupId = preGroupId;
-    }
-
-    public long getPreActionId() {
-        return preActionId;
-    }
-
-    public void setPreActionId(long preActionId) {
-        this.preActionId = preActionId;
-    }
-
-    public int getPreIndex() {
-        return preIndex;
-    }
-
-    public void setPreIndex(int preIndex) {
-        this.preIndex = preIndex;
     }
 
     public long getActionGroupId() {

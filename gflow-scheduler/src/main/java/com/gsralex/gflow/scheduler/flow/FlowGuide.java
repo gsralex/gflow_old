@@ -1,5 +1,6 @@
 package com.gsralex.gflow.scheduler.flow;
 
+import com.gsralex.gflow.core.domain.FlowDirect;
 import com.gsralex.gflow.core.domain.Job;
 import com.gsralex.gflow.core.domain.Flow;
 import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
@@ -16,44 +17,57 @@ import java.util.Map;
  */
 public class FlowGuide {
 
-    private static final Long ROOT_ACTIONID = 0L;
+    private static final int ROOT_INDEX = 0;
 
+    //indexMap key->index,value->flownode
     private Map<Integer, FlowNode> posMap;
-    private Map<Long, List<FlowNode>> actionMap;
     private long groupId;
     private JobGroupStatusEnum status;
 
-    public FlowGuide(long groupId, List<Flow> triggers, JobGroupStatusEnum status) {
-        this(groupId, triggers, null, status);
+    public FlowGuide(long groupId, List<Flow> flows, List<FlowDirect> directs, JobGroupStatusEnum status) {
+        this(groupId, flows, directs, null, status);
     }
 
     /**
      * 初始化流程向导
      *
-     * @param groupId  流程组id
-     * @param triggers 触发器配置
-     * @param jobs     所有流程组的执行的任务
+     * @param groupId 流程组id
+     * @param flows   流程配置
+     * @param directs 流程流转配置
+     * @param jobs    所有流程组的执行的任务
      */
-    public FlowGuide(long groupId, List<Flow> triggers, List<Job> jobs, JobGroupStatusEnum status) {
+    public FlowGuide(long groupId, List<Flow> flows, List<FlowDirect> directs, List<Job> jobs, JobGroupStatusEnum status) {
         this.groupId = groupId;
         this.posMap = new HashMap<>();
-        this.actionMap = new HashMap<>();
         this.status = status;
 
-        for (Flow trigger : triggers) {
-            long actionId = trigger.getActionId();
-            long preActionId = trigger.getPreActionId();
-            int preIndex = trigger.getPreIndex();
-            int index = trigger.getIndex();
-            //处理前置节点
-            FlowNode current = putPosNode(index, actionId);
-            current.setParameter(trigger.getParameter());
-            if (preActionId != ROOT_ACTIONID) {
-                FlowNode pre = putPosNode(preIndex, preActionId);
-                pre.getNext().add(current);
-                current.getPre().add(pre);
+        Map<Integer, List<Integer>> directMap = new HashMap<>();
+        for (FlowDirect item : directs) {
+            if (directMap.containsKey(item.getIndex())) {
+                directMap.get(item.getIndex()).add(item.getPreIndex());
+            } else {
+                List<Integer> preList = new ArrayList<>();
+                preList.add(item.getPreIndex());
+                directMap.put(item.getIndex(), preList);
             }
-            putActionNode(preActionId, current);
+        }
+
+        for (Flow trigger : flows) {
+            FlowNode current = new FlowNode();
+            current.setActionId(trigger.getActionId());
+            current.setIndex(trigger.getIndex());
+            current.setParameter(trigger.getParameter());
+            posMap.put(trigger.getIndex(), current);
+        }
+        for (FlowDirect direct : directs) {
+            FlowNode node = posMap.get(direct.getIndex());
+            //0 1
+            //1 2
+            if (direct.getPreIndex() != ROOT_INDEX) {
+                FlowNode preNode = posMap.get(direct.getPreIndex());
+                preNode.getNext().add(node);
+                node.getPre().add(preNode);
+            }
         }
 
         if (jobs != null) {
@@ -63,9 +77,19 @@ public class FlowGuide {
         }
     }
 
-
+    /**
+     * 列出根节点下待执行的节点
+     * @return
+     */
     public List<FlowNode> listRoot() {
-        return actionMap.get(ROOT_ACTIONID);
+        List<FlowNode> rootList = new ArrayList<>();
+        for (Map.Entry<Integer, FlowNode> entry : posMap.entrySet()) {
+            FlowNode node = entry.getValue();
+            if (node.getPre().size() == 0) {
+                rootList.add(node);
+            }
+        }
+        return rootList;
     }
 
     public void updateNodeOk(int index, boolean ok) {
@@ -73,9 +97,9 @@ public class FlowGuide {
         node.setOk(ok);
     }
 
-    public List<FlowNode> listNeedAction(int position) {
+    public List<FlowNode> listNeedAction(int index) {
         List<FlowNode> needActionList = new ArrayList<>();
-        FlowNode node = posMap.get(position);
+        FlowNode node = posMap.get(index);
         //检查后置节点的前置节点是否都已完成
         for (FlowNode next : node.getNext()) {
             boolean finish = true;
@@ -86,12 +110,7 @@ public class FlowGuide {
                 }
             }
             if (finish) {
-                synchronized (next) {
-                    if (!next.isSchedule()) {
-                        next.setSchedule(true);
-                        needActionList.add(next);
-                    }
-                }
+                needActionList.add(next);
             }
         }
         return needActionList;
@@ -112,10 +131,10 @@ public class FlowGuide {
      * @return
      */
     public List<FlowNode> listContinueAction() {
-        List<FlowNode> continueActionList = new ArrayList<>();
+        List<FlowNode> continueList = new ArrayList<>();
         for (Map.Entry<Integer, FlowNode> entry : posMap.entrySet()) {
             if (!entry.getValue().isOk()) {
-                boolean finish = true;
+                boolean finish = true; //默认已完成，当没有前置节点时
                 for (FlowNode pre : entry.getValue().getPre()) {
                     if (!pre.isOk()) {
                         finish = false;
@@ -123,33 +142,13 @@ public class FlowGuide {
                     }
                 }
                 if (finish) {
-                    continueActionList.add(entry.getValue());
+                    continueList.add(entry.getValue());
                 }
             }
         }
-        return continueActionList;
+        return continueList;
     }
 
-
-    private FlowNode putPosNode(int index, long actionId) {
-        FlowNode node;
-        if (!posMap.containsKey(index)) {
-            node = new FlowNode();
-            node.setActionId(actionId);
-            node.setIndex(index);
-            posMap.put(index, node);
-        } else {
-            node = posMap.get(index);
-        }
-        return node;
-    }
-
-    private void putActionNode(long actionId, FlowNode node) {
-        if (!actionMap.containsKey(actionId)) {
-            actionMap.put(actionId, new ArrayList<>());
-        }
-        actionMap.get(actionId).add(node);
-    }
 
     public JobGroupStatusEnum getStatus() {
         return status;

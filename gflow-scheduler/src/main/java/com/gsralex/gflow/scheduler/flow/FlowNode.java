@@ -16,7 +16,6 @@ public class FlowNode {
     private boolean ok;
     private long actionId;
     private int index;
-    private boolean schedule;
     /**
      * flow定义的参数
      */
@@ -65,14 +64,6 @@ public class FlowNode {
 
     public void setOk(boolean ok) {
         this.ok = ok;
-    }
-
-    public boolean isSchedule() {
-        return schedule;
-    }
-
-    public void setSchedule(boolean schedule) {
-        this.schedule = schedule;
     }
 
     public String getParameter() {

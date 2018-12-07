@@ -1,5 +1,6 @@
-package com.gsralex.gflow.scheduler.schedule;
+package com.gsralex.gflow.scheduler.flow;
 
+import com.gsralex.gflow.core.domain.FlowDirect;
 import com.gsralex.gflow.core.domain.Job;
 import com.gsralex.gflow.core.domain.JobGroup;
 import com.gsralex.gflow.core.domain.Flow;
@@ -28,9 +29,10 @@ public class FlowMapHandle {
     private FlowJobDao flowJobDao;
 
 
-    public FlowGuide initGroup(long jobGroupId, long triggerGroupId) {
-        List<Flow> triggerList = configDao.getFlowList(triggerGroupId);
-        FlowGuide flowGuide = new FlowGuide(triggerGroupId, triggerList, JobGroupStatusEnum.EXECUTING);
+    public FlowGuide initGroup(long jobGroupId, long flowGroupId) {
+        List<Flow> flowList = configDao.listFlow(flowGroupId);
+        List<FlowDirect> directList = configDao.listFlowDirect(flowGroupId);
+        FlowGuide flowGuide = new FlowGuide(jobGroupId, flowList, directList, JobGroupStatusEnum.EXECUTING);
         FlowGuideMap flowGuideMap = SchedulerContext.getContext().getFlowGuideMap();
         flowGuideMap.putFlowMap(jobGroupId, flowGuide);
         return flowGuide;
@@ -43,9 +45,10 @@ public class FlowMapHandle {
             JobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
             if (jobGroup != null) {
                 List<Job> jobList = flowJobDao.listJob(jobGroupId);
-                List<Flow> triggerList = configDao.getFlowList(jobGroup.getFlowGroupId());
+                List<Flow> flowList = configDao.listFlow(jobGroupId);
+                List<FlowDirect> directList = configDao.listFlowDirect(jobGroupId);
                 JobGroupStatusEnum status = JobGroupStatusEnum.valueOf(jobGroup.getStatus());
-                flowGuide = new FlowGuide(jobGroup.getFlowGroupId(), triggerList, jobList, status);
+                flowGuide = new FlowGuide(jobGroupId, flowList, directList, jobList, status);
                 flowGuideMap.putFlowMap(jobGroup.getId(), flowGuide);
                 return flowGuide;
             } else {
