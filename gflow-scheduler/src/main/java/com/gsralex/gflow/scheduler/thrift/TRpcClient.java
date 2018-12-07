@@ -4,9 +4,10 @@ import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.thriftgen.TExecutorService;
 import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.core.thriftgen.TResult;
-import com.gsralex.gflow.scheduler.ScheduleIpSelector;
+import com.gsralex.gflow.scheduler.schedule.ScheduleIpSelector;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import org.apache.log4j.Logger;
+import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
@@ -23,15 +24,15 @@ import java.util.List;
 @Service
 public class TRpcClient {
 
-    @Autowired
-    private ScheduleIpSelector ipSelector;
-
     private static final Logger logger = Logger.getLogger(TRpcClient.class);
 
-    public TResult schedule(TJobDesc jobDesc) {
-        SchedulerContext context = SchedulerContext.getContext();
-        List<IpAddress> ipList = context.getIps();
-        IpAddress ip = ipList.get(0);
+
+    public static void main(String[] args) throws TException {
+        TRpcClient client = new TRpcClient();
+        client.schedule(new IpAddress("127.0.0.1", 10092), new TJobDesc());
+    }
+
+    public TResult schedule(IpAddress ip, TJobDesc jobDesc) throws TException {
         TTransport transport = new TSocket(ip.getIp(), ip.getPort());
         try {
             transport.open();
@@ -40,10 +41,10 @@ public class TRpcClient {
             return client.schedule(jobDesc);
         } catch (Throwable e) {
             logger.error("TRpcClient.send", e);
+            throw e;
         } finally {
             if (transport != null)
                 transport.close();
         }
-        return null;
     }
 }

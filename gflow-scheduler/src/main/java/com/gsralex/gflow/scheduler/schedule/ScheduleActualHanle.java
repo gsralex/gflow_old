@@ -1,25 +1,30 @@
 package com.gsralex.gflow.scheduler.schedule;
 
 import com.gsralex.gflow.core.constants.ErrConstants;
+import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.domain.Action;
 import com.gsralex.gflow.core.domain.Job;
 import com.gsralex.gflow.core.domain.JobGroup;
 import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.core.enums.JobStatusEnum;
+import com.gsralex.gflow.core.thriftgen.TResult;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.flow.FlowGuide;
+import com.gsralex.gflow.scheduler.flow.FlowMapHandle;
 import com.gsralex.gflow.scheduler.flow.FlowNode;
 import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.core.util.DtUtils;
-import com.gsralex.gflow.scheduler.parameter.DynamicParam;
 import com.gsralex.gflow.scheduler.parameter.DynamicParamContext;
 import com.gsralex.gflow.scheduler.retry.RetryTask;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
 import com.gsralex.gflow.scheduler.thrift.TRpcClient;
+import org.apache.thrift.TException;
+import org.apache.thrift.transport.TSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Set;
@@ -41,6 +46,8 @@ public class ScheduleActualHanle {
     private TRpcClient rpcClient;
     @Autowired
     private FlowMapHandle flowMapHandle;
+    @Autowired
+    private ScheduleIpSelector ipSelector;
 
 
     public FlowResult scheduleGroup(long triggerGroupId, String parameter, long executeConfigId, boolean retry) {
@@ -125,6 +132,7 @@ public class ScheduleActualHanle {
 
     public ActionResult scheduleAction(ActionDesc desc, boolean retry) {
         //转换参数
+        Action action = configDao.getAction(desc.getActionId());
         Parameter groupParam = new Parameter(desc.getGroupParameter());
         Parameter param = new Parameter(desc.getParameter());
         DynamicParamContext.getContext().parser(param);
@@ -137,7 +145,6 @@ public class ScheduleActualHanle {
             }
         }
         String parameter = param.toString();
-        Action action = configDao.getAction(desc.getActionId());
         Job job = new Job();
         job.setJobGroupId(desc.getJobGroupId());
         job.setFlowGroupId(desc.getTriggerGroupId());
@@ -168,9 +175,16 @@ public class ScheduleActualHanle {
         jobDesc.setIndex(desc.getIndex());
         jobDesc.setClassName(action.getClassName());
         boolean sendOk = false;
-        if (rpcClient.schedule(jobDesc).getCode() == ErrConstants.OK) {
-            sendOk = true;
-        } else {
+        IpAddress ip = ipSelector.getIpAddress(action.getTagId());
+        try {
+            TResult result = rpcClient.schedule(ip, jobDesc);
+            if (result.getCode() == ErrConstants.OK) {
+                sendOk = true;
+            }
+        } catch (TException e) {
+
+        }
+        if (!sendOk) {
             flowJobDao.updateJobStatus(job.getId(), JobStatusEnum.SendErr.getValue());
         }
         ActionResult result = new ActionResult();

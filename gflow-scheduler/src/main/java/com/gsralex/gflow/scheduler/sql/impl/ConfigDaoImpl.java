@@ -1,11 +1,8 @@
 package com.gsralex.gflow.scheduler.sql.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.core.domain.ActionTag;
+import com.gsralex.gflow.core.domain.*;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
-import com.gsralex.gflow.core.domain.Action;
-import com.gsralex.gflow.core.domain.ExecuteConfig;
-import com.gsralex.gflow.core.domain.Flow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -40,9 +37,15 @@ public class ConfigDaoImpl implements ConfigDao {
     }
 
     @Override
-    public List<Flow> getFlowList(long flowGroupId) {
+    public List<Flow> listFlow(long groupId) {
         String sql = "select * from gflow_flow where action_group_id=?";
-        return jdbcUtils.queryForList(sql, new Object[]{flowGroupId}, Flow.class);
+        return jdbcUtils.queryForList(sql, new Object[]{groupId}, Flow.class);
+    }
+
+    @Override
+    public List<FlowDirect> listFlowDirect(long groupId) {
+        String sql = "select * from gflow_flowdirect where group_id=?";
+        return jdbcUtils.queryForList(sql, new Object[]{groupId}, FlowDirect.class);
     }
 
 }

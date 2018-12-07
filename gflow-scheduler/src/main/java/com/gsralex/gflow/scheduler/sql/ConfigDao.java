@@ -1,9 +1,6 @@
 package com.gsralex.gflow.scheduler.sql;
 
-import com.gsralex.gflow.core.domain.Action;
-import com.gsralex.gflow.core.domain.ActionTag;
-import com.gsralex.gflow.core.domain.ExecuteConfig;
-import com.gsralex.gflow.core.domain.Flow;
+import com.gsralex.gflow.core.domain.*;
 
 import java.util.List;
 
@@ -20,6 +17,7 @@ public interface ConfigDao {
 
     List<ExecuteConfig> listExecuteConfig();
 
-    List<Flow> getFlowList(long triggerGroupId);
+    List<Flow> listFlow(long groupId);
 
+    List<FlowDirect> listFlowDirect(long groupId);
 }
