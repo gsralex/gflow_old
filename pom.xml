@@ -21,7 +21,7 @@
         <thrift.verison>0.11.0</thrift.verison>
         <dbcp.version>1.4</dbcp.version>
         <mysql.version>5.1.39</mysql.version>
-        <gdata.version>1.078</gdata.version>
+        <gdata.version>1.079</gdata.version>
         <zkclient.version>0.10</zkclient.version>
         <gflow.version>1.0-SNAPSHOT</gflow.version>
         <!--maven-->

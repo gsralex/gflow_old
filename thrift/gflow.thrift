@@ -5,7 +5,7 @@ namespace java com.gsralex.gflow.core.thrift.gen
 //调度结果
 struct TResult{
     1:i32 code,
-    2:string errmsg
+    2:string msg
 }
 
 //任务描述
@@ -46,6 +46,9 @@ struct TJobResult{
 service TScheduleService{
     TResult schedule(1:TJobDesc desc);
     TResult scheduleGroup(1:TGroupJobDesc desc);
+    TResult pauseGroup(1:i64 id);
+    TResult stopGroup(1:i64 id);
+    TResult setGflowSettings(1:string key,2:string value);
 }
 
 service TScheduleAckService{
