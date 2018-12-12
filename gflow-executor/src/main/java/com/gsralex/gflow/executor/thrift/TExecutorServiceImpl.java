@@ -2,6 +2,7 @@ package com.gsralex.gflow.executor.thrift;
 
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.Parameter;
+import com.gsralex.gflow.core.domain.ExecuteConfig;
 import com.gsralex.gflow.core.thriftgen.TExecutorService;
 import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.core.thriftgen.TResult;
@@ -11,6 +12,7 @@ import com.gsralex.gflow.executor.ExecutorContext;
 import com.gsralex.gflow.executor.ExecutorThread;
 import com.gsralex.gflow.executor.demo.DemoProcess1;
 import org.apache.thrift.TException;
+import org.apache.thrift.transport.TTransportException;
 import org.springframework.beans.BeansException;
 
 import java.util.concurrent.ExecutorService;
@@ -35,7 +37,7 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
     }
 
     @Override
-    public TResult schedule(TJobDesc desc) {
+    public TResult schedule(TJobDesc desc) throws TException {
         String errMsg = "";
         int code;
         Parameter parameter = new Parameter(desc.getParameter());
@@ -60,7 +62,6 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
                 code = ErrConstants.ERR_NOIMPLPROCESS;
                 errMsg = ErrConstants.MSG_ERRNOIMPLPROCESS;
             }
-
         } catch (Exception e) {
             errMsg = e.getMessage();
             code = ErrConstants.ERR_INTERNAL;
@@ -73,9 +74,9 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
 
     private Object getInstance(Class type) throws IllegalAccessException, InstantiationException {
         Object instance;
-        try {
+        if (ExecutorContext.getContext().isSpring()) {
             instance = ExecutorContext.getContext().getSpringBean(type);
-        } catch (BeansException e) {
+        } else {
             instance = type.newInstance();
         }
         return instance;

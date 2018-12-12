@@ -1,4 +1,4 @@
-package com.gsralex.scheduler.api;
+package com.gsralex.scheduler.client;
 
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.GFlowContext;
@@ -20,14 +20,14 @@ import org.apache.thrift.transport.TTransport;
  * @author gsralex
  * @version 2018/8/19
  */
-public class SchedulerApi {
+public class ScheduleClient {
 
-    private static final Logger logger = Logger.getLogger(SchedulerApi.class);
+    private static final Logger logger = Logger.getLogger(ScheduleClient.class);
 
     private GFlowContext context;
 
-    public SchedulerApi() {
-        context = SchedulerApiContext.getContext().getGFlowContext();
+    public ScheduleClient() {
+        context = ScheduleClientContext.getContext().getGFlowContext();
     }
 
 
@@ -47,7 +47,7 @@ public class SchedulerApi {
             TResult result = client.scheduleGroup(groupJobDesc);
             return result.getCode() == ErrConstants.OK;
         } catch (Throwable e) {
-            logger.error("SchedulerApi.scheduleGroup", e);
+            logger.error("ScheduleClient.scheduleGroup", e);
         } finally {
             if (transport != null)
                 transport.close();
@@ -81,13 +81,15 @@ public class SchedulerApi {
     }
 
     private IpAddress getIpAddress() {
-        SchedulerApiContext apiContext = SchedulerApiContext.getContext();
+        ScheduleClientContext apiContext = ScheduleClientContext.getContext();
         return apiContext.getIps().get(0);
     }
 
     public static void main(String[] args) {
-        SchedulerApi api = new SchedulerApi();
-        Parameter parameter = new Parameter("bizdate=20181205");
-        api.scheduleGroup(2, parameter);
+        ScheduleClient api = new ScheduleClient();
+        Parameter parameter = new Parameter("bizdate=20181209");
+        api.scheduleGroup(1, parameter);
+//        Parameter parameter = new Parameter("bizdate=20181205");
+//        api.scheduleGroup(1, parameter);
     }
 }

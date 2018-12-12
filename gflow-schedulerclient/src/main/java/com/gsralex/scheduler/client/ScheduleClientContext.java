@@ -1,4 +1,4 @@
-package com.gsralex.scheduler.api;
+package com.gsralex.scheduler.client;
 
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
@@ -10,13 +10,13 @@ import java.util.List;
  * @author gsralex
  * @version 2018/10/3
  */
-public class SchedulerApiContext {
+public class ScheduleClientContext {
 
     private GFlowContext context;
     private SchedulerIpData ipData;
 
 
-    private SchedulerApiContext() {
+    private ScheduleClientContext() {
         context = GFlowContext.getContext();
         if (context.getConfig() == null) {
             context.initConfig();
@@ -24,10 +24,10 @@ public class SchedulerApiContext {
         }
     }
 
-    private static SchedulerApiContext currentContext = new SchedulerApiContext();
+    private static ScheduleClientContext currentContext = new ScheduleClientContext();
 
 
-    public static SchedulerApiContext getContext() {
+    public static ScheduleClientContext getContext() {
         return currentContext;
     }
 

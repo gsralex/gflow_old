@@ -198,30 +198,33 @@ public class ScheduleActualHanle {
         Job job = flowJobDao.getJob(jobId);
         if (job != null) {
             job.setEndTime(System.currentTimeMillis());//更新任务结束时间
-            FlowGuide flowGuide = flowMapHandle.getFlowGuide(job.getJobGroupId());
+            if (job.getJobGroupId() != 0) {
+                FlowGuide flowGuide = flowMapHandle.getFlowGuide(job.getJobGroupId());
+                if (retry) {
+                    SchedulerContext.getContext().getRetryProcessor().mark(jobId, job.getRetryJobId(), jobOk);
+                }
+                if (jobOk) {
+                    flowGuide.updateNodeOk(job.getIndex(), jobOk);
+                    job.setStatus(JobStatusEnum.ExecuteOk.getValue());
+                    //加入判断，当任务暂停的时候
+                    if (flowGuide.getStatus() != JobGroupStatusEnum.PAUSE
+                            && flowGuide.getStatus() != JobGroupStatusEnum.STOP) {
 
-            if (retry) {
-                SchedulerContext.getContext().getRetryProcessor().mark(jobId, job.getRetryJobId(), jobOk);
-            }
-            if (jobOk) {
-                flowGuide.updateNodeOk(job.getIndex(), jobOk);
-                job.setStatus(JobStatusEnum.ExecuteOk.getValue());
-                //加入判断，当任务暂停的时候
-                if (flowGuide.getStatus() != JobGroupStatusEnum.PAUSE
-                        && flowGuide.getStatus() != JobGroupStatusEnum.STOP) {
-
-                    JobGroup jobGroup = flowJobDao.getJobGroup(job.getJobGroupId());
-                    if (flowGuide.isFinish()) { //如果任务组已完成
-                        jobGroup.setStatus(JobGroupStatusEnum.FINISH.getValue());
-                        jobGroup.setEndTime(System.currentTimeMillis());
-                        flowJobDao.updateJobGroup(jobGroup);
-                    } else {
-                        List<FlowNode> needActionList = flowGuide.listNeedAction(job.getIndex());
-                        doActionList(job.getFlowGroupId(), job.getJobGroupId(), jobGroup.getParameter(), needActionList, retry);
+                        JobGroup jobGroup = flowJobDao.getJobGroup(job.getJobGroupId());
+                        if (flowGuide.isFinish()) { //如果任务组已完成
+                            jobGroup.setStatus(JobGroupStatusEnum.FINISH.getValue());
+                            jobGroup.setEndTime(System.currentTimeMillis());
+                            flowJobDao.updateJobGroup(jobGroup);
+                        } else {
+                            List<FlowNode> needActionList = flowGuide.listNeedAction(job.getIndex());
+                            doActionList(job.getFlowGroupId(), job.getJobGroupId(), jobGroup.getParameter(), needActionList, retry);
+                        }
                     }
+                } else {
+                    job.setStatus(JobStatusEnum.ExecuteErr.getValue());
                 }
             } else {
-                job.setStatus(JobStatusEnum.ExecuteErr.getValue());
+                job.setStatus(jobOk ? JobStatusEnum.ExecuteOk.getValue() : JobStatusEnum.ExecuteErr.getValue());
             }
         }
         flowJobDao.updateJob(job);

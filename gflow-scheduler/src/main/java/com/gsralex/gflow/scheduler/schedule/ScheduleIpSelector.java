@@ -23,20 +23,16 @@ public class ScheduleIpSelector {
     @Autowired
     private ConfigDao configDao;
 
-//    private Map<Long, List<IpAddress>> ipMap = new HashMap<>();
+//    private static Map<Long, IpAddress[]> ipMaps = new HashMap<>();
 
 //    public void init() {
+//
 //        List<ActionTag> tagList = configDao.listActionTag();
 //        for (ActionTag tag : tagList) {
-//            List<IpAddress> ips = new ArrayList<>();
-//            String[] servers = StringUtils.split(tag.getServers(), ",");
-//            for (String server : servers) {
-//                String[] ipport = StringUtils.split(server, ":");
-//                ips.add(new IpAddress(ipport[0], Integer.parseInt(ipport[1])));
-//                //TODO:结合zk实时上报
-//            }
-//            ipMap.put(tag.getId(), ips);
+//            List<Ip>
+//            ipMaps.put(tag.getId(),)
 //        }
+//
 //    }
 
     public IpAddress getIpAddress(long tagId) {

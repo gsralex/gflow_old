@@ -18,6 +18,7 @@ public class ExecutorContext {
     private SchedulerIpData ipData;
     private GFlowContext gFlowContext;
     private TExecutorClient client;
+    private boolean spring;
 
     public static ExecutorContext getContext() {
         return currentContext;
@@ -43,7 +44,13 @@ public class ExecutorContext {
 
     public void setSpringContext(ApplicationContext springContext) {
         SpringContextHolder.setApplicationContext(springContext);
+        this.spring = true;
     }
+
+    public Boolean isSpring() {
+        return this.spring;
+    }
+
 
     public List<IpAddress> getScheduleIps() {
         return ipData.getIps();
