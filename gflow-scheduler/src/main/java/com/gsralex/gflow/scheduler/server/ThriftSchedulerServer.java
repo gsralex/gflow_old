@@ -1,9 +1,9 @@
-package com.gsralex.gflow.scheduler.thrift;
+package com.gsralex.gflow.scheduler.server;
 
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.thriftgen.TScheduleAckService;
 import com.gsralex.gflow.core.thriftgen.TScheduleService;
-import com.gsralex.gflow.scheduler.SchedulerServer;
+import org.apache.log4j.Logger;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
@@ -21,15 +21,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class ThriftSchedulerServer {
 
+    private static final Logger LOGGER = Logger.getLogger(ThriftSchedulerServer.class);
+
     @Autowired
     private TScheduleAckServiceImpl scheduleAckService;
     @Autowired
     private TScheduleServiceImpl scheduleService;
 
-    public void start() {
+    public void start() throws ScheduleTransportException {
         TServerTransport tServerSocket;
         try {
-            GFlowContext context=GFlowContext.getContext();
+            GFlowContext context = GFlowContext.getContext();
             tServerSocket = new TServerSocket(context.getConfig().getPort());
             TMultiplexedProcessor processor = new TMultiplexedProcessor();
             TScheduleService.Processor<TScheduleServiceImpl> schedule =
@@ -49,7 +51,8 @@ public class ThriftSchedulerServer {
             }).start();
 
         } catch (TTransportException e) {
-            e.printStackTrace();
+            LOGGER.error("ThriftSchedulerServer.start", e);
+            throw new ScheduleTransportException(e);
         }
     }
 }

@@ -19,12 +19,10 @@ import com.gsralex.gflow.scheduler.parameter.DynamicParamContext;
 import com.gsralex.gflow.scheduler.retry.RetryTask;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
-import com.gsralex.gflow.scheduler.thrift.TRpcClient;
-import org.apache.thrift.TException;
-import org.apache.thrift.transport.TSocket;
+import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
+import com.gsralex.gflow.scheduler.scheduleclient.TRpcClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Set;
@@ -93,6 +91,16 @@ public class ScheduleActualHanle {
             flowGuide.setStatus(JobGroupStatusEnum.PAUSE);
             //更新数据库
             jobGroup.setStatus(JobGroupStatusEnum.PAUSE.getValue());
+            flowJobDao.updateJobGroup(jobGroup);
+        }
+    }
+
+    public void stopGroup(long jobGroupId) {
+        JobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
+        if (jobGroup != null) {
+            FlowGuide flowGuide = flowMapHandle.getFlowGuide(jobGroupId);
+            flowGuide.setStatus(JobGroupStatusEnum.STOP);
+            jobGroup.setStatus(JobGroupStatusEnum.STOP.getValue());
             flowJobDao.updateJobGroup(jobGroup);
         }
     }
@@ -181,8 +189,8 @@ public class ScheduleActualHanle {
             if (result.getCode() == ErrConstants.OK) {
                 sendOk = true;
             }
-        } catch (TException e) {
-
+        } catch (ScheduleTransportException e) {
+            //连接失败
         }
         if (!sendOk) {
             flowJobDao.updateJobStatus(job.getId(), JobStatusEnum.SendErr.getValue());

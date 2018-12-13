@@ -33,6 +33,10 @@ public class ScheduleLinkHandle {
         scheduleActualHanle.pauseGroup(jobGroupId);
     }
 
+    public void stopGroup(long jobGroupId) {
+        scheduleActualHanle.stopGroup(jobGroupId);
+    }
+
     public void continueGroup(long jobGroupId) {
         scheduleActualHanle.continueGroup(jobGroupId, retry);
     }

@@ -5,7 +5,8 @@ import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.scheduler.parameter.DynamicParam;
 import com.gsralex.gflow.core.spring.SpringContextHolder;
 import com.gsralex.gflow.scheduler.spring.SpringConfiguration;
-import com.gsralex.gflow.scheduler.thrift.ThriftSchedulerServer;
+import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
+import com.gsralex.gflow.scheduler.server.ThriftSchedulerServer;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -17,9 +18,8 @@ import java.util.Date;
  */
 public class SchedulerServer {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ScheduleTransportException {
         SchedulerServer server = new SchedulerServer();
-
         server.start();
     }
 
@@ -42,7 +42,7 @@ public class SchedulerServer {
         context.addParam(parameter);
     }
 
-    public void start() {
+    public void start() throws ScheduleTransportException {
         GFlowContext context = GFlowContext.getContext();
         context.initConfig();
         if (context.getConfig().getZkActive() != null && context.getConfig().getZkActive()) {

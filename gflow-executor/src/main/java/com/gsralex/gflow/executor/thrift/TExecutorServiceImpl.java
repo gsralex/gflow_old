@@ -2,7 +2,6 @@ package com.gsralex.gflow.executor.thrift;
 
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.Parameter;
-import com.gsralex.gflow.core.domain.ExecuteConfig;
 import com.gsralex.gflow.core.thriftgen.TExecutorService;
 import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.core.thriftgen.TResult;
@@ -10,10 +9,7 @@ import com.gsralex.gflow.executor.AckExecuteProcess;
 import com.gsralex.gflow.executor.ExecuteProcess;
 import com.gsralex.gflow.executor.ExecutorContext;
 import com.gsralex.gflow.executor.ExecutorThread;
-import com.gsralex.gflow.executor.demo.DemoProcess1;
 import org.apache.thrift.TException;
-import org.apache.thrift.transport.TTransportException;
-import org.springframework.beans.BeansException;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,11 +19,6 @@ import java.util.concurrent.Executors;
  * @version 2018/8/4
  */
 public class TExecutorServiceImpl implements TExecutorService.Iface {
-
-    public static void main(String[] args) {
-        System.out.println(ExecuteProcess.class.isAssignableFrom(DemoProcess1.class));
-        System.out.println(AckExecuteProcess.class.isAssignableFrom(DemoProcess1.class));
-    }
 
     private ExecutorService executorService;
 
@@ -68,7 +59,7 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
         }
         TResult tResult = new TResult();
         tResult.setCode(code);
-        tResult.setErrmsg(errMsg);
+        tResult.setMsg(errMsg);
         return tResult;
     }
 

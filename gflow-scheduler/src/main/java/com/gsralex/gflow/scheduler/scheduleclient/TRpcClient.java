@@ -1,21 +1,17 @@
-package com.gsralex.gflow.scheduler.thrift;
+package com.gsralex.gflow.scheduler.scheduleclient;
 
 import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.thriftgen.TExecutorService;
 import com.gsralex.gflow.core.thriftgen.TJobDesc;
 import com.gsralex.gflow.core.thriftgen.TResult;
-import com.gsralex.gflow.scheduler.schedule.ScheduleIpSelector;
-import com.gsralex.gflow.scheduler.SchedulerContext;
+import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author gsralex
@@ -24,24 +20,18 @@ import java.util.List;
 @Service
 public class TRpcClient {
 
-    private static final Logger logger = Logger.getLogger(TRpcClient.class);
+    private static final Logger LOGGER = Logger.getLogger(TRpcClient.class);
 
-
-    public static void main(String[] args) throws TException {
-        TRpcClient client = new TRpcClient();
-        client.schedule(new IpAddress("127.0.0.1", 10092), new TJobDesc());
-    }
-
-    public TResult schedule(IpAddress ip, TJobDesc jobDesc) throws TException {
+    public TResult schedule(IpAddress ip, TJobDesc jobDesc) throws ScheduleTransportException {
         TTransport transport = new TSocket(ip.getIp(), ip.getPort());
         try {
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             TExecutorService.Client client = new TExecutorService.Client(protocol);
             return client.schedule(jobDesc);
-        } catch (Throwable e) {
-            logger.error("TRpcClient.send", e);
-            throw e;
+        } catch (TException e) {
+            LOGGER.error("TRpcClient.send", e);
+            throw new ScheduleTransportException(e);
         } finally {
             if (transport != null)
                 transport.close();
