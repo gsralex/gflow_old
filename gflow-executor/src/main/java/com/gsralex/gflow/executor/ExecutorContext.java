@@ -4,7 +4,7 @@ import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.spring.SpringContextHolder;
 import com.gsralex.gflow.core.zk.SchedulerIpData;
-import com.gsralex.gflow.executor.thrift.TExecutorClient;
+import com.gsralex.gflow.executor.connectclient.TExecutorClient;
 import org.springframework.context.ApplicationContext;
 
 import java.util.List;

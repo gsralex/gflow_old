@@ -1,4 +1,4 @@
-package com.gsralex.gflow.executor.thrift;
+package com.gsralex.gflow.executor.server;
 
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.Parameter;
@@ -9,6 +9,7 @@ import com.gsralex.gflow.executor.AckExecuteProcess;
 import com.gsralex.gflow.executor.ExecuteProcess;
 import com.gsralex.gflow.executor.ExecutorContext;
 import com.gsralex.gflow.executor.ExecutorThread;
+import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 
 import java.util.concurrent.ExecutorService;
@@ -20,6 +21,8 @@ import java.util.concurrent.Executors;
  */
 public class TExecutorServiceImpl implements TExecutorService.Iface {
 
+
+    private static final Logger LOGGER = Logger.getLogger(TExecutorServiceImpl.class);
     private ExecutorService executorService;
 
     public TExecutorServiceImpl() {
@@ -56,6 +59,7 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
         } catch (Exception e) {
             errMsg = e.getMessage();
             code = ErrConstants.ERR_INTERNAL;
+            LOGGER.error("TExecutorServiceImpl.schedule", e);
         }
         TResult tResult = new TResult();
         tResult.setCode(code);

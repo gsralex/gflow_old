@@ -1,7 +1,7 @@
 package com.gsralex.gflow.executor;
 
 import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.executor.thrift.TExecutorServer;
+import com.gsralex.gflow.executor.server.TExecutorServer;
 import org.springframework.context.ApplicationContext;
 
 
@@ -22,6 +22,10 @@ public class ExecutorServer {
         executorContext.setGflowContext(context);
         TExecutorServer server = new TExecutorServer(executorContext);
         server.start(context.getConfig().getPort());
+    }
+
+    public static void main(String[] args){
+        ExecutorServer server;
     }
 
 }

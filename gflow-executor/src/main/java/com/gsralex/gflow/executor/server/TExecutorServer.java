@@ -1,4 +1,4 @@
-package com.gsralex.gflow.executor.thrift;
+package com.gsralex.gflow.executor.server;
 
 import com.gsralex.gflow.core.thriftgen.TExecutorService;
 import com.gsralex.gflow.executor.ExecutorContext;
