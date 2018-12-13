@@ -1,4 +1,4 @@
-package com.gsralex.gflow.core.util;
+package com.gsralex.gflow.core.connect;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -8,9 +8,9 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * @author gsralex
- * @version 2018/10/23
+ * @version 2018/12/13
  */
-public class AccessTokenUtils {
+public class SecurityUtils {
 
     public static boolean check(String accessKey, String accessToken) {
         return StringUtils.equals(encrypt(accessKey), accessToken);

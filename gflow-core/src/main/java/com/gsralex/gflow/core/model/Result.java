@@ -5,9 +5,13 @@ public class Result {
     private int code;
     private String msg;
 
-    public Result(int code,String msg){
-        this.code=code;
-        this.msg=msg;
+    public Result() {
+        this(0, "");
+    }
+
+    public Result(int code, String msg) {
+        this.code = code;
+        this.msg = msg;
     }
 
     public int getCode() {

@@ -13,5 +13,5 @@ public interface ScheduleClient {
 
     Result scheduleAction(long id,Parameter parameter);
 
-    Result setGflowSettings(String key,String value);
+    Result setSettings(String key,String value);
 }

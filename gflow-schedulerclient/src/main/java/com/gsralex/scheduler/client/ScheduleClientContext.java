@@ -14,6 +14,7 @@ public class ScheduleClientContext {
 
     private GFlowContext context;
     private SchedulerIpData ipData;
+    private static final ScheduleClient scheduleClient = new ScheduleClientImpl();
 
 
     private ScheduleClientContext() {
@@ -22,6 +23,10 @@ public class ScheduleClientContext {
             context.initConfig();
             ipData = new SchedulerIpData(context);
         }
+    }
+
+    public static ScheduleClient getClient() {
+        return scheduleClient;
     }
 
     private static ScheduleClientContext currentContext = new ScheduleClientContext();

@@ -1,14 +1,11 @@
 package com.gsralex.scheduler.client;
 
+import com.gsralex.gflow.core.connect.SecurityUtils;
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.model.Result;
-import com.gsralex.gflow.core.thriftgen.TGroupJobDesc;
-import com.gsralex.gflow.core.thriftgen.TJobDesc;
-import com.gsralex.gflow.core.thriftgen.TResult;
-import com.gsralex.gflow.core.thriftgen.TScheduleService;
-import com.gsralex.gflow.core.util.AccessTokenUtils;
+import com.gsralex.gflow.core.thriftgen.*;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -16,7 +13,6 @@ import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
-import org.apache.thrift.transport.TTransportException;
 
 /**
  * @author gsralex
@@ -24,7 +20,7 @@ import org.apache.thrift.transport.TTransportException;
  */
 public class ScheduleClientImpl implements ScheduleClient {
 
-    private static final Logger logger = Logger.getLogger(ScheduleClientImpl.class);
+    private static final Logger LOGGER = Logger.getLogger(ScheduleClientImpl.class);
 
     private GFlowContext context;
 
@@ -34,30 +30,34 @@ public class ScheduleClientImpl implements ScheduleClient {
 
 
     public Result scheduleGroup(long groupId, Parameter parameter) {
-        class ScheduleGroupCallback implements ScheduleCallback{
+        class ClientGroupCallback implements ClientCallback {
 
             @Override
-            public Result doSchedule(TScheduleService.Client client) {
+            public Result doSchedule(TScheduleService.Client client) throws TException {
                 TGroupJobDesc tDesc = new TGroupJobDesc();
                 tDesc.setParameter(parameter.toString());
                 tDesc.setGroupId(groupId);
-                String accessKey = context.getConfig().getAccessKey();
-                tDesc.setAccessToken(AccessTokenUtils.encrypt(accessKey));
-                TResult tResult= null;
-                try {
-                    tResult = client.scheduleGroup(tDesc);
-                } catch (TException e) {
-                    e.printStackTrace();
-                }
-                return new Result(tResult.getCode(),tResult.getErrmsg());
+                tDesc.setAccessToken(getAccessToken());
+                TResult tResult = client.scheduleGroup(tDesc);
+                return new Result(tResult.getCode(), tResult.getMsg());
             }
         }
-        return execute(new ScheduleGroupCallback());
+        return execute(new ClientGroupCallback());
     }
 
     @Override
     public Result pauseGroup(long id) {
-        return null;
+        class PauseGroupCallback implements ClientCallback {
+            @Override
+            public Result doSchedule(TScheduleService.Client client) throws TException {
+                TGroupJobDesc tDesc = new TGroupJobDesc();
+                tDesc.setGroupId(id);
+                tDesc.setAccessToken(getAccessToken());
+                TResult tResult = client.pauseGroup(tDesc);
+                return new Result(tResult.getCode(), tResult.getMsg());
+            }
+        }
+        return execute(new PauseGroupCallback());
     }
 
     @Override
@@ -66,33 +66,37 @@ public class ScheduleClientImpl implements ScheduleClient {
     }
 
     public Result scheduleAction(long actionId, Parameter parameter) {
-        class ScheduleActionCallback implements ScheduleCallback {
+        class ClientActionCallback implements ClientCallback {
             @Override
-            public Result doSchedule(TScheduleService.Client client) {
+            public Result doSchedule(TScheduleService.Client client) throws TException {
                 TJobDesc tDesc = new TJobDesc();
                 tDesc.setParameter(parameter.toString());
                 tDesc.setActionId(actionId);
-                String accessKey = context.getConfig().getAccessKey();
-                tDesc.setAccessToken(AccessTokenUtils.encrypt(accessKey));
-                TResult tResult= null;
-                try {
-                    tResult = client.schedule(tDesc);
-                } catch (TException e) {
-                    e.printStackTrace();
-                }
-                return new Result(tResult.getCode(),tResult.getErrmsg());
+                tDesc.setAccessToken(getAccessToken());
+                TResult tResult = client.scheduleAction(tDesc);
+                return new Result(tResult.getCode(), tResult.getMsg());
             }
-
         }
-        return execute(new ScheduleActionCallback());
+        return execute(new ClientActionCallback());
     }
 
     @Override
-    public Result setGflowSettings(String key, String value) {
-        return null;
+    public Result setSettings(String key, String value) {
+        class SetSettingsCallback implements ClientCallback {
+            @Override
+            public Result doSchedule(TScheduleService.Client client) throws TException {
+                TSettingsDesc tDesc = new TSettingsDesc();
+                tDesc.setKey(key);
+                tDesc.setValue(value);
+                tDesc.setAccessToken(getAccessToken());
+                TResult tResult = client.setSettings(tDesc);
+                return new Result(tResult.getCode(), tResult.getMsg());
+            }
+        }
+        return execute(new SetSettingsCallback());
     }
 
-    public Result execute(ScheduleCallback callback){
+    public Result execute(ClientCallback callback) {
         IpAddress ip = getIpAddress();
         TTransport transport = new TSocket(ip.getIp(), ip.getPort());
         try {
@@ -101,10 +105,11 @@ public class ScheduleClientImpl implements ScheduleClient {
             TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "schedule");
             TScheduleService.Client client = new TScheduleService.Client(multiProtocol);
             return callback.doSchedule(client);
-        } catch (TTransportException e) {
-            return null;
+        } catch (Exception e) {
+            LOGGER.error("ScheduleClient.execute", e);
+            throw new ClientTransportException(e);
         } finally {
-            if(transport!=null){
+            if (transport != null) {
                 transport.close();
             }
         }
@@ -115,10 +120,8 @@ public class ScheduleClientImpl implements ScheduleClient {
         return apiContext.getIps().get(0);
     }
 
-
-    public static void main(String[] args) {
-        ScheduleClientImpl api = new ScheduleClientImpl();
-        Parameter parameter = new Parameter("bizdate=20181209");
-        api.scheduleGroup(1, parameter);
+    private String getAccessToken() {
+        String accessKey = context.getConfig().getAccessKey();
+        return SecurityUtils.encrypt(accessKey);
     }
 }

@@ -35,20 +35,19 @@ struct TAckDesc{
     4:string accessToken
 }
 
-//任务结果
-struct TJobResult{
-    1:TJobDesc jobDesc
-    2:i32 code
+struct TSettingsDesc{
+    1:string key
+    2:string value
+    3:string accessToken
 }
 
 
-
 service TScheduleService{
-    TResult schedule(1:TJobDesc desc);
+    TResult scheduleAction(1:TJobDesc desc);
     TResult scheduleGroup(1:TGroupJobDesc desc);
-    TResult pauseGroup(1:i64 id);
-    TResult stopGroup(1:i64 id);
-    TResult setGflowSettings(1:string key,2:string value);
+    TResult pauseGroup(1:TGroupJobDesc desc);
+    TResult stopGroup(1:TGroupJobDesc desc);
+    TResult setSettings(1:TSettingsDesc desc);
 }
 
 service TScheduleAckService{
