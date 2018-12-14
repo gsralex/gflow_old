@@ -12,11 +12,13 @@ import java.util.List;
  * @author gsralex
  * @version 2018/6/2
  */
-@Repository
 public class ConfigDaoImpl implements ConfigDao {
 
-    @Autowired
     private JdbcUtils jdbcUtils;
+
+    public ConfigDaoImpl(JdbcUtils jdbcUtils) {
+        this.jdbcUtils = jdbcUtils;
+    }
 
     @Override
     public Action getAction(long id) {

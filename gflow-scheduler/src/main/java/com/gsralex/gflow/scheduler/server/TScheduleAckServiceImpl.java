@@ -6,6 +6,7 @@ import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.thriftgen.TAckDesc;
 import com.gsralex.gflow.core.thriftgen.TResult;
 import com.gsralex.gflow.core.thriftgen.TScheduleAckService;
+import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.schedule.ScheduleLinkHandle;
 import org.apache.thrift.TException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,14 @@ import org.springframework.stereotype.Service;
  * @author gsralex
  * @version 2018/8/21
  */
-@Service
 public class TScheduleAckServiceImpl implements TScheduleAckService.Iface {
 
-    @Autowired
     private ScheduleLinkHandle scheduleLinkHandle;
 
-    @Override
+    public TScheduleAckServiceImpl(SchedulerContext context) {
+        scheduleLinkHandle = new ScheduleLinkHandle(context);
+    }
+
     public TResult ack(TAckDesc desc) throws TException {
         class AckCallback implements ScheduleCallback {
             @Override

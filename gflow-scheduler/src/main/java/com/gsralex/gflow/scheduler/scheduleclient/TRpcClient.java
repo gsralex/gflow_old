@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
  * @author gsralex
  * @version 2018/3/18
  */
-@Service
 public class TRpcClient {
 
     private static final Logger LOGGER = Logger.getLogger(TRpcClient.class);

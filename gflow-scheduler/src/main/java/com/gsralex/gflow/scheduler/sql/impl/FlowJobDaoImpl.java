@@ -15,11 +15,13 @@ import java.util.List;
  * @author gsralex
  * @version 2018/5/12
  */
-@Repository
 public class FlowJobDaoImpl implements FlowJobDao {
 
-    @Autowired
     private JdbcUtils jdbcUtils;
+
+    public FlowJobDaoImpl(JdbcUtils jdbcUtils) {
+        this.jdbcUtils = jdbcUtils;
+    }
 
     @Override
     public boolean saveJobGroup(JobGroup jobGroup) {

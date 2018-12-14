@@ -5,6 +5,7 @@ import com.gsralex.gflow.core.connect.SecurityUtils;
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.thriftgen.*;
+import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.schedule.ScheduleLinkHandle;
 import org.apache.thrift.TException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,13 @@ import org.springframework.stereotype.Service;
  * @author gsralex
  * @version 2018/3/18
  */
-@Service
 public class TScheduleServiceImpl implements TScheduleService.Iface {
 
-    @Autowired
     private ScheduleLinkHandle scheduleLinkHandle;
+
+    public TScheduleServiceImpl(SchedulerContext context) {
+        scheduleLinkHandle = new ScheduleLinkHandle(context);
+    }
 
     @Override
     public TResult scheduleAction(TJobDesc desc) throws TException {

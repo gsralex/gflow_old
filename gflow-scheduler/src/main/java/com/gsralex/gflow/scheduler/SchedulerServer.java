@@ -2,15 +2,13 @@ package com.gsralex.gflow.scheduler;
 
 
 import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.scheduler.parameter.DynamicParam;
 import com.gsralex.gflow.core.spring.SpringContextHolder;
-import com.gsralex.gflow.scheduler.spring.SpringConfiguration;
+import com.gsralex.gflow.scheduler.parameter.DynamicParam;
+import com.gsralex.gflow.scheduler.retry.RetryProcessor;
 import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
 import com.gsralex.gflow.scheduler.server.ThriftSchedulerServer;
-import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
-
-import java.util.Date;
+import com.gsralex.gflow.scheduler.time.TimerTaskProcessor;
+import org.apache.log4j.Logger;
 
 /**
  * @author gsralex
@@ -18,23 +16,16 @@ import java.util.Date;
  */
 public class SchedulerServer {
 
-    public static void main(String[] args) throws ScheduleTransportException {
-        SchedulerServer server = new SchedulerServer();
-        server.start();
-    }
+    private static final Logger LOGGER = Logger.getLogger(SchedulerServer.class);
 
-    public static class BizDateDynamicParam implements DynamicParam {
-
-        @Override
-        public String getRegexKey() {
-            return "bizdate";
-        }
-
-        @Override
-        public String getValue(String key) {
-            return DateFormatUtils.format(DateUtils.addDays(new Date(), -2), "yyyyMMdd");
-        }
-    }
+    /**
+     * 重试处理器
+     */
+    private RetryProcessor retryProcessor;
+    /**
+     * 任务定时处理器
+     */
+    private TimerTaskProcessor timerTaskProcessor;
 
 
     public void addParameter(DynamicParam parameter) {
@@ -42,30 +33,26 @@ public class SchedulerServer {
         context.addParam(parameter);
     }
 
-    public void start() throws ScheduleTransportException {
+    public void serve() throws ScheduleTransportException {
+        LOGGER.info("====== SchedulerServer STARTING ======");
         GFlowContext context = GFlowContext.getContext();
         context.initConfig();
         if (context.getConfig().getZkActive() != null && context.getConfig().getZkActive()) {
             context.initZk();
         }
-
-        SpringContextHolder.init(SpringConfiguration.class);
         SchedulerContext scheduleContext = SchedulerContext.getContext();
         scheduleContext.setGflowContext(context);
-        ThriftSchedulerServer server = SpringContextHolder.getBean(ThriftSchedulerServer.class);
+        ThriftSchedulerServer server = new ThriftSchedulerServer(scheduleContext);
         server.start();
+        LOGGER.info("====== SchedulerServer.serve STARTED ======");
+        //retryProcessor = new RetryProcessor(scheduleContext);
+        //timerTaskProcessor = new TimerTaskProcessor(scheduleContext);
 
-        //定时任务
-//        TimerTaskProcessor timeProcess = SpringContextHolder.getBean(TimerTaskProcessor.class);
-//        scheduleContext.setTimerTaskProcessor(timeProcess);
-//        timeProcess.start();
-//
-//        //当开启重试的时候才做重试任务执行
-//        if (context.getConfig().getRetryActive() != null && context.getConfig().getRetryActive()) {
-//            RetryProcessor retryProcessor = SpringContextHolder.getBean(RetryProcessor.class);
-//            scheduleContext.setRetryProcessor(retryProcessor);
-//            retryProcessor.start();
-//        }
+    }
+
+    public static void main(String[] args) throws ScheduleTransportException {
+        SchedulerServer server = new SchedulerServer();
+        server.serve();
     }
 }
 

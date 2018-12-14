@@ -1,7 +1,9 @@
 package com.gsralex.gflow.scheduler.schedule;
 
 import com.gsralex.gflow.core.context.GFlowContext;
+import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
+import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,18 +13,20 @@ import org.springframework.stereotype.Service;
  * @author gsralex
  * @version 2018/8/22
  */
-@Service
 public class ScheduleLinkHandle {
 
-    @Autowired
     private ScheduleActualHanle scheduleActualHanle;
-    @Autowired
     private FlowJobDao flowJobDao;
+
 
     private boolean retry;
 
-    public ScheduleLinkHandle() {
+    public ScheduleLinkHandle(SchedulerContext context) {
         retry = getRetry();
+
+        flowJobDao = new FlowJobDaoImpl(context.getJdbcUtils());
+
+        scheduleActualHanle = new ScheduleActualHanle(context);
     }
 
     public void scheduleGroup(long groupId, String parameter, long executeConfigId) {

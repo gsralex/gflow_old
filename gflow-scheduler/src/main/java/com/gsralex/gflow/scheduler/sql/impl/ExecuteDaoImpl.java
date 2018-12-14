@@ -8,11 +8,14 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
 public class ExecuteDaoImpl implements ExecuteDao {
 
-    @Autowired
+
     private JdbcUtils jdbcUtils;
+
+    public ExecuteDaoImpl(JdbcUtils jdbcUtils) {
+        this.jdbcUtils = jdbcUtils;
+    }
 
     @Override
     public List<ExecuteConfig> listExecuteConfig() {

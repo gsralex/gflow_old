@@ -21,6 +21,8 @@ import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
 import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
 import com.gsralex.gflow.scheduler.scheduleclient.TRpcClient;
+import com.gsralex.gflow.scheduler.sql.impl.ConfigDaoImpl;
+import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,19 +35,22 @@ import java.util.Set;
  * @author gsralex
  * @version 2018/6/2
  */
-@Service
 public class ScheduleActualHanle {
 
-    @Autowired
     private ConfigDao configDao;
-    @Autowired
     private FlowJobDao flowJobDao;
-    @Autowired
     private TRpcClient rpcClient;
-    @Autowired
     private FlowMapHandle flowMapHandle;
-    @Autowired
     private ScheduleIpSelector ipSelector;
+
+    public ScheduleActualHanle(SchedulerContext context) {
+        configDao = new ConfigDaoImpl(context.getJdbcUtils());
+        flowJobDao = new FlowJobDaoImpl(context.getJdbcUtils());
+        rpcClient = new TRpcClient();
+        flowMapHandle = new FlowMapHandle(context);
+        ipSelector = new ScheduleIpSelector(context);
+
+    }
 
 
     public FlowResult scheduleGroup(long triggerGroupId, String parameter, long executeConfigId, boolean retry) {
@@ -172,7 +177,7 @@ public class ScheduleActualHanle {
             retryTask.setRetryTime(System.currentTimeMillis());
             retryTask.setJobId(job.getId());
             retryTask.getActionDesc().setRetryJobId(job.getId());
-            SchedulerContext.getContext().getRetryProcessor().put(retryTask);//加入重试队列
+            //SchedulerContext.getContext().getRetryProcessor().put(retryTask);//加入重试队列
         }
 
         TJobDesc jobDesc = new TJobDesc();
@@ -209,7 +214,7 @@ public class ScheduleActualHanle {
             if (job.getJobGroupId() != 0) {
                 FlowGuide flowGuide = flowMapHandle.getFlowGuide(job.getJobGroupId());
                 if (retry) {
-                    SchedulerContext.getContext().getRetryProcessor().mark(jobId, job.getRetryJobId(), jobOk);
+                    //SchedulerContext.getContext().getRetryProcessor().mark(jobId, job.getRetryJobId(), jobOk);
                 }
                 if (jobOk) {
                     flowGuide.updateNodeOk(job.getIndex(), jobOk);

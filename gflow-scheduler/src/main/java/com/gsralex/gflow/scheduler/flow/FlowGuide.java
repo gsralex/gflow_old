@@ -20,11 +20,12 @@ public class FlowGuide {
     private static final int ROOT_INDEX = 0;
 
     //indexMap key->index,value->flownode
-    private Map<Integer, FlowNode> posMap;
+    private Map<Integer, FlowNode> posMap = new HashMap<>();
     private long groupId;
     private JobGroupStatusEnum status;
 
-    public FlowGuide(long groupId, List<Flow> flows, List<FlowDirect> directs, JobGroupStatusEnum status) {
+    public FlowGuide(long groupId, List<Flow> flows, List<FlowDirect> directs,
+                     JobGroupStatusEnum status) {
         this(groupId, flows, directs, null, status);
     }
 
@@ -36,9 +37,9 @@ public class FlowGuide {
      * @param directs 流程流转配置
      * @param jobs    所有流程组的执行的任务
      */
-    public FlowGuide(long groupId, List<Flow> flows, List<FlowDirect> directs, List<Job> jobs, JobGroupStatusEnum status) {
+    public FlowGuide(long groupId, List<Flow> flows, List<FlowDirect> directs,
+                     List<Job> jobs, JobGroupStatusEnum status) {
         this.groupId = groupId;
-        this.posMap = new HashMap<>();
         this.status = status;
 
         Map<Integer, List<Integer>> directMap = new HashMap<>();
@@ -79,6 +80,7 @@ public class FlowGuide {
 
     /**
      * 列出根节点下待执行的节点
+     *
      * @return
      */
     public List<FlowNode> listRoot() {

@@ -10,6 +10,8 @@ import com.gsralex.gflow.scheduler.flow.FlowGuideMap;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
+import com.gsralex.gflow.scheduler.sql.impl.ConfigDaoImpl;
+import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +21,17 @@ import java.util.List;
  * @author gsralex
  * @version 2018/8/19
  */
-@Service
+
 public class FlowMapHandle {
 
-
-    @Autowired
     private ConfigDao configDao;
-    @Autowired
     private FlowJobDao flowJobDao;
+
+
+    public FlowMapHandle(SchedulerContext context) {
+        configDao = new ConfigDaoImpl(context.getJdbcUtils());
+        flowJobDao = new FlowJobDaoImpl(context.getJdbcUtils());
+    }
 
 
     public FlowGuide initGroup(long jobGroupId, long flowGroupId) {

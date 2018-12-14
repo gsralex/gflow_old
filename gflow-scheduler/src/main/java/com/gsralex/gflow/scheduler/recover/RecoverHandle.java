@@ -12,12 +12,10 @@ import java.util.List;
  * @author gsralex
  * @version 2018/8/24
  */
-@Service
+
 public class RecoverHandle {
 
-    @Autowired
     private FlowJobDao flowJobDao;
-    @Autowired
     private ScheduleLinkHandle scheduleLinkHandle;
 
     private void recoverTask() {

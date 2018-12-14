@@ -3,10 +3,12 @@ package com.gsralex.gflow.scheduler.retry;
 import com.gsralex.gflow.core.config.GFlowConfig;
 import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.domain.Job;
+import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.schedule.ActionDesc;
 import com.gsralex.gflow.scheduler.schedule.ActionResult;
 import com.gsralex.gflow.scheduler.schedule.ScheduleActualHanle;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
+import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +20,6 @@ import java.util.Map;
  * @author gsralex
  * @version 2018/8/21
  */
-@Component
 public class RetryProcessor {
 
 
@@ -26,10 +27,15 @@ public class RetryProcessor {
     private Map<Long, RetryTask> retryTaskMap = new HashMap<>();
     private GFlowConfig config = GFlowContext.getContext().getConfig();
 
-    @Autowired
     private ScheduleActualHanle actualHanle;
-    @Autowired
     private FlowJobDao flowJobDao;
+
+    private SchedulerContext context;
+
+    public RetryProcessor(SchedulerContext context) {
+        this.context = context;
+        this.flowJobDao = new FlowJobDaoImpl(context.getJdbcUtils());
+    }
 
     public void start() {
         recover();
