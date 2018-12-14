@@ -29,7 +29,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.gsralex.scheduler.client.ScheduleClientContext</mainClass>
+                            <mainClass>com.gsralex.scheduler.client.SchedulerClientContext</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -1,7 +1,6 @@
 package com.gsralex.scheduler.client;
 
 import com.gsralex.gflow.core.connect.SecurityUtils;
-import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.model.Result;
@@ -22,10 +21,10 @@ public class ScheduleClientImpl implements ScheduleClient {
 
     private static final Logger LOGGER = Logger.getLogger(ScheduleClientImpl.class);
 
-    private GFlowContext context;
+    private SchedulerClientContext context;
 
-    public ScheduleClientImpl() {
-        context = ScheduleClientContext.getContext().getGFlowContext();
+    public ScheduleClientImpl(SchedulerClientContext context) {
+        this.context = context;
     }
 
 
@@ -116,8 +115,7 @@ public class ScheduleClientImpl implements ScheduleClient {
     }
 
     private IpAddress getIpAddress() {
-        ScheduleClientContext apiContext = ScheduleClientContext.getContext();
-        return apiContext.getIps().get(0);
+        return context.getIps().get(0);
     }
 
     private String getAccessToken() {

@@ -14,7 +14,6 @@
         <module>gflow-schedulerclient</module>
     </modules>
     <properties>
-        <spring.version>5.0.3.RELEASE</spring.version>
         <junit.version>4.12</junit.version>
         <commonslang3.version>3.4</commonslang3.version>
         <log4j.version>1.2.17</log4j.version>
@@ -70,12 +69,6 @@
                 <artifactId>zkclient</artifactId>
                 <version>${zkclient.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commonslang3.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.gsralex.gdata</groupId>
                 <artifactId>gdata-bean</artifactId>
@@ -87,23 +80,6 @@
                 <version>${gflow.version}</version>
             </dependency>
 
-            <!--spring-->
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
