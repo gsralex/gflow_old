@@ -1,4 +1,4 @@
-package com.gsralex.gflow.core.domain;
+package com.gsralex.gflow.scheduler.domain;
 
 /**
  * @author gsralex

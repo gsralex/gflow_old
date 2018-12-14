@@ -1,17 +1,13 @@
 package com.gsralex.gflow.scheduler.retry;
 
 import com.gsralex.gflow.core.config.GFlowConfig;
-import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.core.domain.Job;
 import com.gsralex.gflow.scheduler.SchedulerContext;
+import com.gsralex.gflow.scheduler.domain.Job;
 import com.gsralex.gflow.scheduler.schedule.ActionDesc;
 import com.gsralex.gflow.scheduler.schedule.ActionResult;
 import com.gsralex.gflow.scheduler.schedule.ScheduleActualHanle;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
 import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +21,6 @@ public class RetryProcessor {
 
     //key->taskId,value->task，重试任务
     private Map<Long, RetryTask> retryTaskMap = new HashMap<>();
-    private GFlowConfig config = GFlowContext.getContext().getConfig();
 
     private ScheduleActualHanle actualHanle;
     private FlowJobDao flowJobDao;
@@ -48,7 +43,7 @@ public class RetryProcessor {
     }
 
     private void recover() {
-        List<Job> retryJobList = flowJobDao.listJobNeedRetry(config.getRetryCnt());
+        List<Job> retryJobList = flowJobDao.listJobNeedRetry(3);
         for (Job job : retryJobList) {
             RetryTask retryTask = new RetryTask();
             retryTask.setJobId(job.getId());
@@ -125,7 +120,7 @@ public class RetryProcessor {
         //3:2^2*10=40s
         //4:2^3*10=80s
         //5:2^4*10=160s
-        long retryWaitTime = Math.round(Math.pow(2, task.getRetryCnt()) * config.getRetryIntervalMills()); //2^retrycnt*interval
+        long retryWaitTime = Math.round(Math.pow(2, task.getRetryCnt()) * 1);//config.getRetryIntervalMills()); //2^retrycnt*interval
         //下次执行时间=放入时间+任务超时时间+重试等待时间
         long nextExecutionTime = task.getRetryTime() + task.getTimeoutTime() + retryWaitTime;
         return nextExecutionTime - currentTime;
@@ -143,10 +138,10 @@ public class RetryProcessor {
                     if (task == null) {
                         retryTaskMap.wait();
                     }
-                    if (task.getRetryCnt() >= config.getRetryCnt()) {
-                        retryTaskMap.remove(task.getJobId());
-                        continue;
-                    }
+//                    if (task.getRetryCnt() >= config.getRetryCnt()) {
+//                        retryTaskMap.remove(task.getJobId());
+//                        continue;
+//                    }
 
                     long interval = getInterval(task);
                     if (interval < 0) {

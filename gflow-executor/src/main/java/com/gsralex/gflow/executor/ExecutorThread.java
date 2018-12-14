@@ -2,6 +2,7 @@ package com.gsralex.gflow.executor;
 
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.thriftgen.TJobDesc;
+import com.gsralex.gflow.executor.connectclient.TExecutorClient;
 import org.apache.log4j.Logger;
 
 /**
@@ -10,11 +11,12 @@ import org.apache.log4j.Logger;
  */
 public class ExecutorThread implements Runnable {
 
-    private static final Logger logger = Logger.getLogger(ExecutorThread.class);
+    private static final Logger LOGGER = Logger.getLogger(ExecutorThread.class);
     private ExecuteProcess process;
     private AckExecuteProcess ackProcess;
     private Parameter parameter;
     private TJobDesc tJobDesc;
+    private TExecutorClient client;
 
     public ExecutorThread(ExecuteProcess process) {
         this.process = process;
@@ -40,14 +42,14 @@ public class ExecutorThread implements Runnable {
             try {
                 ok = process.process(jobDesc);
             } catch (Exception e) {
-                logger.error(process.getClass().getName() + ":" + e);
+                LOGGER.error(process.getClass().getName() + ":" + e);
             }
-            ExecutorContext.getContext().ack(jobDesc.getJobId(), ok);
+            client.ack(jobDesc.getJobId(), ok);
         } else if (ackProcess != null) {
             try {
                 ackProcess.process(jobDesc);
             } catch (Exception e) {
-                logger.error(ackProcess.getClass().getName() + ":" + e);
+                LOGGER.error(ackProcess.getClass().getName() + ":" + e);
             }
         }
     }

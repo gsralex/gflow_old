@@ -1,13 +1,11 @@
 package com.gsralex.gflow.scheduler.sql.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.core.domain.Job;
-import com.gsralex.gflow.core.domain.JobGroup;
-import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
-import com.gsralex.gflow.core.enums.JobStatusEnum;
+import com.gsralex.gflow.scheduler.domain.Job;
+import com.gsralex.gflow.scheduler.domain.JobGroup;
+import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
+import com.gsralex.gflow.scheduler.enums.JobStatusEnum;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

@@ -6,6 +6,7 @@ import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.thriftgen.TAckDesc;
 import com.gsralex.gflow.core.thriftgen.TScheduleAckService;
 import com.gsralex.gflow.executor.ExecutorContext;
+import com.gsralex.gflow.executor.config.ExecutorConfig;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -42,7 +43,7 @@ public class TExecutorClient {
             TScheduleAckService.Client client = new TScheduleAckService.Client(multiProtocol);
             TAckDesc ackDesc = new TAckDesc();
             ackDesc.setJobId(jobId);
-            String accessKey = context.getGFlowContext().getConfig().getAccessKey();
+            String accessKey = context.getConfig().getAccessKey();
             ackDesc.setAccessToken(SecurityUtils.encrypt(accessKey));
             if (ok) {
                 ackDesc.setCode(ErrConstants.OK);

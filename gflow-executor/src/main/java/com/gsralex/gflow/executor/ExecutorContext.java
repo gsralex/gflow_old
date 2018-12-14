@@ -1,12 +1,14 @@
 package com.gsralex.gflow.executor;
 
-import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
-import com.gsralex.gflow.core.spring.SpringContextHolder;
-import com.gsralex.gflow.core.zk.SchedulerIpData;
+import com.gsralex.gflow.core.util.PropertiesUtils;
+import com.gsralex.gflow.executor.config.ExecutorConfig;
 import com.gsralex.gflow.executor.connectclient.TExecutorClient;
+import com.gsralex.gflow.executor.spring.SpringContextHolder;
 import org.springframework.context.ApplicationContext;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,24 +16,33 @@ import java.util.List;
  * @version 2018/9/21
  */
 public class ExecutorContext {
-    private static ExecutorContext currentContext = new ExecutorContext();
-    private SchedulerIpData ipData;
-    private GFlowContext gFlowContext;
+
+    private static final String CONFIG_FILEPATH = "/gflow.properties";
+
     private TExecutorClient client;
     private boolean spring;
 
-    public static ExecutorContext getContext() {
-        return currentContext;
-    }
+    private ExecutorConfig config;
+
+    private List<IpAddress> schedulerIps=new ArrayList<>();
 
     public ExecutorContext() {
         client = new TExecutorClient(this);
     }
 
-    public void setGflowContext(GFlowContext context) {
-        gFlowContext = context;
-        ipData = new SchedulerIpData(context);
+    public void init() throws IOException {
+        config= PropertiesUtils.getConfig(CONFIG_FILEPATH,ExecutorConfig.class);
     }
+
+    private void initIps(){
+        String[] ips= config.getSchedulerIps().split(",");
+        for(String ip:ips){
+            String[] ipport= ip.split(":");
+            IpAddress ipAddress=new IpAddress(ipport[0],Integer.parseInt(ipport[1]));
+            schedulerIps.add(ipAddress);
+        }
+    }
+
 
     public void ack(long id, boolean ok) {
         client.ack(id, ok);
@@ -51,13 +62,11 @@ public class ExecutorContext {
         return this.spring;
     }
 
-
     public List<IpAddress> getScheduleIps() {
-        return ipData.getIps();
+        return schedulerIps;
     }
 
-    public GFlowContext getGFlowContext() {
-        return gFlowContext;
+    public ExecutorConfig getConfig() {
+        return config;
     }
-
 }

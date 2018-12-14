@@ -1,8 +1,10 @@
 package com.gsralex.gflow.executor;
 
-import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.executor.server.TExecutorServer;
+import org.apache.thrift.transport.TTransportException;
 import org.springframework.context.ApplicationContext;
+
+import java.io.IOException;
 
 
 /**
@@ -11,20 +13,22 @@ import org.springframework.context.ApplicationContext;
  */
 public class ExecutorServer {
 
+    private ExecutorContext context;
+    public ExecutorServer() throws IOException {
+        context = new ExecutorContext();
+        context.init();
+    }
+
     public void setSpringContext(ApplicationContext context) {
-        ExecutorContext.getContext().setSpringContext(context);
+        this.context.setSpringContext(context);
     }
 
-    public void start() {
-        GFlowContext context = GFlowContext.getContext();
-        context.initConfig();
-        ExecutorContext executorContext = ExecutorContext.getContext();
-        executorContext.setGflowContext(context);
-        TExecutorServer server = new TExecutorServer(executorContext);
-        server.start(context.getConfig().getPort());
+    public void serve() throws TTransportException {
+        TExecutorServer server = new TExecutorServer(context);
+        server.start();
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         ExecutorServer server;
     }
 

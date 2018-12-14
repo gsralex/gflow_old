@@ -1,14 +1,13 @@
 package com.gsralex.gflow.scheduler;
 
-
-import com.gsralex.gflow.core.context.GFlowContext;
-import com.gsralex.gflow.core.spring.SpringContextHolder;
 import com.gsralex.gflow.scheduler.parameter.DynamicParam;
 import com.gsralex.gflow.scheduler.retry.RetryProcessor;
 import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
 import com.gsralex.gflow.scheduler.server.ThriftSchedulerServer;
 import com.gsralex.gflow.scheduler.time.TimerTaskProcessor;
 import org.apache.log4j.Logger;
+
+import java.io.IOException;
 
 /**
  * @author gsralex
@@ -27,22 +26,18 @@ public class SchedulerServer {
      */
     private TimerTaskProcessor timerTaskProcessor;
 
+    private SchedulerContext context;
 
     public void addParameter(DynamicParam parameter) {
-        SchedulerContext context = SchedulerContext.getContext();
         context.addParam(parameter);
     }
 
-    public void serve() throws ScheduleTransportException {
+    public void serve() throws ScheduleTransportException, IOException {
         LOGGER.info("====== SchedulerServer STARTING ======");
-        GFlowContext context = GFlowContext.getContext();
-        context.initConfig();
-        if (context.getConfig().getZkActive() != null && context.getConfig().getZkActive()) {
-            context.initZk();
-        }
-        SchedulerContext scheduleContext = SchedulerContext.getContext();
-        scheduleContext.setGflowContext(context);
-        ThriftSchedulerServer server = new ThriftSchedulerServer(scheduleContext);
+        SchedulerContext context = new SchedulerContext();
+        context.init();
+
+        ThriftSchedulerServer server = new ThriftSchedulerServer(context);
         server.start();
         LOGGER.info("====== SchedulerServer.serve STARTED ======");
         //retryProcessor = new RetryProcessor(scheduleContext);
@@ -50,7 +45,7 @@ public class SchedulerServer {
 
     }
 
-    public static void main(String[] args) throws ScheduleTransportException {
+    public static void main(String[] args) throws ScheduleTransportException, IOException {
         SchedulerServer server = new SchedulerServer();
         server.serve();
     }

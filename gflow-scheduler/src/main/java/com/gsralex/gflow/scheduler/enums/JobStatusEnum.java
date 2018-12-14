@@ -1,4 +1,4 @@
-package com.gsralex.gflow.core.enums;
+package com.gsralex.gflow.scheduler.enums;
 
 public enum JobStatusEnum {
 

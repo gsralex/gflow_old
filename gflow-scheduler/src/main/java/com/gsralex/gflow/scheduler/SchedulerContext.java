@@ -1,31 +1,28 @@
 package com.gsralex.gflow.scheduler;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.util.PropertiesUtils;
+import com.gsralex.gflow.scheduler.config.SchedulerConfig;
 import com.gsralex.gflow.scheduler.flow.FlowGuideMap;
-import com.gsralex.gflow.core.zk.ExecutorIpData;
 import com.gsralex.gflow.scheduler.parameter.DynamicParam;
 import com.gsralex.gflow.scheduler.parameter.DynamicParamContext;
-import com.gsralex.gflow.scheduler.retry.RetryProcessor;
-import com.gsralex.gflow.scheduler.time.TimerTaskProcessor;
 import org.apache.commons.dbcp.BasicDataSource;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author gsralex
  * @version 2018/9/21
  */
 public class SchedulerContext {
-    private static SchedulerContext currentContext = new SchedulerContext();
 
-    private GFlowContext gFlowContext;
+    private static final String CONFIG_FILEPATH = "/gflow.properties";
 
-    private ExecutorIpData ipData;
+    private SchedulerConfig config;
 
     /**
      * 所有未完成的flow
@@ -37,45 +34,50 @@ public class SchedulerContext {
     private DynamicParamContext paramContext = DynamicParamContext.getContext();
 
     private JdbcUtils jdbcUtils;
+    /**
+     * 执行器ip
+     */
+    private List<IpAddress> executorIps = new ArrayList<>();
 
 
-    private SchedulerContext() {
-
+    public void init() throws IOException {
+        InputStream is = PropertiesUtils.class.getResourceAsStream(CONFIG_FILEPATH);
+        config = PropertiesUtils.getConfig(is, SchedulerConfig.class);
+        initJdbc();
+        initIps();
     }
 
-    public void setGflowContext(GFlowContext context) {
-        gFlowContext = context;
-        this.ipData = new ExecutorIpData(context);
-        initializeJdbc();
 
-    }
-
-    private void initializeJdbc() {
+    private void initJdbc() {
         BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setUrl(gFlowContext.getConfig().getDbUrl());
-        dataSource.setUsername(gFlowContext.getConfig().getDbUsername());
-        dataSource.setPassword(gFlowContext.getConfig().getDbPassword());
-        dataSource.setDriverClassName(gFlowContext.getConfig().getDbDriver());
+        dataSource.setUrl(config.getDbUrl());
+        dataSource.setUsername(config.getDbUsername());
+        dataSource.setPassword(config.getDbPassword());
+        dataSource.setDriverClassName(config.getDbDriver());
         jdbcUtils = new JdbcUtils(dataSource);
     }
 
-
-    public static SchedulerContext getContext() {
-        return currentContext;
+    private void initIps() {
+        String[] ips = config.getExecutorIps().split(",");
+        for (String ip : ips) {
+            String[] ipport = ip.split(":");
+            IpAddress ipAddress = new IpAddress(ipport[0], Integer.parseInt(ipport[1]));
+            executorIps.add(ipAddress);
+        }
     }
 
-    public GFlowContext getGFlowContext() {
-        return gFlowContext;
-    }
 
     public List<IpAddress> getIps() {
-        return ipData.getIps();
+        return executorIps;
     }
 
     public FlowGuideMap getFlowGuideMap() {
         return flowGuideMap;
     }
 
+    public SchedulerConfig getConfig(){
+        return config;
+    }
     /**
      * 添加参数
      *

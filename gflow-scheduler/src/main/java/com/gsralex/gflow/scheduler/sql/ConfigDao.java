@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.sql;
 
-import com.gsralex.gflow.core.domain.*;
+import com.gsralex.gflow.scheduler.domain.*;
 
 import java.util.List;
 

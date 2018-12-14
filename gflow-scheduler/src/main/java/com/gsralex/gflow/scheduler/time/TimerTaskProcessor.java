@@ -1,12 +1,11 @@
 package com.gsralex.gflow.scheduler.time;
 
-import com.gsralex.gflow.core.enums.ExecuteTimeEnum;
 import com.gsralex.gflow.core.model.ExecuteConfig;
 import com.gsralex.gflow.core.util.DtUtils;
 import com.gsralex.gflow.scheduler.SchedulerContext;
+import com.gsralex.gflow.scheduler.enums.ExecuteTimeEnum;
 import com.gsralex.gflow.scheduler.schedule.ScheduleLinkHandle;
 import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -37,12 +36,7 @@ public class TimerTaskProcessor {
 
     public void setTimer(ExecuteConfig config) {
         synchronized (map) {
-            if (map.containsKey(config.getId())) {
-                TimerTask timerTask = map.get(config.getId());
-                timerTask.setExecuteConfig(config);
-            } else {
-                map.put(config.getId(), new TimerTask(config));
-            }
+            map.put(config.getId(), new TimerTask(config));
             map.notify();
         }
     }
@@ -86,13 +80,6 @@ public class TimerTaskProcessor {
                     }
                 }
                 return executionTime - currentTime;
-            }
-            case Interval: {
-                if (timerTask.getLastExecutionTime() == 0) {
-                    return config.getInterval();
-                } else {
-                    return currentTime - (timerTask.getLastExecutionTime() + config.getInterval());
-                }
             }
         }
         return null;

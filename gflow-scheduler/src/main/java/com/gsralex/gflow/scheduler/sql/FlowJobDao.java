@@ -1,8 +1,8 @@
 package com.gsralex.gflow.scheduler.sql;
 
 
-import com.gsralex.gflow.core.domain.Job;
-import com.gsralex.gflow.core.domain.JobGroup;
+import com.gsralex.gflow.scheduler.domain.Job;
+import com.gsralex.gflow.scheduler.domain.JobGroup;
 
 import java.util.List;
 

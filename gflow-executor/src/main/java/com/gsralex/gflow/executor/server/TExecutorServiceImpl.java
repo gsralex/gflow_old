@@ -9,6 +9,7 @@ import com.gsralex.gflow.executor.AckExecuteProcess;
 import com.gsralex.gflow.executor.ExecuteProcess;
 import com.gsralex.gflow.executor.ExecutorContext;
 import com.gsralex.gflow.executor.ExecutorThread;
+import com.gsralex.gflow.executor.config.ExecutorConfig;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 
@@ -25,8 +26,10 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
     private static final Logger LOGGER = Logger.getLogger(TExecutorServiceImpl.class);
     private ExecutorService executorService;
 
-    public TExecutorServiceImpl() {
-        int threads = ExecutorContext.getContext().getGFlowContext().getConfig().getExecutorThreads();
+    private ExecutorContext context;
+    public TExecutorServiceImpl(ExecutorContext context) {
+        this.context=context;
+        int threads = 10;
         executorService = Executors.newFixedThreadPool(threads);
     }
 
@@ -69,8 +72,8 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
 
     private Object getInstance(Class type) throws IllegalAccessException, InstantiationException {
         Object instance;
-        if (ExecutorContext.getContext().isSpring()) {
-            instance = ExecutorContext.getContext().getSpringBean(type);
+        if (context.isSpring()) {
+            instance = context.getSpringBean(type);
         } else {
             instance = type.newInstance();
         }

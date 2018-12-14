@@ -1,10 +1,7 @@
 package com.gsralex.gflow.core.context;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,13 +19,13 @@ public class Parameter {
 
     public Parameter(String str) {
         map = new HashMap<>();
-        if (!StringUtils.isEmpty(str)) {
-            String[] array = StringUtils.split(str, ",");
+        if (str != null) {
+            String[] array = str.split(",");
             for (String item : array) {
-                String[] kv = StringUtils.split(item, "=");
+                String[] kv = item.split("=");
                 String key = "", value = "";
                 if (kv.length >= 1) {
-                    key = StringUtils.lowerCase(kv[0]);
+                    key = kv[0].toLowerCase();
                 }
                 if (kv.length >= 2) {
                     value = kv[1];
@@ -39,7 +36,7 @@ public class Parameter {
     }
 
     public String getString(String key) {
-        key = StringUtils.lowerCase(key);
+        key = key.toLowerCase();
         return map.get(key);
     }
 
@@ -48,7 +45,11 @@ public class Parameter {
     }
 
     public int getInt(String key, int defaultValue) {
-        return NumberUtils.toInt(getString(key), defaultValue);
+        try {
+            return Integer.parseInt(getString(key));
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     public long getLong(String key) {
@@ -56,7 +57,11 @@ public class Parameter {
     }
 
     public long getLong(String key, long defaultValue) {
-        return NumberUtils.toLong(getString(key), defaultValue);
+        try {
+            return Long.parseLong(getString(key));
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     public double getDouble(String key) {
@@ -64,7 +69,11 @@ public class Parameter {
     }
 
     public double getDouble(String key, double defaultValue) {
-        return NumberUtils.toDouble(getString(key), defaultValue);
+        try {
+            return Double.parseDouble(getString(key));
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     public float getFloat(String key) {
@@ -72,7 +81,11 @@ public class Parameter {
     }
 
     public float getFloat(String key, float defaultValue) {
-        return NumberUtils.toFloat(getString(key), defaultValue);
+        try {
+            return Float.parseFloat(getString(key));
+        } catch (NumberFormatException e) {
+            return defaultValue;
+        }
     }
 
     public void put(String key, String value) {
@@ -93,6 +106,6 @@ public class Parameter {
         for (Map.Entry<String, String> entry : map.entrySet()) {
             b.append(String.format("%s=%s,", entry.getKey(), entry.getValue()));
         }
-        return StringUtils.removeEnd(b.toString(), ",");
+        return b.deleteCharAt(b.length() - 1).toString();
     }
 }

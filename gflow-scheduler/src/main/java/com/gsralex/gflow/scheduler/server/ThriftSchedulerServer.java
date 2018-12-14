@@ -1,6 +1,5 @@
 package com.gsralex.gflow.scheduler.server;
 
-import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.core.thriftgen.TScheduleAckService;
 import com.gsralex.gflow.core.thriftgen.TScheduleService;
 import com.gsralex.gflow.scheduler.SchedulerContext;
@@ -12,8 +11,6 @@ import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * @author gsralex
@@ -26,16 +23,17 @@ public class ThriftSchedulerServer {
 
     private TScheduleAckServiceImpl scheduleAckService;
     private TScheduleServiceImpl scheduleService;
+    private SchedulerContext context;
 
     public ThriftSchedulerServer(SchedulerContext context) {
         scheduleAckService = new TScheduleAckServiceImpl(context);
         scheduleService = new TScheduleServiceImpl(context);
+        this.context=context;
     }
 
     public void start() throws ScheduleTransportException {
         TServerTransport tServerSocket;
         try {
-            GFlowContext context = GFlowContext.getContext();
             tServerSocket = new TServerSocket(context.getConfig().getPort());
             TMultiplexedProcessor processor = new TMultiplexedProcessor();
             TScheduleService.Processor<TScheduleServiceImpl> schedule =

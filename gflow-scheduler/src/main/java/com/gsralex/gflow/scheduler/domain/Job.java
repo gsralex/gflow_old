@@ -1,4 +1,4 @@
-package com.gsralex.gflow.core.domain;
+package com.gsralex.gflow.scheduler.domain;
 
 import com.gsralex.gdata.bean.annotation.Column;
 import com.gsralex.gdata.bean.annotation.Id;

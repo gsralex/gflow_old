@@ -1,7 +1,5 @@
 package com.gsralex.gflow.core.connect;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -13,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 public class SecurityUtils {
 
     public static boolean check(String accessKey, String accessToken) {
-        return StringUtils.equals(encrypt(accessKey), accessToken);
+        return encrypt(accessKey).equals(accessToken);
     }
 
     public static String encrypt(String accessKey) {

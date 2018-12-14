@@ -1,19 +1,14 @@
 package com.gsralex.gflow.scheduler.schedule;
 
 import com.gsralex.gflow.core.context.IpAddress;
-import com.gsralex.gflow.core.domain.ActionTag;
 import com.gsralex.gflow.scheduler.SchedulerContext;
+import com.gsralex.gflow.scheduler.domain.ActionTag;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.scheduler.sql.impl.ConfigDaoImpl;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author gsralex

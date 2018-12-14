@@ -20,15 +20,22 @@ import java.util.Set;
 public class PropertiesUtils {
 
 
-    public static <T> T getConfig(String path, Class<T> type) throws IllegalAccessException, IOException, InstantiationException {
+    public static <T> T getConfig(String path, Class<T> type) throws IOException {
         InputStream is = PropertiesUtils.class.getResourceAsStream(path);
         return getConfig(is, type);
     }
 
-    public static <T> T getConfig(InputStream is, Class<T> type) throws IOException, IllegalAccessException, InstantiationException {
+    public static <T> T getConfig(InputStream is, Class<T> type) throws IOException {
         Properties prop = new Properties();
         prop.load(is);
-        T instance = type.newInstance();
+        T instance = null;
+        try {
+            instance = type.newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
 
         Map<String, Field> annotationMap = getAnnotaionMap(type);
         for (Map.Entry<Object, Object> entry : prop.entrySet()) {
@@ -41,8 +48,8 @@ public class PropertiesUtils {
                     Method method = type.getMethod(getSetMethodName(field.getName()), field.getType());
                     method.invoke(instance, typeValue);
                 } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
                 } catch (InvocationTargetException e) {
+                } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }

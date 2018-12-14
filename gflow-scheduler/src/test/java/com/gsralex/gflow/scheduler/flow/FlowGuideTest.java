@@ -1,8 +1,8 @@
 package com.gsralex.gflow.scheduler.flow;
 
-import com.gsralex.gflow.core.domain.Flow;
-import com.gsralex.gflow.core.domain.FlowDirect;
-import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
+import com.gsralex.gflow.scheduler.domain.Flow;
+import com.gsralex.gflow.scheduler.domain.FlowDirect;
+import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
 import org.junit.Assert;
 import org.junit.Test;
 

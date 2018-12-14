@@ -1,19 +1,15 @@
 package com.gsralex.gflow.scheduler.flow;
 
-import com.gsralex.gflow.core.domain.FlowDirect;
-import com.gsralex.gflow.core.domain.Job;
-import com.gsralex.gflow.core.domain.JobGroup;
-import com.gsralex.gflow.core.domain.Flow;
-import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
-import com.gsralex.gflow.scheduler.flow.FlowGuide;
-import com.gsralex.gflow.scheduler.flow.FlowGuideMap;
+import com.gsralex.gflow.scheduler.domain.Flow;
+import com.gsralex.gflow.scheduler.domain.FlowDirect;
+import com.gsralex.gflow.scheduler.domain.Job;
+import com.gsralex.gflow.scheduler.domain.JobGroup;
+import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
 import com.gsralex.gflow.scheduler.sql.impl.ConfigDaoImpl;
 import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -27,10 +23,12 @@ public class FlowMapHandle {
     private ConfigDao configDao;
     private FlowJobDao flowJobDao;
 
+    private SchedulerContext context;
 
     public FlowMapHandle(SchedulerContext context) {
         configDao = new ConfigDaoImpl(context.getJdbcUtils());
         flowJobDao = new FlowJobDaoImpl(context.getJdbcUtils());
+        this.context = context;
     }
 
 
@@ -38,13 +36,13 @@ public class FlowMapHandle {
         List<Flow> flowList = configDao.listFlow(flowGroupId);
         List<FlowDirect> directList = configDao.listFlowDirect(flowGroupId);
         FlowGuide flowGuide = new FlowGuide(jobGroupId, flowList, directList, JobGroupStatusEnum.EXECUTING);
-        FlowGuideMap flowGuideMap = SchedulerContext.getContext().getFlowGuideMap();
+        FlowGuideMap flowGuideMap = context.getFlowGuideMap();
         flowGuideMap.putFlowMap(jobGroupId, flowGuide);
         return flowGuide;
     }
 
     public FlowGuide getFlowGuide(long jobGroupId) {
-        FlowGuideMap flowGuideMap = SchedulerContext.getContext().getFlowGuideMap();
+        FlowGuideMap flowGuideMap = context.getFlowGuideMap();
         FlowGuide flowGuide = flowGuideMap.getFlowMap(jobGroupId);
         if (flowGuide == null) {
             JobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);

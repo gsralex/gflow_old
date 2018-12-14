@@ -23,18 +23,18 @@ public class TRpcSeqClientHolder {
 
 
     public void seqSchedule(TJobDesc jobDesc) {
-        List<IpAddress> ips = SchedulerContext.getContext().getIps();
-        int index = seq(lastIIndex, ips.size());
-        Map<Integer, Integer> map = new HashMap<>();
-        IpAddress ipAddress = ips.get(index);
-        int retryCnt=0;
-        try {
-            rpcClient.schedule(ipAddress, jobDesc);
-        } catch (ScheduleTransportException e) {
-            //TODO:加入zk处于异常状态提醒
-            retryCnt++;
-        }
-        lastIIndex = index;
+//        List<IpAddress> ips = SchedulerContext.getContext().getIps();
+//        int index = seq(lastIIndex, ips.size());
+//        Map<Integer, Integer> map = new HashMap<>();
+//        IpAddress ipAddress = ips.get(index);
+//        int retryCnt=0;
+//        try {
+//            rpcClient.schedule(ipAddress, jobDesc);
+//        } catch (ScheduleTransportException e) {
+//            //TODO:加入zk处于异常状态提醒
+//            retryCnt++;
+//        }
+//        lastIIndex = index;
     }
 
     private int seq(int index, int size) {

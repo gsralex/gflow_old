@@ -1,11 +1,8 @@
 package com.gsralex.gflow.scheduler.schedule;
 
-import com.gsralex.gflow.core.context.GFlowContext;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
 import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * 调度链路
@@ -55,11 +52,11 @@ public class ScheduleLinkHandle {
 
 
     private boolean getRetry() {
-        GFlowContext context = GFlowContext.getContext();
-        if (context.getConfig().getRetryActive() != null
-                && context.getConfig().getRetryActive()) {
-            return true;
-        }
+//        GFlowContext context = GFlowContext.getContext();
+//        if (context.getConfig().getRetryActive() != null
+//                && context.getConfig().getRetryActive()) {
+//            return true;
+//        }
         return false;
     }
 }

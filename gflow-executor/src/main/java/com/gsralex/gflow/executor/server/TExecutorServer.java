@@ -21,29 +21,14 @@ public class TExecutorServer {
         this.context = context;
     }
 
-    public void start(int port) {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TServerSocket serverSocket;
-                try {
-                    serverSocket = new TServerSocket(port);
-                    TProcessor processor = new TExecutorService.Processor(new TExecutorServiceImpl());
-                    TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverSocket);
-                    args.processor(processor);
-                    args.protocolFactory(new TBinaryProtocol.Factory());
-                    TServer tServer = new TThreadPoolServer(args);
-
-                    tServer.serve();
-
-                } catch (TTransportException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }).start();
-
+    public void start() throws TTransportException {
+        TServerSocket serverSocket = new TServerSocket(context.getConfig().getPort());
+        TProcessor processor = new TExecutorService.Processor(new TExecutorServiceImpl(context));
+        TThreadPoolServer.Args args = new TThreadPoolServer.Args(serverSocket);
+        args.processor(processor);
+        args.protocolFactory(new TBinaryProtocol.Factory());
+        TServer tServer = new TThreadPoolServer(args);
+        tServer.serve();
     }
 
 

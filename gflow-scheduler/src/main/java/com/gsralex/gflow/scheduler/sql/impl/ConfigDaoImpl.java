@@ -1,10 +1,8 @@
 package com.gsralex.gflow.scheduler.sql.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.core.domain.*;
+import com.gsralex.gflow.scheduler.domain.*;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

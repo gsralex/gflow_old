@@ -1,10 +1,10 @@
 package com.gsralex.gflow.scheduler.flow;
 
-import com.gsralex.gflow.core.domain.FlowDirect;
-import com.gsralex.gflow.core.domain.Job;
-import com.gsralex.gflow.core.domain.Flow;
-import com.gsralex.gflow.core.enums.JobGroupStatusEnum;
-import com.gsralex.gflow.core.enums.JobStatusEnum;
+import com.gsralex.gflow.scheduler.domain.Flow;
+import com.gsralex.gflow.scheduler.domain.FlowDirect;
+import com.gsralex.gflow.scheduler.domain.Job;
+import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
+import com.gsralex.gflow.scheduler.enums.JobStatusEnum;
 
 import java.util.ArrayList;
 import java.util.HashMap;

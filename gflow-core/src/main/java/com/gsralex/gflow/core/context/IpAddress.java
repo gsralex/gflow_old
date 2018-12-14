@@ -1,8 +1,6 @@
 package com.gsralex.gflow.core.context;
 
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +31,7 @@ public class IpAddress {
     }
 
     public static IpAddress getIp(String ip) {
-        String[] ipport = StringUtils.split(ip, ":");
+        String[] ipport = ip.split(":");
         if (ipport.length < 2) {
             //TODO:加入exception
         }
@@ -50,8 +48,8 @@ public class IpAddress {
 
     public static List<IpAddress> getIpsByConfig(String ipStr) {
         List<IpAddress> ipList = new ArrayList<>();
-        if (!StringUtils.isEmpty(ipStr)) {
-            String[] ips = StringUtils.split(ipStr, ",");
+        if (ipStr!=null) {
+            String[] ips =ipStr.split(",");
             for (String ip : ips) {
                 ipList.add(IpAddress.getIp(ip));
             }
