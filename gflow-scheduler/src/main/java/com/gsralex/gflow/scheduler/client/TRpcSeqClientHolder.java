@@ -1,14 +1,7 @@
-package com.gsralex.gflow.scheduler.scheduleclient;
+package com.gsralex.gflow.scheduler.client;
 
-import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.thriftgen.TJobDesc;
-import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
 import org.apache.log4j.Logger;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author gsralex

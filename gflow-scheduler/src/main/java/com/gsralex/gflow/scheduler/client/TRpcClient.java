@@ -1,4 +1,4 @@
-package com.gsralex.gflow.scheduler.scheduleclient;
+package com.gsralex.gflow.scheduler.client;
 
 import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.thriftgen.TExecutorService;
@@ -11,7 +11,6 @@ import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
-import org.springframework.stereotype.Service;
 
 /**
  * @author gsralex

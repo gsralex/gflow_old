@@ -1,4 +1,4 @@
-package com.gsralex.gflow.scheduler.scheduleclient;
+package com.gsralex.gflow.scheduler.client;
 
 import com.gsralex.gflow.core.thriftgen.TResult;
 

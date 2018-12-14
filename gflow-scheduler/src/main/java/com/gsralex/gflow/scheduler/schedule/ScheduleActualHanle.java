@@ -20,11 +20,9 @@ import com.gsralex.gflow.scheduler.retry.RetryTask;
 import com.gsralex.gflow.scheduler.sql.ConfigDao;
 import com.gsralex.gflow.scheduler.sql.FlowJobDao;
 import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
-import com.gsralex.gflow.scheduler.scheduleclient.TRpcClient;
+import com.gsralex.gflow.scheduler.client.TRpcClient;
 import com.gsralex.gflow.scheduler.sql.impl.ConfigDaoImpl;
 import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
