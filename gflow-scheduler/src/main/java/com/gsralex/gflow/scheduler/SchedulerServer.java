@@ -4,7 +4,7 @@ import com.gsralex.gflow.scheduler.parameter.DynamicParam;
 import com.gsralex.gflow.scheduler.retry.RetryProcessor;
 import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
 import com.gsralex.gflow.scheduler.server.ThriftSchedulerServer;
-import com.gsralex.gflow.scheduler.time.TimerTaskProcessor;
+import com.gsralex.gflow.scheduler.timer.TimerTaskProcessor;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;

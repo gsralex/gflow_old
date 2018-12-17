@@ -102,10 +102,13 @@ public class Parameter {
 
     @Override
     public String toString() {
-        StringBuilder b = new StringBuilder();
-        for (Map.Entry<String, String> entry : map.entrySet()) {
-            b.append(String.format("%s=%s,", entry.getKey(), entry.getValue()));
+        if (map.size() != 0) {
+            StringBuilder b = new StringBuilder();
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                b.append(String.format("%s=%s,", entry.getKey(), entry.getValue()));
+            }
+            return b.deleteCharAt(b.length() - 1).toString();
         }
-        return b.deleteCharAt(b.length() - 1).toString();
+        return "";
     }
 }

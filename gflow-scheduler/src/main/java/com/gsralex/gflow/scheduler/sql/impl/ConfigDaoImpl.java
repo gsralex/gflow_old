@@ -31,9 +31,9 @@ public class ConfigDaoImpl implements ConfigDao {
     }
 
     @Override
-    public List<ExecuteConfig> listExecuteConfig() {
+    public List<TimerConfig> listExecuteConfig() {
         String sql = "select * from gflow_executeconfig";
-        return jdbcUtils.queryForList(sql, null, ExecuteConfig.class);
+        return jdbcUtils.queryForList(sql, null, TimerConfig.class);
     }
 
     @Override

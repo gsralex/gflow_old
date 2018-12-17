@@ -1,13 +1,13 @@
 package com.gsralex.gflow.scheduler.sql;
 
-import com.gsralex.gflow.scheduler.domain.ExecuteConfig;
+import com.gsralex.gflow.scheduler.domain.TimerConfig;
 
 import java.util.List;
 
 public interface ExecuteDao {
 
 
-    List<ExecuteConfig> listExecuteConfig();
+    List<TimerConfig> listExecuteConfig();
 
 
 

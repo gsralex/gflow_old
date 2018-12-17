@@ -15,7 +15,7 @@ public interface ConfigDao {
 
     List<ActionTag> listActionTag();
 
-    List<ExecuteConfig> listExecuteConfig();
+    List<TimerConfig> listExecuteConfig();
 
     List<Flow> listFlow(long groupId);
 

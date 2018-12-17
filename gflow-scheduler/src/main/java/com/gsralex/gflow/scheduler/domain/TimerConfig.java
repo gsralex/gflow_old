@@ -8,20 +8,21 @@ import com.gsralex.gdata.bean.annotation.Id;
  * @author gsralex
  * @date 2018/2/17
  */
-public class ExecuteConfig {
+public class TimerConfig {
 
     @Id
     private Long id;
-    @Column(name = "trigger_group_id")
-    private Long triggerGroupId;
+    @Column(name = "flow_group_id")
+    private Long flowGroupId;
     @Column(name = "time_type")
     private Integer timeType;
-    @Column(name = "interval")
-    private Integer interval;
     private String time;
     private Boolean active;
     @Column(name = "create_time")
     private Long createTime;
+    @Column(name = "mod_time")
+    private Long modTime;
+    private Boolean del;
     @Column(name = "parameter")
     private String parameter;
 
@@ -33,12 +34,12 @@ public class ExecuteConfig {
         this.id = id;
     }
 
-    public Long getTriggerGroupId() {
-        return triggerGroupId;
+    public Long getFlowGroupId() {
+        return flowGroupId;
     }
 
-    public void setTriggerGroupId(Long triggerGroupId) {
-        this.triggerGroupId = triggerGroupId;
+    public void setFlowGroupId(Long flowGroupId) {
+        this.flowGroupId = flowGroupId;
     }
 
     public Integer getTimeType() {
@@ -47,14 +48,6 @@ public class ExecuteConfig {
 
     public void setTimeType(Integer timeType) {
         this.timeType = timeType;
-    }
-
-    public Integer getInterval() {
-        return interval;
-    }
-
-    public void setInterval(Integer interval) {
-        this.interval = interval;
     }
 
     public String getTime() {
@@ -79,6 +72,22 @@ public class ExecuteConfig {
 
     public void setCreateTime(Long createTime) {
         this.createTime = createTime;
+    }
+
+    public Long getModTime() {
+        return modTime;
+    }
+
+    public void setModTime(Long modTime) {
+        this.modTime = modTime;
+    }
+
+    public Boolean getDel() {
+        return del;
+    }
+
+    public void setDel(Boolean del) {
+        this.del = del;
     }
 
     public String getParameter() {

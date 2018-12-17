@@ -47,6 +47,9 @@ service TScheduleService{
     TResult scheduleGroup(1:TGroupJobDesc desc);
     TResult pauseGroup(1:TGroupJobDesc desc);
     TResult stopGroup(1:TGroupJobDesc desc);
+}
+
+service TScheduleConfigService{
     TResult setSettings(1:TSettingsDesc desc);
 }
 
@@ -58,4 +61,5 @@ service TExecutorService{
     TResult schedule(1:TJobDesc desc);
     TResult heartbeat();
 }
+
 
