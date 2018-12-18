@@ -1,7 +1,6 @@
 package com.gsralex.gflow.core.util;
 
 
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +10,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * @author gsralex
@@ -64,7 +62,7 @@ public class PropertiesUtils {
         for (Field field : fields) {
             PropertyName propName = field.getAnnotation(PropertyName.class);
             if (propName != null) {
-                result.put(StringUtils.lowerCase(propName.name()), field);
+                result.put(propName.name().toLowerCase(), field);
             }
         }
         return result;

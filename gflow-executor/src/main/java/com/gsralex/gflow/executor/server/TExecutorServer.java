@@ -1,6 +1,6 @@
 package com.gsralex.gflow.executor.server;
 
-import com.gsralex.gflow.core.thriftgen.TExecutorService;
+import com.gsralex.gflow.core.thriftgen.scheduler.TExecutorService;
 import com.gsralex.gflow.executor.ExecutorContext;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;

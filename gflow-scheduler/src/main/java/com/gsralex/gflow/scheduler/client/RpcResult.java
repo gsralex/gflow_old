@@ -1,6 +1,7 @@
 package com.gsralex.gflow.scheduler.client;
 
-import com.gsralex.gflow.core.thriftgen.TResult;
+
+import com.gsralex.gflow.core.thriftgen.TResp;
 
 /**
  * @author gsralex
@@ -10,11 +11,11 @@ public class RpcResult {
 
     private int retryCnt;
 
-    private TResult tResult;
+    private TResp tResult;
 
     private boolean ok;
 
-    public RpcResult(int retryCnt, TResult tResult) {
+    public RpcResult(int retryCnt, TResp tResult) {
         this.retryCnt = retryCnt;
         this.tResult = tResult;
     }
@@ -23,7 +24,7 @@ public class RpcResult {
         return retryCnt;
     }
 
-    public TResult gettResult() {
+    public TResp gettResult() {
         return tResult;
     }
 }

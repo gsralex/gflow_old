@@ -68,18 +68,19 @@ public class TimerTaskProcessor {
     public long getInterval(TimerTask timerTask, Date date) {
         TimerConfig config = timerTask.getTimerConfig();
         long currentTime = date.getTime();
-        Date executionDate = getTodayDate(config.getTime(), date);
-        long executionTime = executionDate.getTime();
-        long interval = executionTime - currentTime;
+        Date execDate = getTodayDate(config.getTime(), date);
+        long execTime = execDate.getTime();
+        long interval = execTime - currentTime;
         if (interval < 0) {
-            Date lastExecutionDate = DtUtils.parseUnixTimeMs(timerTask.getLastExecutionTime());
-            if (DateUtils.isSameDay(lastExecutionDate, date)) { //今日已执行
-                executionTime = DateUtils.addDays(executionDate, 1).getTime();
-                interval = executionTime - currentTime;
+            Date lastExecDate = DtUtils.parseUnixTimeMs(timerTask.getLastExecutionTime());
+            if (DateUtils.isSameDay(lastExecDate, date)) {
+                execTime = DateUtils.addDays(execDate, 1).getTime();
+                interval = execTime - currentTime;
             }
         }
         return interval;
     }
+
 
     public Date getTodayDate(String time, Date date) {
         String[] timeArr = time.split(":");

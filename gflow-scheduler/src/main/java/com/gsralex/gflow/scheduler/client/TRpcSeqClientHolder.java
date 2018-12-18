@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.client;
 
-import com.gsralex.gflow.core.thriftgen.TJobDesc;
+import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
 import org.apache.log4j.Logger;
 
 /**
@@ -15,7 +15,7 @@ public class TRpcSeqClientHolder {
     private TRpcClient rpcClient;
 
 
-    public void seqSchedule(TJobDesc jobDesc) {
+    public void seqSchedule(TJobReq jobDesc) {
 //        List<IpAddress> ips = SchedulerContext.getContext().getIps();
 //        int index = seq(lastIIndex, ips.size());
 //        Map<Integer, Integer> map = new HashMap<>();

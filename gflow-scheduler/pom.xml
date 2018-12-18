@@ -56,7 +56,6 @@
             <groupId>com.gsralex.gdata</groupId>
             <artifactId>gdata-bean</artifactId>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -74,6 +73,14 @@
             <groupId>com.gsralex.gflow</groupId>
             <artifactId>gflow-core</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
 
     </dependencies>

@@ -9,13 +9,13 @@ import com.gsralex.gdata.bean.annotation.Column;
 public class Flow {
 
     private long id;
-    @Column(name = "action_group_id")
+    @Column("action_group_id")
     private long actionGroupId;
-    @Column(name = "action_id")
+    @Column("action_id")
     private long actionId;
-    @Column(name = "index")
+    @Column("index")
     private int index;
-    @Column(name = "create_time")
+    @Column("create_time")
     private Long createTime;
     private String parameter;
 

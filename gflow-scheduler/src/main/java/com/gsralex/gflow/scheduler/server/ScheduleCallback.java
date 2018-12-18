@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.server;
 
-import com.gsralex.gflow.core.thriftgen.TResult;
+import com.gsralex.gflow.core.thriftgen.TResp;
 
 /**
  * @author gsralex
@@ -8,5 +8,5 @@ import com.gsralex.gflow.core.thriftgen.TResult;
  */
 public interface ScheduleCallback {
 
-    TResult doSchedule();
+    TResp doSchedule();
 }

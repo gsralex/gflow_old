@@ -2,14 +2,13 @@ package com.gsralex.gflow.executor.server;
 
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.Parameter;
-import com.gsralex.gflow.core.thriftgen.TExecutorService;
-import com.gsralex.gflow.core.thriftgen.TJobDesc;
-import com.gsralex.gflow.core.thriftgen.TResult;
+import com.gsralex.gflow.core.thriftgen.TResp;
+import com.gsralex.gflow.core.thriftgen.scheduler.TExecutorService;
+import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
 import com.gsralex.gflow.executor.AckExecuteProcess;
 import com.gsralex.gflow.executor.ExecuteProcess;
 import com.gsralex.gflow.executor.ExecutorContext;
 import com.gsralex.gflow.executor.ExecutorThread;
-import com.gsralex.gflow.executor.config.ExecutorConfig;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 
@@ -27,30 +26,31 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
     private ExecutorService executorService;
 
     private ExecutorContext context;
+
     public TExecutorServiceImpl(ExecutorContext context) {
-        this.context=context;
+        this.context = context;
         int threads = 10;
         executorService = Executors.newFixedThreadPool(threads);
     }
 
     @Override
-    public TResult schedule(TJobDesc desc) throws TException {
+    public TResp schedule(TJobReq req) throws TException {
         String errMsg = "";
         int code;
-        Parameter parameter = new Parameter(desc.getParameter());
+        Parameter parameter = new Parameter(req.getParameter());
         try {
-            Class type = Class.forName(desc.getClassName());
+            Class type = Class.forName(req.getClassName());
             if (ExecuteProcess.class.isAssignableFrom(type)) {
                 ExecuteProcess process = (ExecuteProcess) getInstance(type);
                 ExecutorThread thread = new ExecutorThread(process);
-                thread.setTJobDesc(desc);
+                thread.setReq(req);
                 thread.setParameter(parameter);
                 executorService.execute(thread);
                 code = ErrConstants.OK;
             } else if (AckExecuteProcess.class.isAssignableFrom(type)) {
                 AckExecuteProcess process = (AckExecuteProcess) getInstance(type);
                 ExecutorThread thread = new ExecutorThread(process);
-                thread.setTJobDesc(desc);
+                thread.setReq(req);
                 thread.setParameter(parameter);
                 executorService.execute(thread);
                 code = ErrConstants.OK;
@@ -64,10 +64,10 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
             code = ErrConstants.ERR_INTERNAL;
             LOGGER.error("TExecutorServiceImpl.schedule", e);
         }
-        TResult tResult = new TResult();
-        tResult.setCode(code);
-        tResult.setMsg(errMsg);
-        return tResult;
+        TResp resp = new TResp();
+        resp.setCode(code);
+        resp.setMsg(errMsg);
+        return resp;
     }
 
     private Object getInstance(Class type) throws IllegalAccessException, InstantiationException {
@@ -81,7 +81,7 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
     }
 
     @Override
-    public TResult heartbeat() throws TException {
-        return new TResult(ErrConstants.OK, ErrConstants.MSG_OK);
+    public TResp heartbeat() throws TException {
+        return new TResp(ErrConstants.OK, ErrConstants.MSG_OK);
     }
 }

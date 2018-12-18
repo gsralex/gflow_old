@@ -9,13 +9,13 @@ import com.gsralex.gdata.bean.annotation.Column;
 public class Action {
     private long id;
     private String name;
-    @Column(name = "class_name")
+    @Column("class_name")
     private String className;
-    @Column(name = "create_time")
+    @Column("create_time")
     private Long createTime;
-    @Column(name = "mod_time")
+    @Column("mod_time")
     private Long modTime;
-    @Column(name = "tag_id")
+    @Column("tag_id")
     private Long tagId;
 
     public long getId() {

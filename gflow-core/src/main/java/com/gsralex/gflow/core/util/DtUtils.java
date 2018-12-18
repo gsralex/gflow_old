@@ -2,9 +2,7 @@ package com.gsralex.gflow.core.util;
 
 
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.commons.lang3.time.DateUtils;
 
-import java.text.ParseException;
 import java.util.Date;
 
 /**
@@ -13,7 +11,6 @@ import java.util.Date;
  */
 public class DtUtils {
 
-    private static final String DF_FULLTIME = "yyyy-MM-dd HH:mm:ss";
     private static final String DF_YYYYMMDD = "yyyyMMdd";
 
 

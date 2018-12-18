@@ -5,7 +5,8 @@ import com.gsralex.gflow.scheduler.retry.RetryProcessor;
 import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
 import com.gsralex.gflow.scheduler.server.ThriftSchedulerServer;
 import com.gsralex.gflow.scheduler.timer.TimerTaskProcessor;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -15,7 +16,7 @@ import java.io.IOException;
  */
 public class SchedulerServer {
 
-    private static final Logger LOGGER = Logger.getLogger(SchedulerServer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerServer.class);
 
     /**
      * 重试处理器

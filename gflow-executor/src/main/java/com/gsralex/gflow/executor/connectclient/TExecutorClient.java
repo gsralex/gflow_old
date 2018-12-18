@@ -3,17 +3,17 @@ package com.gsralex.gflow.executor.connectclient;
 import com.gsralex.gflow.core.connect.SecurityUtils;
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.IpAddress;
-import com.gsralex.gflow.core.thriftgen.TAckDesc;
-import com.gsralex.gflow.core.thriftgen.TScheduleAckService;
+import com.gsralex.gflow.core.thriftgen.scheduler.TAckReq;
+import com.gsralex.gflow.core.thriftgen.scheduler.TScheduleService;
 import com.gsralex.gflow.executor.ExecutorContext;
-import com.gsralex.gflow.executor.config.ExecutorConfig;
-import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class TExecutorClient {
 
-    private static final Logger logger = Logger.getLogger(TExecutorClient.class);
+    private static final Logger logger = LoggerFactory.getLogger(TExecutorClient.class);
 
     private ExecutorContext context;
 
@@ -40,19 +40,19 @@ public class TExecutorClient {
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "scheduleAck");
-            TScheduleAckService.Client client = new TScheduleAckService.Client(multiProtocol);
-            TAckDesc ackDesc = new TAckDesc();
-            ackDesc.setJobId(jobId);
+            TScheduleService.Client client = new TScheduleService.Client(multiProtocol);
+            TAckReq req = new TAckReq();
+            req.setJobId(jobId);
             String accessKey = context.getConfig().getAccessKey();
-            ackDesc.setAccessToken(SecurityUtils.encrypt(accessKey));
+            req.setAccessToken(SecurityUtils.encrypt(accessKey));
             if (ok) {
-                ackDesc.setCode(ErrConstants.OK);
-                ackDesc.setErrmsg(ErrConstants.MSG_OK);
+                req.setCode(ErrConstants.OK);
+                req.setErrmsg(ErrConstants.MSG_OK);
             } else {
-                ackDesc.setCode(ErrConstants.ERR_EXECUTEFAIL);
-                ackDesc.setErrmsg(ErrConstants.MSG_ERREXECUTEFAIL);
+                req.setCode(ErrConstants.ERR_EXECUTEFAIL);
+                req.setErrmsg(ErrConstants.MSG_ERREXECUTEFAIL);
             }
-            client.ack(ackDesc);
+            client.ack(req);
         } catch (TException e) {
             logger.error("TExecutorClient.ack", e);
         } finally {

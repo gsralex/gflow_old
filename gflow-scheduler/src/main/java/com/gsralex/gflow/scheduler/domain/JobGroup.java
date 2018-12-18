@@ -9,26 +9,26 @@ import com.gsralex.gdata.bean.annotation.Table;
  * @author gsralex
  * @date 2018/2/12
  */
-@Table(name = "gflow_jobgroup")
+@Table("gflow_jobgroup")
 public class JobGroup {
     @Id
     private Long id;
-    @Column(name = "start_time")
+    @Column("start_time")
     private Long startTime;
-    @Column(name="end_time")
+    @Column("end_time")
     private Long endTime;
-    @Column(name="create_time")
+    @Column("create_time")
     private Long createTime;
-    @Column(name="flow_group_id")
+    @Column("flow_group_id")
     private Long flowGroupId;
-    @Column(name="start_flow_id")
+    @Column("start_flow_id")
     private Long startFlowId;
-    @Column(name = "date")
+    @Column("date")
     private Integer date;
-    @Column(name = "status")
+    @Column("status")
     private Integer status;
-    @Column(name = "execute_config_id")
-    private Long executeConfigId;
+    @Column("timer_config_id")
+    private Long timerConfigId;
     private String parameter;
 
     public Long getId() {
@@ -95,12 +95,12 @@ public class JobGroup {
         this.status = status;
     }
 
-    public Long getExecuteConfigId() {
-        return executeConfigId;
+    public Long getTimerConfigId() {
+        return timerConfigId;
     }
 
-    public void setExecuteConfigId(Long executeConfigId) {
-        this.executeConfigId = executeConfigId;
+    public void setTimerConfigId(Long timerConfigId) {
+        this.timerConfigId = timerConfigId;
     }
 
     public String getParameter() {

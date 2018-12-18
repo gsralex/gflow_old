@@ -1,9 +1,9 @@
 package com.gsralex.gflow.scheduler.client;
 
 import com.gsralex.gflow.core.context.IpAddress;
-import com.gsralex.gflow.core.thriftgen.TExecutorService;
-import com.gsralex.gflow.core.thriftgen.TJobDesc;
-import com.gsralex.gflow.core.thriftgen.TResult;
+import com.gsralex.gflow.core.thriftgen.TResp;
+import com.gsralex.gflow.core.thriftgen.scheduler.TExecutorService;
+import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
 import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
@@ -20,7 +20,7 @@ public class TRpcClient {
 
     private static final Logger LOGGER = Logger.getLogger(TRpcClient.class);
 
-    public TResult schedule(IpAddress ip, TJobDesc jobDesc) throws ScheduleTransportException {
+    public TResp schedule(IpAddress ip, TJobReq jobDesc) throws ScheduleTransportException {
         TTransport transport = new TSocket(ip.getIp(), ip.getPort());
         try {
             transport.open();

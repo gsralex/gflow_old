@@ -16,13 +16,15 @@
     <properties>
         <junit.version>4.12</junit.version>
         <commonslang3.version>3.4</commonslang3.version>
-        <log4j.version>1.2.17</log4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <lang3.version>3.8.1</lang3.version>
         <thrift.verison>0.11.0</thrift.verison>
         <dbcp.version>1.4</dbcp.version>
         <mysql.version>5.1.39</mysql.version>
-        <gdata.version>1.079</gdata.version>
+        <gdata.version>1.08</gdata.version>
         <zkclient.version>0.10</zkclient.version>
         <gflow.version>1.0-SNAPSHOT</gflow.version>
+
         <!--maven-->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -39,9 +41,9 @@
             </dependency>
 
             <dependency>
-                <groupId>log4j</groupId>
-                <artifactId>log4j</artifactId>
-                <version>${log4j.version}</version>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
             </dependency>
 
 
@@ -78,6 +80,11 @@
                 <groupId>com.gsralex.gflow</groupId>
                 <artifactId>gflow-core</artifactId>
                 <version>${gflow.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${lang3.version}</version>
             </dependency>
 
         </dependencies>

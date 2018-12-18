@@ -6,5 +6,5 @@ package com.gsralex.gflow.executor;
  */
 public interface ExecuteProcess {
 
-    boolean process(JobDesc desc);
+    boolean process(JobReq desc);
 }

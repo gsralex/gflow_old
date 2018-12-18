@@ -1,9 +1,7 @@
 package com.gsralex.gflow.scheduler.server;
 
-import com.gsralex.gflow.core.thriftgen.TScheduleAckService;
-import com.gsralex.gflow.core.thriftgen.TScheduleService;
+import com.gsralex.gflow.core.thriftgen.scheduler.TScheduleService;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import org.apache.log4j.Logger;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
@@ -11,6 +9,8 @@ import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
 import org.apache.thrift.transport.TTransportException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author gsralex
@@ -18,17 +18,14 @@ import org.apache.thrift.transport.TTransportException;
  */
 public class ThriftSchedulerServer {
 
-    private static final Logger LOGGER = Logger.getLogger(ThriftSchedulerServer.class);
-
-
-    private TScheduleAckServiceImpl scheduleAckService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ThriftSchedulerServer.class);
+    ;
     private TScheduleServiceImpl scheduleService;
     private SchedulerContext context;
 
     public ThriftSchedulerServer(SchedulerContext context) {
-        scheduleAckService = new TScheduleAckServiceImpl(context);
         scheduleService = new TScheduleServiceImpl(context);
-        this.context=context;
+        this.context = context;
     }
 
     public void start() throws ScheduleTransportException {
@@ -38,11 +35,8 @@ public class ThriftSchedulerServer {
             TMultiplexedProcessor processor = new TMultiplexedProcessor();
             TScheduleService.Processor<TScheduleServiceImpl> schedule =
                     new TScheduleService.Processor<>(scheduleService);
-            processor.registerProcessor("schedule", schedule);
+            processor.registerProcessor("scheduler", schedule);
 
-            TScheduleAckService.Processor<TScheduleAckServiceImpl> scheduleAck =
-                    new TScheduleAckService.Processor<>(scheduleAckService);
-            processor.registerProcessor("scheduleAck", scheduleAck);
 
             TThreadPoolServer.Args args = new TThreadPoolServer.Args(tServerSocket);
             args.processor(processor);

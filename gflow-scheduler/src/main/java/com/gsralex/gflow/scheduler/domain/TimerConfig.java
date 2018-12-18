@@ -3,27 +3,29 @@ package com.gsralex.gflow.scheduler.domain;
 
 import com.gsralex.gdata.bean.annotation.Column;
 import com.gsralex.gdata.bean.annotation.Id;
+import com.gsralex.gdata.bean.annotation.Table;
 
 /**
  * @author gsralex
  * @date 2018/2/17
  */
+@Table("gflow_timerconfig")
 public class TimerConfig {
 
     @Id
     private Long id;
-    @Column(name = "flow_group_id")
+    @Column("flow_group_id")
     private Long flowGroupId;
-    @Column(name = "time_type")
+    @Column("time_type")
     private Integer timeType;
     private String time;
     private Boolean active;
-    @Column(name = "create_time")
+    @Column("create_time")
     private Long createTime;
-    @Column(name = "mod_time")
+    @Column("mod_time")
     private Long modTime;
     private Boolean del;
-    @Column(name = "parameter")
+    @Column("parameter")
     private String parameter;
 
     public Long getId() {

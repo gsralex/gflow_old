@@ -3,8 +3,11 @@ package com.gsralex.gflow.scheduler.schedule;
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.context.Parameter;
-import com.gsralex.gflow.core.thriftgen.TResult;
+import com.gsralex.gflow.core.thriftgen.TResp;
+import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
+import com.gsralex.gflow.core.util.DtUtils;
 import com.gsralex.gflow.scheduler.SchedulerContext;
+import com.gsralex.gflow.scheduler.client.TRpcClient;
 import com.gsralex.gflow.scheduler.domain.Action;
 import com.gsralex.gflow.scheduler.domain.Job;
 import com.gsralex.gflow.scheduler.domain.JobGroup;
@@ -13,16 +16,13 @@ import com.gsralex.gflow.scheduler.enums.JobStatusEnum;
 import com.gsralex.gflow.scheduler.flow.FlowGuide;
 import com.gsralex.gflow.scheduler.flow.FlowMapHandle;
 import com.gsralex.gflow.scheduler.flow.FlowNode;
-import com.gsralex.gflow.core.thriftgen.TJobDesc;
-import com.gsralex.gflow.core.util.DtUtils;
 import com.gsralex.gflow.scheduler.parameter.DynamicParamContext;
 import com.gsralex.gflow.scheduler.retry.RetryTask;
-import com.gsralex.gflow.scheduler.sql.ConfigDao;
-import com.gsralex.gflow.scheduler.sql.FlowJobDao;
 import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
-import com.gsralex.gflow.scheduler.client.TRpcClient;
-import com.gsralex.gflow.scheduler.sql.impl.ConfigDaoImpl;
-import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
+import com.gsralex.gflow.scheduler.sql.ActionDao;
+import com.gsralex.gflow.scheduler.sql.JobDao;
+import com.gsralex.gflow.scheduler.sql.impl.ActionDaoImpl;
+import com.gsralex.gflow.scheduler.sql.impl.JobDaoImpl;
 
 import java.util.List;
 import java.util.Set;
@@ -35,15 +35,15 @@ import java.util.Set;
  */
 public class ScheduleActualHanle {
 
-    private ConfigDao configDao;
-    private FlowJobDao flowJobDao;
+    private ActionDao actionDao;
+    private JobDao jobDao;
     private TRpcClient rpcClient;
     private FlowMapHandle flowMapHandle;
     private ScheduleIpSelector ipSelector;
 
     public ScheduleActualHanle(SchedulerContext context) {
-        configDao = new ConfigDaoImpl(context.getJdbcUtils());
-        flowJobDao = new FlowJobDaoImpl(context.getJdbcUtils());
+        actionDao = new ActionDaoImpl(context.getJdbcUtils());
+        jobDao = new JobDaoImpl(context.getJdbcUtils());
         rpcClient = new TRpcClient();
         flowMapHandle = new FlowMapHandle(context);
         ipSelector = new ScheduleIpSelector(context);
@@ -61,9 +61,9 @@ public class ScheduleActualHanle {
         jobGroup.setStatus(JobGroupStatusEnum.EXECUTING.getValue());
         jobGroup.setFlowGroupId(triggerGroupId);
         jobGroup.setDate(DtUtils.getBizDate());
-        jobGroup.setExecuteConfigId(executeConfigId);
+        jobGroup.setTimerConfigId(executeConfigId);
         jobGroup.setParameter(param.toString());
-        flowJobDao.saveJobGroup(jobGroup);
+        jobDao.saveJobGroup(jobGroup);
 
         FlowGuide flowGuide = flowMapHandle.initGroup(jobGroup.getId(), triggerGroupId);
         List<FlowNode> rootList = flowGuide.listRoot();
@@ -88,28 +88,28 @@ public class ScheduleActualHanle {
 
 
     public void pauseGroup(long jobGroupId) {
-        JobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
+        JobGroup jobGroup = jobDao.getJobGroup(jobGroupId);
         if (jobGroup != null) {
             FlowGuide flowGuide = flowMapHandle.getFlowGuide(jobGroupId);
             flowGuide.setStatus(JobGroupStatusEnum.PAUSE);
             //更新数据库
             jobGroup.setStatus(JobGroupStatusEnum.PAUSE.getValue());
-            flowJobDao.updateJobGroup(jobGroup);
+            jobDao.updateJobGroup(jobGroup);
         }
     }
 
     public void stopGroup(long jobGroupId) {
-        JobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
+        JobGroup jobGroup = jobDao.getJobGroup(jobGroupId);
         if (jobGroup != null) {
             FlowGuide flowGuide = flowMapHandle.getFlowGuide(jobGroupId);
             flowGuide.setStatus(JobGroupStatusEnum.STOP);
             jobGroup.setStatus(JobGroupStatusEnum.STOP.getValue());
-            flowJobDao.updateJobGroup(jobGroup);
+            jobDao.updateJobGroup(jobGroup);
         }
     }
 
     public FlowResult continueGroup(long jobGroupId, boolean retry) {
-        JobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
+        JobGroup jobGroup = jobDao.getJobGroup(jobGroupId);
         if (jobGroup != null) {
             FlowGuide flowGuide = flowMapHandle.getFlowGuide(jobGroupId);
             boolean needAction = false;
@@ -117,7 +117,7 @@ public class ScheduleActualHanle {
                 case PAUSE: {
                     flowGuide.setStatus(JobGroupStatusEnum.EXECUTING);
                     jobGroup.setStatus(JobGroupStatusEnum.EXECUTING.getValue());
-                    flowJobDao.updateJobGroup(jobGroup);
+                    jobDao.updateJobGroup(jobGroup);
                     needAction = true;
                     break;
                 }
@@ -143,7 +143,7 @@ public class ScheduleActualHanle {
 
     public ActionResult scheduleAction(ActionDesc desc, boolean retry) {
         //转换参数
-        Action action = configDao.getAction(desc.getActionId());
+        Action action = actionDao.getAction(desc.getActionId());
         Parameter groupParam = new Parameter(desc.getGroupParameter());
         Parameter param = new Parameter(desc.getParameter());
         DynamicParamContext.getContext().parser(param);
@@ -167,7 +167,7 @@ public class ScheduleActualHanle {
         job.setRetryJobId(desc.getRetryJobId());
         job.setStatus(JobStatusEnum.SendOk.getValue());
         job.setParameter(parameter);
-        flowJobDao.saveJob(job);
+        jobDao.saveJob(job);
 
         if (retry) {
             RetryTask retryTask = new RetryTask();
@@ -178,25 +178,25 @@ public class ScheduleActualHanle {
             //SchedulerContext.getContext().getRetryProcessor().put(retryTask);//加入重试队列
         }
 
-        TJobDesc jobDesc = new TJobDesc();
-        jobDesc.setJobGroupId(desc.getJobGroupId());
-        jobDesc.setActionId(desc.getActionId());
-        jobDesc.setParameter(parameter);
-        jobDesc.setId(job.getId());
-        jobDesc.setIndex(desc.getIndex());
-        jobDesc.setClassName(action.getClassName());
+        TJobReq req = new TJobReq();
+        req.setJobGroupId(desc.getJobGroupId());
+        req.setActionId(desc.getActionId());
+        req.setParameter(parameter);
+        req.setId(job.getId());
+        req.setIndex(desc.getIndex());
+        req.setClassName(action.getClassName());
         boolean sendOk = false;
         IpAddress ip = ipSelector.getIpAddress(action.getTagId());
         try {
-            TResult result = rpcClient.schedule(ip, jobDesc);
-            if (result.getCode() == ErrConstants.OK) {
+            TResp resp = rpcClient.schedule(ip, req);
+            if (resp.getCode() == ErrConstants.OK) {
                 sendOk = true;
             }
         } catch (ScheduleTransportException e) {
             //连接失败
         }
         if (!sendOk) {
-            flowJobDao.updateJobStatus(job.getId(), JobStatusEnum.SendErr.getValue());
+            jobDao.updateJobStatus(job.getId(), JobStatusEnum.SendErr.getValue());
         }
         ActionResult result = new ActionResult();
         result.setActionDesc(desc);
@@ -206,7 +206,7 @@ public class ScheduleActualHanle {
 
     public FlowResult actionAck(long jobId, boolean jobOk, boolean retry) {
         FlowResult r = new FlowResult();
-        Job job = flowJobDao.getJob(jobId);
+        Job job = jobDao.getJob(jobId);
         if (job != null) {
             job.setEndTime(System.currentTimeMillis());//更新任务结束时间
             if (job.getJobGroupId() != 0) {
@@ -221,11 +221,11 @@ public class ScheduleActualHanle {
                     if (flowGuide.getStatus() != JobGroupStatusEnum.PAUSE
                             && flowGuide.getStatus() != JobGroupStatusEnum.STOP) {
 
-                        JobGroup jobGroup = flowJobDao.getJobGroup(job.getJobGroupId());
+                        JobGroup jobGroup = jobDao.getJobGroup(job.getJobGroupId());
                         if (flowGuide.isFinish()) { //如果任务组已完成
                             jobGroup.setStatus(JobGroupStatusEnum.FINISH.getValue());
                             jobGroup.setEndTime(System.currentTimeMillis());
-                            flowJobDao.updateJobGroup(jobGroup);
+                            jobDao.updateJobGroup(jobGroup);
                         } else {
                             List<FlowNode> needActionList = flowGuide.listNeedAction(job.getIndex());
                             doActionList(job.getFlowGroupId(), job.getJobGroupId(), jobGroup.getParameter(), needActionList, retry);
@@ -238,7 +238,7 @@ public class ScheduleActualHanle {
                 job.setStatus(jobOk ? JobStatusEnum.ExecuteOk.getValue() : JobStatusEnum.ExecuteErr.getValue());
             }
         }
-        flowJobDao.updateJob(job);
+        jobDao.updateJob(job);
         return r;
     }
 }

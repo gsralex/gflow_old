@@ -1,8 +1,8 @@
 package com.gsralex.gflow.scheduler.schedule;
 
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.sql.FlowJobDao;
-import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
+import com.gsralex.gflow.scheduler.sql.JobDao;
+import com.gsralex.gflow.scheduler.sql.impl.JobDaoImpl;
 
 /**
  * 调度链路
@@ -13,7 +13,7 @@ import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
 public class ScheduleLinkHandle {
 
     private ScheduleActualHanle scheduleActualHanle;
-    private FlowJobDao flowJobDao;
+    private JobDao jobDao;
 
 
     private boolean retry;
@@ -21,7 +21,7 @@ public class ScheduleLinkHandle {
     public ScheduleLinkHandle(SchedulerContext context) {
         retry = getRetry();
 
-        flowJobDao = new FlowJobDaoImpl(context.getJdbcUtils());
+        jobDao = new JobDaoImpl(context.getJdbcUtils());
 
         scheduleActualHanle = new ScheduleActualHanle(context);
     }

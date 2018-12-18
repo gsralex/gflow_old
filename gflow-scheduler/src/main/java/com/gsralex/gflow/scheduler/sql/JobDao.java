@@ -10,7 +10,7 @@ import java.util.List;
  * @author gsralex
  * @version 2018/5/12
  */
-public interface FlowJobDao {
+public interface JobDao {
 
     /**
      * 保存任务

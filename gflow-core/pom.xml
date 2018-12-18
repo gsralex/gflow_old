@@ -17,10 +17,6 @@
             <version>0.11.0</version>
         </dependency>
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.gsralex.gdata</groupId>
             <artifactId>gdata-bean</artifactId>
         </dependency>
@@ -41,6 +37,11 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
     </dependencies>
 
 

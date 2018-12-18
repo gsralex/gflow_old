@@ -8,16 +8,11 @@ import java.util.List;
  * @author gsralex
  * @version 2018/6/2
  */
-public interface ConfigDao {
+public interface ActionDao {
 
 
     Action getAction(long id);
 
     List<ActionTag> listActionTag();
 
-    List<TimerConfig> listExecuteConfig();
-
-    List<Flow> listFlow(long groupId);
-
-    List<FlowDirect> listFlowDirect(long groupId);
 }

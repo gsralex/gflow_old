@@ -5,7 +5,7 @@ import com.gsralex.gflow.scheduler.domain.Job;
 import com.gsralex.gflow.scheduler.domain.JobGroup;
 import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.enums.JobStatusEnum;
-import com.gsralex.gflow.scheduler.sql.FlowJobDao;
+import com.gsralex.gflow.scheduler.sql.JobDao;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import java.util.List;
  * @author gsralex
  * @version 2018/5/12
  */
-public class FlowJobDaoImpl implements FlowJobDao {
+public class JobDaoImpl implements JobDao {
 
     private JdbcUtils jdbcUtils;
 
-    public FlowJobDaoImpl(JdbcUtils jdbcUtils) {
+    public JobDaoImpl(JdbcUtils jdbcUtils) {
         this.jdbcUtils = jdbcUtils;
     }
 

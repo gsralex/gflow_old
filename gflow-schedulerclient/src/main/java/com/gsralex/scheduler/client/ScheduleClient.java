@@ -12,6 +12,4 @@ public interface ScheduleClient {
     Result stopGroup(long id);
 
     Result scheduleAction(long id,Parameter parameter);
-
-    Result setSettings(String key,String value);
 }

@@ -6,5 +6,5 @@ package com.gsralex.gflow.executor;
  */
 public interface AckExecuteProcess {
 
-    void process(JobDesc desc);
+    void process(JobReq desc);
 }

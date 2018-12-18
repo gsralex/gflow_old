@@ -1,11 +1,13 @@
 package com.gsralex.gflow.scheduler.server;
 
 
-import com.gsralex.gflow.core.connect.SecurityUtils;
 import com.gsralex.gflow.core.constants.ErrConstants;
-import com.gsralex.gflow.core.thriftgen.*;
+import com.gsralex.gflow.core.thriftgen.TResp;
+import com.gsralex.gflow.core.thriftgen.scheduler.TAckReq;
+import com.gsralex.gflow.core.thriftgen.scheduler.TGroupJobReq;
+import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
+import com.gsralex.gflow.core.thriftgen.scheduler.TScheduleService;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.config.SchedulerConfig;
 import com.gsralex.gflow.scheduler.schedule.ScheduleLinkHandle;
 import org.apache.thrift.TException;
 
@@ -20,74 +22,85 @@ public class TScheduleServiceImpl implements TScheduleService.Iface {
     private ScheduleChain chain;
 
     public TScheduleServiceImpl(SchedulerContext context) {
-        chain=new ScheduleChain(context.getConfig().getAccessKey());
+        chain = new ScheduleChain(context.getConfig().getAccessKey());
         scheduleLinkHandle = new ScheduleLinkHandle(context);
     }
 
     @Override
-    public TResult scheduleAction(TJobDesc desc) {
+    public TResp scheduleAction(TJobReq req) {
         class ScheduleActionCallback implements ScheduleCallback {
             @Override
-            public TResult doSchedule() {
-                TResult tResult = new TResult();
-                scheduleLinkHandle.scheduleAction(desc.getActionId(), desc.getParameter());
+            public TResp doSchedule() {
+                TResp tResult = new TResp();
+                scheduleLinkHandle.scheduleAction(req.getActionId(), req.getParameter());
                 tResult.setCode(ErrConstants.OK);
                 tResult.setMsg(ErrConstants.MSG_OK);
                 return tResult;
             }
         }
-        return chain.execute(new ScheduleActionCallback(), desc.getAccessToken());
+        return chain.execute(new ScheduleActionCallback(), req.getAccessToken());
     }
 
     @Override
-    public TResult scheduleGroup(TGroupJobDesc desc) {
+    public TResp scheduleGroup(TGroupJobReq req) {
         class ScheduleGroupCallback implements ScheduleCallback {
             @Override
-            public TResult doSchedule() {
-                scheduleLinkHandle.scheduleGroup(desc.getGroupId(), desc.getParameter(), 0);
-                TResult tResult = new TResult();
+            public TResp doSchedule() {
+                scheduleLinkHandle.scheduleGroup(req.getGroupId(), req.getParameter(), 0);
+                TResp tResult = new TResp();
                 tResult.setCode(ErrConstants.OK);
                 tResult.setMsg(ErrConstants.MSG_OK);
                 return tResult;
             }
         }
-        return chain.execute(new ScheduleGroupCallback(), desc.getAccessToken());
+        return chain.execute(new ScheduleGroupCallback(), req.getAccessToken());
     }
 
     @Override
-    public TResult pauseGroup(TGroupJobDesc desc)  {
+    public TResp pauseGroup(TGroupJobReq req) {
         class PauseGroupCallback implements ScheduleCallback {
             @Override
-            public TResult doSchedule() {
-                scheduleLinkHandle.pauseGroup(desc.getGroupId());
-                TResult tResult = new TResult();
+            public TResp doSchedule() {
+                scheduleLinkHandle.pauseGroup(req.getGroupId());
+                TResp tResult = new TResp();
                 tResult.setCode(ErrConstants.OK);
                 tResult.setMsg(ErrConstants.MSG_OK);
                 return tResult;
             }
         }
-        return chain.execute(new PauseGroupCallback(), desc.getAccessToken());
+        return chain.execute(new PauseGroupCallback(), req.getAccessToken());
     }
 
     @Override
-    public TResult stopGroup(TGroupJobDesc desc) {
+    public TResp stopGroup(TGroupJobReq req) {
         class StopGroupCallback implements ScheduleCallback {
             @Override
-            public TResult doSchedule() {
-                scheduleLinkHandle.stopGroup(desc.getGroupId());
-                TResult tResult = new TResult();
+            public TResp doSchedule() {
+                scheduleLinkHandle.stopGroup(req.getGroupId());
+                TResp tResult = new TResp();
                 tResult.setCode(ErrConstants.OK);
                 tResult.setMsg(ErrConstants.MSG_OK);
                 return tResult;
             }
         }
-        return chain.execute(new StopGroupCallback(), desc.getAccessToken());
+        return chain.execute(new StopGroupCallback(), req.getAccessToken());
     }
 
     @Override
-    public TResult setSettings(TSettingsDesc desc) {
-        //TODO:空实现
-        return null;
+    public TResp ack(TAckReq req) throws TException {
+        class AckCallback implements ScheduleCallback {
+            @Override
+            public TResp doSchedule() {
+                boolean ok = req.getCode() == ErrConstants.OK ? true : false;
+                scheduleLinkHandle.ackAction(req.getJobId(), ok);
+                TResp tResult = new TResp();
+                tResult.setCode(ErrConstants.OK);
+                tResult.setMsg(ErrConstants.MSG_OK);
+                return tResult;
+            }
+        }
+        return chain.execute(new AckCallback(), req.getAccessToken());
     }
+
 
 }

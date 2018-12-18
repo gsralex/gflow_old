@@ -1,7 +1,7 @@
 package com.gsralex.gflow.executor;
 
 import com.gsralex.gflow.core.context.Parameter;
-import com.gsralex.gflow.core.thriftgen.TJobDesc;
+import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
 import com.gsralex.gflow.executor.connectclient.TExecutorClient;
 import org.apache.log4j.Logger;
 
@@ -15,7 +15,7 @@ public class ExecutorThread implements Runnable {
     private ExecuteProcess process;
     private AckExecuteProcess ackProcess;
     private Parameter parameter;
-    private TJobDesc tJobDesc;
+    private TJobReq req;
     private TExecutorClient client;
 
     public ExecutorThread(ExecuteProcess process) {
@@ -30,24 +30,24 @@ public class ExecutorThread implements Runnable {
         this.parameter = parameter;
     }
 
-    public void setTJobDesc(TJobDesc tJobDesc) {
-        this.tJobDesc = tJobDesc;
+    public void setReq(TJobReq req) {
+        this.req = req;
     }
 
     @Override
     public void run() {
-        JobDesc jobDesc = new JobDesc(tJobDesc.getId(), parameter);
+        JobReq jobReq = new JobReq(req.getId(), parameter);
         if (process != null) {
             boolean ok = false;
             try {
-                ok = process.process(jobDesc);
+                ok = process.process(jobReq);
             } catch (Exception e) {
                 LOGGER.error(process.getClass().getName() + ":" + e);
             }
-            client.ack(jobDesc.getJobId(), ok);
+            client.ack(jobReq.getJobId(), ok);
         } else if (ackProcess != null) {
             try {
-                ackProcess.process(jobDesc);
+                ackProcess.process(jobReq);
             } catch (Exception e) {
                 LOGGER.error(ackProcess.getClass().getName() + ":" + e);
             }

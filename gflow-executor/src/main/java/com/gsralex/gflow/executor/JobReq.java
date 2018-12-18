@@ -6,12 +6,12 @@ import com.gsralex.gflow.core.context.Parameter;
  * @author gsralex
  * @version 2018/12/6
  */
-public class JobDesc {
+public class JobReq {
 
     private Long jobId;
     private Parameter parameter;
 
-    public JobDesc(long jobId, Parameter parameter) {
+    public JobReq(long jobId, Parameter parameter) {
         this.jobId = jobId;
         this.parameter = parameter;
     }

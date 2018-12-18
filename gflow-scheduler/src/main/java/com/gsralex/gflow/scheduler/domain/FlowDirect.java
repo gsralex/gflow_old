@@ -9,10 +9,10 @@ import com.gsralex.gdata.bean.annotation.Column;
 public class FlowDirect {
 
     private Long id;
-    @Column(name = "pre_index")
+    @Column("pre_index")
     private Integer preIndex;
     private Integer index;
-    @Column(name = "group_id")
+    @Column("group_id")
     private Long groupId;
 
     public Long getId() {

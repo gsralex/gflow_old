@@ -6,10 +6,12 @@ import com.gsralex.gflow.scheduler.domain.Job;
 import com.gsralex.gflow.scheduler.domain.JobGroup;
 import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.sql.ConfigDao;
-import com.gsralex.gflow.scheduler.sql.FlowJobDao;
-import com.gsralex.gflow.scheduler.sql.impl.ConfigDaoImpl;
-import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
+import com.gsralex.gflow.scheduler.sql.ActionDao;
+import com.gsralex.gflow.scheduler.sql.FlowDao;
+import com.gsralex.gflow.scheduler.sql.JobDao;
+import com.gsralex.gflow.scheduler.sql.impl.ActionDaoImpl;
+import com.gsralex.gflow.scheduler.sql.impl.FlowDaoImpl;
+import com.gsralex.gflow.scheduler.sql.impl.JobDaoImpl;
 
 import java.util.List;
 
@@ -20,21 +22,23 @@ import java.util.List;
 
 public class FlowMapHandle {
 
-    private ConfigDao configDao;
-    private FlowJobDao flowJobDao;
+    private ActionDao actionDao;
+    private JobDao jobDao;
+    private FlowDao flowDao;
 
     private SchedulerContext context;
 
     public FlowMapHandle(SchedulerContext context) {
-        configDao = new ConfigDaoImpl(context.getJdbcUtils());
-        flowJobDao = new FlowJobDaoImpl(context.getJdbcUtils());
+        actionDao = new ActionDaoImpl(context.getJdbcUtils());
+        jobDao = new JobDaoImpl(context.getJdbcUtils());
+        flowDao = new FlowDaoImpl(context.getJdbcUtils());
         this.context = context;
     }
 
 
     public FlowGuide initGroup(long jobGroupId, long flowGroupId) {
-        List<Flow> flowList = configDao.listFlow(flowGroupId);
-        List<FlowDirect> directList = configDao.listFlowDirect(flowGroupId);
+        List<Flow> flowList = flowDao.listFlow(flowGroupId);
+        List<FlowDirect> directList = flowDao.listFlowDirect(flowGroupId);
         FlowGuide flowGuide = new FlowGuide(jobGroupId, flowList, directList, JobGroupStatusEnum.EXECUTING);
         FlowGuideMap flowGuideMap = context.getFlowGuideMap();
         flowGuideMap.putFlowMap(jobGroupId, flowGuide);
@@ -45,11 +49,11 @@ public class FlowMapHandle {
         FlowGuideMap flowGuideMap = context.getFlowGuideMap();
         FlowGuide flowGuide = flowGuideMap.getFlowMap(jobGroupId);
         if (flowGuide == null) {
-            JobGroup jobGroup = flowJobDao.getJobGroup(jobGroupId);
+            JobGroup jobGroup = jobDao.getJobGroup(jobGroupId);
             if (jobGroup != null) {
-                List<Job> jobList = flowJobDao.listJob(jobGroupId);
-                List<Flow> flowList = configDao.listFlow(jobGroupId);
-                List<FlowDirect> directList = configDao.listFlowDirect(jobGroupId);
+                List<Job> jobList = jobDao.listJob(jobGroupId);
+                List<Flow> flowList = flowDao.listFlow(jobGroupId);
+                List<FlowDirect> directList = flowDao.listFlowDirect(jobGroupId);
                 JobGroupStatusEnum status = JobGroupStatusEnum.valueOf(jobGroup.getStatus());
                 flowGuide = new FlowGuide(jobGroupId, flowList, directList, jobList, status);
                 flowGuideMap.putFlowMap(jobGroup.getId(), flowGuide);

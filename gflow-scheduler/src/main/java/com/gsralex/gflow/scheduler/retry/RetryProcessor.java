@@ -5,8 +5,8 @@ import com.gsralex.gflow.scheduler.domain.Job;
 import com.gsralex.gflow.scheduler.schedule.ActionDesc;
 import com.gsralex.gflow.scheduler.schedule.ActionResult;
 import com.gsralex.gflow.scheduler.schedule.ScheduleActualHanle;
-import com.gsralex.gflow.scheduler.sql.FlowJobDao;
-import com.gsralex.gflow.scheduler.sql.impl.FlowJobDaoImpl;
+import com.gsralex.gflow.scheduler.sql.JobDao;
+import com.gsralex.gflow.scheduler.sql.impl.JobDaoImpl;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,13 +23,13 @@ public class RetryProcessor {
     private Map<Long, RetryTask> retryTaskMap = new HashMap<>();
 
     private ScheduleActualHanle actualHanle;
-    private FlowJobDao flowJobDao;
+    private JobDao jobDao;
 
     private SchedulerContext context;
 
     public RetryProcessor(SchedulerContext context) {
         this.context = context;
-        this.flowJobDao = new FlowJobDaoImpl(context.getJdbcUtils());
+        this.jobDao = new JobDaoImpl(context.getJdbcUtils());
     }
 
     public void start() {
@@ -43,7 +43,7 @@ public class RetryProcessor {
     }
 
     private void recover() {
-        List<Job> retryJobList = flowJobDao.listJobNeedRetry(3);
+        List<Job> retryJobList = jobDao.listJobNeedRetry(3);
         for (Job job : retryJobList) {
             RetryTask retryTask = new RetryTask();
             retryTask.setJobId(job.getId());
@@ -149,7 +149,7 @@ public class RetryProcessor {
                         task.setRetryCnt(task.getRetryCnt() + 1);
                         task.setRetryTime(System.currentTimeMillis());
                         //加入重试次数
-                        flowJobDao.incrJobRetryCnt(task.getJobId());
+                        jobDao.incrJobRetryCnt(task.getJobId());
                         ActionResult result = actualHanle.scheduleAction(task.getActionDesc(), false);
                     } else {
                         retryTaskMap.wait(interval);

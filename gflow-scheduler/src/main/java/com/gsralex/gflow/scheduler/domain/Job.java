@@ -8,34 +8,34 @@ import com.gsralex.gdata.bean.annotation.Table;
  * @author gsralex
  * @date 2018/2/12
  */
-@Table(name = "gflow_job")
+@Table("gflow_job")
 public class Job {
 
     @Id
     private Integer id;
-    @Column(name = "action_id")
+    @Column("action_id")
     private Long actionId;
-    @Column(name = "flow_group_id")
+    @Column("flow_group_id")
     private Long flowGroupId;
-    @Column(name = "job_group_id")
+    @Column("job_group_id")
     private Long jobGroupId;
-    @Column(name = "start_time")
+    @Column("start_time")
     private Long startTime;
-    @Column(name = "end_time")
+    @Column("end_time")
     private Long endTime;
-    @Column(name = "retry_cnt")
+    @Column("retry_cnt")
     private Integer retryCnt;
-    @Column(name = "status")
+    @Column("status")
     private Integer status;
-    @Column(name = "retry_job_id")
+    @Column("retry_job_id")
     private Long retryJobId;
-    @Column(name = "create_time")
+    @Column("create_time")
     private Long createTime;
-    @Column(name = "mod_time")
+    @Column("mod_time")
     private Long modTime;
-    @Column(name = "index")
+    @Column("index")
     private Integer index;
-    @Column(name = "parameter")
+    @Column("parameter")
     private String parameter;
 
     public Integer getId() {
