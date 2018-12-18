@@ -21,7 +21,7 @@ public class TimerDaoImpl implements TimerDao {
 
     @Override
     public boolean saveTimer(TimerConfig config) {
-        return jdbcUtils.insert(config);
+        return jdbcUtils.insert(config,true);
     }
 
     @Override
@@ -31,8 +31,14 @@ public class TimerDaoImpl implements TimerDao {
 
     @Override
     public boolean deleteTimer(long id) {
-        String sql = "update gflow_timer set del=1 where id=?";
+        String sql = "update gflow_timerconfig set del=1 where id=?";
         return jdbcUtils.executeUpdate(sql, new Object[]{id}) != 0 ? true : false;
+    }
+
+    @Override
+    public TimerConfig getTimer(long id) {
+        String sql="select * from gflow_timerconfig where id=? and del =0 ";
+        return jdbcUtils.queryForObject(sql,new Object[]{id},TimerConfig.class);
     }
 
     @Override

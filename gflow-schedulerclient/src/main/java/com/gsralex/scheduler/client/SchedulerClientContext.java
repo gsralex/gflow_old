@@ -21,6 +21,7 @@ public class SchedulerClientContext {
 
     private void init() throws IOException {
         config = PropertiesUtils.getConfig(CONFIG_FILEPATH, ClientConfig.class);
+        initIps();
     }
 
     private void initIps() {

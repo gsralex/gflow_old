@@ -12,13 +12,13 @@ import java.util.Date;
  * @author gsralex
  * @version 2018/12/17
  */
-public class TimerTaskProcessorTest {
+public class TimerProcessorTest {
     @Test
     public void getMin() throws Exception {
 
         SchedulerContext context = new SchedulerContext();
         context.init();
-        TimerTaskProcessor processor = new TimerTaskProcessor(context);
+        TimerProcessor processor = new TimerProcessor(context);
 
         //设置现在时间
         Calendar now = Calendar.getInstance();

@@ -5,6 +5,8 @@ import com.gsralex.gflow.scheduler.domain.Job;
 import com.gsralex.gflow.scheduler.domain.JobGroup;
 import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.enums.JobStatusEnum;
+import com.gsralex.gflow.scheduler.model.JobGroupExec;
+import com.gsralex.gflow.scheduler.sql.IdUtils;
 import com.gsralex.gflow.scheduler.sql.JobDao;
 
 import java.util.List;
@@ -80,6 +82,15 @@ public class JobDaoImpl implements JobDao {
     public List<Job> listJobNeedRetry(int maxRetryCnt) {
         String sql = "select * from gflow_job where `status`<>? and retry_cnt<?";
         return jdbcUtils.queryForList(sql, new Object[]{JobStatusEnum.ExecuteOk, maxRetryCnt}, Job.class);
+    }
+
+    @Override
+    public List<JobGroupExec> listJobGroupExec(List<Long> timerIdList) {
+        String sql="select max(create_time) as createtime,timer_config_id as timerconfigid from gflow_jobgroup  ";
+        String ids= IdUtils.longToInts(timerIdList);
+        sql+="where timer_config_id in ("+ids+")";
+        sql+="group by timer_config_id";
+        return jdbcUtils.queryForList(sql,null,JobGroupExec.class);
     }
 
 

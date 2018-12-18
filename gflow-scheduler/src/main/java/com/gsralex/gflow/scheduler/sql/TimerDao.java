@@ -16,5 +16,7 @@ public interface TimerDao {
 
     boolean deleteTimer(long id);
 
+    TimerConfig getTimer(long id);
+
     List<TimerConfig> listTimer();
 }

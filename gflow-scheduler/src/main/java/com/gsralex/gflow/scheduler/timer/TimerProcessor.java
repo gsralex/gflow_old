@@ -15,17 +15,25 @@ import java.util.Map;
  * @author gsralex
  * @version 2018/8/21
  */
-public class TimerTaskProcessor {
+public class TimerProcessor {
 
     private Map<Long, TimerTask> map = new HashMap<>();
-
-    private static final String DF_FULLTIME = "yyyy:mm:dd hh:mm:ss";
-
     private ScheduleLinkHandle scheduleLinkHandle;
 
-    public TimerTaskProcessor(SchedulerContext schedulerContext) {
-        scheduleLinkHandle = new ScheduleLinkHandle(schedulerContext);
+
+    private static final TimerProcessor current=new TimerProcessor();
+    private TimerProcessor(){
+
     }
+
+    public void setContext(SchedulerContext context){
+        scheduleLinkHandle=new ScheduleLinkHandle(context);
+    }
+
+    public static TimerProcessor getInstance(){
+        return current;
+    }
+
 
     public void start() {
         new Thread(new Runnable() {
@@ -39,6 +47,13 @@ public class TimerTaskProcessor {
     public void setTimer(TimerTask task) {
         synchronized (map) {
             map.put(task.getTimerConfig().getId(), task);
+            map.notify();
+        }
+    }
+
+    public void removeTimer(long id) {
+        synchronized (map) {
+            map.remove(id);
             map.notify();
         }
     }

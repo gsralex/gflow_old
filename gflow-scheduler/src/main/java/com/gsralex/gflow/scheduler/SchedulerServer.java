@@ -1,10 +1,10 @@
 package com.gsralex.gflow.scheduler;
 
 import com.gsralex.gflow.scheduler.parameter.DynamicParam;
-import com.gsralex.gflow.scheduler.retry.RetryProcessor;
 import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
 import com.gsralex.gflow.scheduler.server.ThriftSchedulerServer;
-import com.gsralex.gflow.scheduler.timer.TimerTaskProcessor;
+import com.gsralex.gflow.scheduler.timer.TimerProcessor;
+import com.gsralex.gflow.scheduler.timer.TimerRecovery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,15 +18,6 @@ public class SchedulerServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerServer.class);
 
-    /**
-     * 重试处理器
-     */
-    private RetryProcessor retryProcessor;
-    /**
-     * 任务定时处理器
-     */
-    private TimerTaskProcessor timerTaskProcessor;
-
     private SchedulerContext context;
 
     public void addParameter(DynamicParam parameter) {
@@ -35,14 +26,17 @@ public class SchedulerServer {
 
     public void serve() throws ScheduleTransportException, IOException {
         LOGGER.info("====== SchedulerServer STARTING ======");
-        SchedulerContext context = new SchedulerContext();
+        context = new SchedulerContext();
         context.init();
 
         ThriftSchedulerServer server = new ThriftSchedulerServer(context);
         server.start();
         LOGGER.info("====== SchedulerServer.serve STARTED ======");
-        //retryProcessor = new RetryProcessor(scheduleContext);
-        //timerTaskProcessor = new TimerTaskProcessor(scheduleContext);
+
+        TimerProcessor timerProcessor = TimerProcessor.getInstance();
+        timerProcessor.setContext(context);
+        TimerRecovery timerRecovery = new TimerRecovery(timerProcessor, context);
+        timerRecovery.reply();
 
     }
 

@@ -20,9 +20,7 @@ public class ScheduleLinkHandle {
 
     public ScheduleLinkHandle(SchedulerContext context) {
         retry = getRetry();
-
         jobDao = new JobDaoImpl(context.getJdbcUtils());
-
         scheduleActualHanle = new ScheduleActualHanle(context);
     }
 
