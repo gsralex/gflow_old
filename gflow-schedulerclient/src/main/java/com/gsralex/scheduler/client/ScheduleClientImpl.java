@@ -90,7 +90,7 @@ public class ScheduleClientImpl implements ScheduleClient {
         try {
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
-            TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "schedule");
+            TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "scheduler");
             TScheduleService.Client client = new TScheduleService.Client(multiProtocol);
             return callback.doSchedule(client);
         } catch (Exception e) {

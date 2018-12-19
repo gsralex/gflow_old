@@ -14,8 +14,9 @@ import java.io.IOException;
 public class ExecutorServer {
 
     private ExecutorContext context;
+
     public ExecutorServer() throws IOException {
-        context = new ExecutorContext();
+        context = ExecutorContext.getInstance();
         context.init();
     }
 
@@ -28,8 +29,9 @@ public class ExecutorServer {
         server.start();
     }
 
-    public static void main(String[] args) {
-        ExecutorServer server;
+    public static void main(String[] args) throws IOException, TTransportException {
+        ExecutorServer server = new ExecutorServer();
+        server.serve();
     }
 
 }

@@ -39,14 +39,25 @@ public class SchedulerClientContext {
         return config;
     }
 
-    public static void main(String[] args) throws IOException {
+//    public static void main(String[] args) throws IOException {
+//
+//        SchedulerClientContext context=new SchedulerClientContext();
+//        context.init();
+//        int id = Integer.parseInt(args[0]);
+//        Parameter parameter = new Parameter();
+//        parameter.put("bizdate", args[1]);
+//        ScheduleClient scheduleClient = new ScheduleClientImpl(context);
+//        scheduleClient.scheduleGroup(id, parameter);
+//    }
 
-        SchedulerClientContext context=new SchedulerClientContext();
+    public static void main(String[] args) throws IOException {
+        SchedulerClientContext context = new SchedulerClientContext();
         context.init();
-        int id = Integer.parseInt(args[0]);
         Parameter parameter = new Parameter();
-        parameter.put("bizdate", args[1]);
-        ScheduleClient scheduleClient = new ScheduleClientImpl(context);
-        scheduleClient.scheduleGroup(id, parameter);
+        parameter.put("bizdate", "20181218");
+        parameter.put("id", "1");
+
+        ScheduleClient client = new ScheduleClientImpl(context);
+        client.scheduleAction(5, parameter);
     }
 }

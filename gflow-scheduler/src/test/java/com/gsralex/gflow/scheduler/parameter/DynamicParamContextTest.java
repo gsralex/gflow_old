@@ -23,11 +23,6 @@ public class DynamicParamContextTest {
         DynamicParamContext context = DynamicParamContext.getContext();
         DynamicParam param1 = new DynamicParam() {
             @Override
-            public String getRegexKey() {
-                return "bizdate\\-\\d+d";
-            }
-
-            @Override
             public String getValue(String key) {
                 //bizdate-1d
                 Pattern pattern = Pattern.compile("bizdate-(?<day>\\d+)d");
@@ -38,11 +33,10 @@ public class DynamicParamContextTest {
             }
         };
         context.addParam(param1);
-        Parameter parameter = new Parameter("$bizdate=bizdate-3d");
+        Parameter parameter = new Parameter("bizdate=${bizdate-3d}");
         context.parser(parameter);
         String date = DateFormatUtils.format(DateUtils.addDays(new Date(), 3), "yyyyMMdd");
         Assert.assertEquals(parameter.getString("bizdate"), date);
-
     }
 
 }

@@ -31,7 +31,7 @@ public class TimerRecovery {
         timerDao = new TimerDaoImpl(context.getJdbcUtils());
     }
 
-    public void reply() {
+    public void recovery() {
         List<TimerConfig> timerList = timerDao.listTimer();
         List<Long> timerIdList = timerList.stream().map(x -> x.getId()).collect(Collectors.toList());
         List<JobGroupExec> execList = jobDao.listJobGroupExec(timerIdList);

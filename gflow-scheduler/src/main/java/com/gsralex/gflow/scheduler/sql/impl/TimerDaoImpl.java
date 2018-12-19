@@ -43,7 +43,7 @@ public class TimerDaoImpl implements TimerDao {
 
     @Override
     public List<TimerConfig> listTimer() {
-        String sql = "select * from gflow_timer where del=0";
+        String sql = "select * from gflow_timerconfig where del=0";
         return jdbcUtils.queryForList(sql, null, TimerConfig.class);
     }
 

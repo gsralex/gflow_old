@@ -1,12 +1,14 @@
 package com.gsralex.gflow.executor.config;
 
+import com.gsralex.gflow.core.util.PropertyName;
+
 public class ExecutorConfig {
 
-
+    @PropertyName(name = "gflow.port")
     private int port;
-
+    @PropertyName(name = "gflow.scheduler.ips")
     private String schedulerIps;
-
+    @PropertyName(name = "gflow.accesskey")
     private String accessKey;
 
     public int getPort() {

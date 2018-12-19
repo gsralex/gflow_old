@@ -21,16 +21,17 @@ public class TimerProcessor {
     private ScheduleLinkHandle scheduleLinkHandle;
 
 
-    private static final TimerProcessor current=new TimerProcessor();
-    private TimerProcessor(){
+    private static final TimerProcessor current = new TimerProcessor();
+
+    private TimerProcessor() {
 
     }
 
-    public void setContext(SchedulerContext context){
-        scheduleLinkHandle=new ScheduleLinkHandle(context);
+    public void setContext(SchedulerContext context) {
+        scheduleLinkHandle = new ScheduleLinkHandle(context);
     }
 
-    public static TimerProcessor getInstance(){
+    public static TimerProcessor getInstance() {
         return current;
     }
 
@@ -109,7 +110,6 @@ public class TimerProcessor {
         if (timeArr.length > 2) {
             ss = Integer.parseInt(timeArr[2]);
         }
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, hh);
@@ -120,7 +120,7 @@ public class TimerProcessor {
 
 
     public void mainLoop() {
-        while (!Thread.currentThread().isInterrupted()) {
+        while (true) {
             try {
                 synchronized (map) {
                     if (map.size() == 0) {

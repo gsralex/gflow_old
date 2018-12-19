@@ -19,26 +19,33 @@ public class ExecutorContext {
 
     private static final String CONFIG_FILEPATH = "/gflow.properties";
 
+    private static final ExecutorContext current = new ExecutorContext();
+
     private TExecutorClient client;
     private boolean spring;
 
     private ExecutorConfig config;
 
-    private List<IpAddress> schedulerIps=new ArrayList<>();
+    private List<IpAddress> schedulerIps = new ArrayList<>();
 
-    public ExecutorContext() {
-        client = new TExecutorClient(this);
+    private ExecutorContext() {
+
+    }
+
+    public static ExecutorContext getInstance() {
+        return current;
     }
 
     public void init() throws IOException {
-        config= PropertiesUtils.getConfig(CONFIG_FILEPATH,ExecutorConfig.class);
+        client = new TExecutorClient(this);
+        config = PropertiesUtils.getConfig(CONFIG_FILEPATH, ExecutorConfig.class);
     }
 
-    private void initIps(){
-        String[] ips= config.getSchedulerIps().split(",");
-        for(String ip:ips){
-            String[] ipport= ip.split(":");
-            IpAddress ipAddress=new IpAddress(ipport[0],Integer.parseInt(ipport[1]));
+    private void initIps() {
+        String[] ips = config.getSchedulerIps().split(",");
+        for (String ip : ips) {
+            String[] ipport = ip.split(":");
+            IpAddress ipAddress = new IpAddress(ipport[0], Integer.parseInt(ipport[1]));
             schedulerIps.add(ipAddress);
         }
     }

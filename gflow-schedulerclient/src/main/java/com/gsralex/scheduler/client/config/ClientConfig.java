@@ -1,8 +1,12 @@
 package com.gsralex.scheduler.client.config;
 
+import com.gsralex.gflow.core.util.PropertyName;
+
 public class ClientConfig {
 
+    @PropertyName(name = "gflow.scheduler.ips")
     private String schedulerIps;
+    @PropertyName(name = "gflow.accesskey")
     private String accessKey;
 
     public String getSchedulerIps() {
