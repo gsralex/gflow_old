@@ -51,7 +51,7 @@ public class ScheduleActualHanle {
     }
 
 
-    public FlowResult scheduleGroup(long triggerGroupId, String parameter, long executeConfigId, boolean retry) {
+    public FlowResult scheduleGroup(long triggerGroupId, String parameter, long timerConfigId, boolean retry) {
         Parameter param = new Parameter(parameter);
         DynamicParamContext.getContext().parser(param);
 
@@ -61,7 +61,7 @@ public class ScheduleActualHanle {
         jobGroup.setStatus(JobGroupStatusEnum.EXECUTING.getValue());
         jobGroup.setFlowGroupId(triggerGroupId);
         jobGroup.setDate(DtUtils.getBizDate());
-        jobGroup.setTimerConfigId(executeConfigId);
+        jobGroup.setTimerConfigId(timerConfigId);
         jobGroup.setParameter(param.toString());
         jobDao.saveJobGroup(jobGroup);
 

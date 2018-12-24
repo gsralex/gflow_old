@@ -18,13 +18,15 @@ public class ExecutorThread implements Runnable {
     private TJobReq req;
     private TExecutorClient client;
 
-    public ExecutorThread(ExecuteProcess process) {
+    public ExecutorThread(ExecuteProcess process, ExecutorContext context) {
         this.process = process;
+        this.client = new TExecutorClient(context);
     }
 
     public ExecutorThread(AckExecuteProcess ackProcess) {
         this.ackProcess = ackProcess;
     }
+
 
     public void setParameter(Parameter parameter) {
         this.parameter = parameter;

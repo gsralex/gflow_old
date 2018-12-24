@@ -40,7 +40,7 @@ public class SchedulerServer {
 
         ThriftSchedulerServer server = new ThriftSchedulerServer(context);
         server.start();
-        LOGGER.info("====== SchedulerServer.serve STARTED ======");
+        LOGGER.info("====== SchedulerServer STARTED ======");
 
         TimerProcessor timerProcessor = TimerProcessor.getInstance();
         timerProcessor.setContext(context);

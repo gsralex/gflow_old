@@ -2,6 +2,8 @@ package com.gsralex.gflow.executor;
 
 import com.gsralex.gflow.executor.server.TExecutorServer;
 import org.apache.thrift.transport.TTransportException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
@@ -12,6 +14,9 @@ import java.io.IOException;
  * @version 2018/8/4
  */
 public class ExecutorServer {
+
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorServer.class);
 
     private ExecutorContext context;
 
@@ -25,8 +30,11 @@ public class ExecutorServer {
     }
 
     public void serve() throws TTransportException {
+        LOGGER.info("====== ExecutorServer STARTING ======");
+        LOGGER.info("port:{}", context.getConfig().getPort());
         TExecutorServer server = new TExecutorServer(context);
         server.start();
+
     }
 
     public static void main(String[] args) throws IOException, TTransportException {

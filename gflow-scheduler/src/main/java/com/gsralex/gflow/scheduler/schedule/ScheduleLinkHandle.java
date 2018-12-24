@@ -24,8 +24,8 @@ public class ScheduleLinkHandle {
         scheduleActualHanle = new ScheduleActualHanle(context);
     }
 
-    public void scheduleGroup(long groupId, String parameter, long executeConfigId) {
-        scheduleActualHanle.scheduleGroup(groupId, parameter, executeConfigId, retry);
+    public void scheduleGroup(long groupId, String parameter, long timerConfigId) {
+        scheduleActualHanle.scheduleGroup(groupId, parameter, timerConfigId, retry);
     }
 
     public void pauseGroup(long jobGroupId) {

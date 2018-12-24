@@ -39,6 +39,7 @@ public class ExecutorContext {
     public void init() throws IOException {
         client = new TExecutorClient(this);
         config = PropertiesUtils.getConfig(CONFIG_FILEPATH, ExecutorConfig.class);
+        initIps();
     }
 
     private void initIps() {

@@ -28,7 +28,12 @@ public class TExecutorServer {
         args.processor(processor);
         args.protocolFactory(new TBinaryProtocol.Factory());
         TServer tServer = new TThreadPoolServer(args);
-        tServer.serve();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                tServer.serve();
+            }
+        }).start();
     }
 
 

@@ -3,7 +3,7 @@ package com.gsralex.gflow.scheduler.enums;
 public enum JobStatusEnum {
 
     /**
-     * 发送失败
+     * 发送成功
      */
     SendOk(1),
     /**

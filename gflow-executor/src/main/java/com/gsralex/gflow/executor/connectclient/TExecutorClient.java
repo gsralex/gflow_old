@@ -15,6 +15,7 @@ import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -31,6 +32,13 @@ public class TExecutorClient {
         this.context = context;
     }
 
+    public static void main(String[] args) throws IOException {
+        ExecutorContext context = ExecutorContext.getInstance();
+        context.init();
+        TExecutorClient client = new TExecutorClient(context);
+        client.ack(1, true);
+    }
+
     public void ack(long jobId, boolean ok) {
         TTransport transport = null;
         try {
@@ -39,7 +47,7 @@ public class TExecutorClient {
             transport = new TSocket(ip.getIp(), ip.getPort());
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
-            TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "scheduleAck");
+            TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "scheduler");
             TScheduleService.Client client = new TScheduleService.Client(multiProtocol);
             TAckReq req = new TAckReq();
             req.setJobId(jobId);

@@ -42,7 +42,7 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
             Class type = Class.forName(req.getClassName());
             if (ExecuteProcess.class.isAssignableFrom(type)) {
                 ExecuteProcess process = (ExecuteProcess) getInstance(type);
-                ExecutorThread thread = new ExecutorThread(process);
+                ExecutorThread thread = new ExecutorThread(process, this.context);
                 thread.setReq(req);
                 thread.setParameter(parameter);
                 executorService.execute(thread);

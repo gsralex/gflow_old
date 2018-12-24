@@ -5,6 +5,8 @@ import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.domain.TimerConfig;
 import com.gsralex.gflow.scheduler.schedule.ScheduleLinkHandle;
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -16,6 +18,8 @@ import java.util.Map;
  * @version 2018/8/21
  */
 public class TimerProcessor {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TimerProcessor.class);
 
     private Map<Long, TimerTask> map = new HashMap<>();
     private ScheduleLinkHandle scheduleLinkHandle;
@@ -140,6 +144,7 @@ public class TimerProcessor {
                     }
                 }
             } catch (Exception e) {
+                LOGGER.error("TimerProcessor.mainLoop", e);
             }
         }
     }
