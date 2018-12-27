@@ -1,14 +1,15 @@
 package com.gsralex.gflow.scheduler.server;
 
 
+import com.gsralex.gflow.core.connect.SecurityUtils;
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.thriftgen.TResp;
-import com.gsralex.gflow.core.thriftgen.scheduler.TAckReq;
-import com.gsralex.gflow.core.thriftgen.scheduler.TGroupJobReq;
-import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
-import com.gsralex.gflow.core.thriftgen.scheduler.TScheduleService;
+import com.gsralex.gflow.core.thriftgen.scheduler.*;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.schedule.ScheduleLinkHandle;
+import com.gsralex.gflow.scheduler.domain.JobGroup;
+import com.gsralex.gflow.scheduler.schedule.ActionResult;
+import com.gsralex.gflow.scheduler.schedule.FlowResult;
+import com.gsralex.gflow.scheduler.schedule.SchedulerService;
 import org.apache.thrift.TException;
 
 /**
@@ -17,89 +18,115 @@ import org.apache.thrift.TException;
  */
 public class TScheduleServiceImpl implements TScheduleService.Iface {
 
-    private ScheduleLinkHandle scheduleLinkHandle;
 
-    private ScheduleChain chain;
+    private SchedulerService schedulerService;
+    private String accessKey;
 
     public TScheduleServiceImpl(SchedulerContext context) {
-        chain = new ScheduleChain(context.getConfig().getAccessKey());
-        scheduleLinkHandle = new ScheduleLinkHandle(context);
+        accessKey = context.getConfig().getAccessKey();
+        schedulerService = new SchedulerService(context);
+    }
+
+
+    private boolean getRetry() {
+        return false;
     }
 
     @Override
-    public TResp scheduleAction(TJobReq req) {
-        class ScheduleActionCallback implements ScheduleCallback {
-            @Override
-            public TResp doSchedule() {
-                TResp tResult = new TResp();
-                scheduleLinkHandle.scheduleAction(req.getActionId(), req.getParameter());
-                tResult.setCode(ErrConstants.OK);
-                tResult.setMsg(ErrConstants.MSG_OK);
-                return tResult;
-            }
+    public TJobResp scheduleAction(TJobReq req) {
+        TJobResp resp = new TJobResp();
+        if (!SecurityUtils.check(accessKey, req.getAccessToken())) {
+            resp.setCode(ErrConstants.ERR_ACCESSTOKEN);
+            resp.setMsg(ErrConstants.MSG_ERRACCESTOKEN);
+            return resp;
         }
-        return chain.execute(new ScheduleActionCallback(), req.getAccessToken());
+        ActionResult result = schedulerService.scheduleAction(req.getActionId(), req.getParameter(), getRetry());
+        resp.setCode(ErrConstants.OK);
+        resp.setMsg(ErrConstants.MSG_OK);
+        resp.setJobId(result.getJobId());
+        return resp;
     }
 
     @Override
-    public TResp scheduleGroup(TGroupJobReq req) {
-        class ScheduleGroupCallback implements ScheduleCallback {
-            @Override
-            public TResp doSchedule() {
-                scheduleLinkHandle.scheduleGroup(req.getGroupId(), req.getParameter(), 0);
-                TResp tResult = new TResp();
-                tResult.setCode(ErrConstants.OK);
-                tResult.setMsg(ErrConstants.MSG_OK);
-                return tResult;
-            }
+    public TScheduleGroupResp scheduleGroup(TGroupJobReq req) {
+        TScheduleGroupResp resp = new TScheduleGroupResp();
+        if (!SecurityUtils.check(accessKey, req.getAccessToken())) {
+            resp.setCode(ErrConstants.ERR_ACCESSTOKEN);
+//            resp.setMsg(ErrConstants.MSG_ERRACCESTOKEN);
+            return resp;
         }
-        return chain.execute(new ScheduleGroupCallback(), req.getAccessToken());
+        FlowResult result = schedulerService.scheduleGroup(req.getGroupId(), req.getParameter(), 0, getRetry());
+        resp.setCode(ErrConstants.OK);
+        resp.setJobGroupId(result.getJobGroupId());
+
+//        resp.setMsg(ErrConstants.MSG_OK);
+        return resp;
     }
 
     @Override
     public TResp pauseGroup(TGroupJobReq req) {
-        class PauseGroupCallback implements ScheduleCallback {
-            @Override
-            public TResp doSchedule() {
-                scheduleLinkHandle.pauseGroup(req.getGroupId());
-                TResp tResult = new TResp();
-                tResult.setCode(ErrConstants.OK);
-                tResult.setMsg(ErrConstants.MSG_OK);
-                return tResult;
-            }
+        TResp resp = new TResp();
+        if (!SecurityUtils.check(accessKey, req.getAccessToken())) {
+            resp.setCode(ErrConstants.ERR_ACCESSTOKEN);
+            resp.setMsg(ErrConstants.MSG_ERRACCESTOKEN);
+            return resp;
         }
-        return chain.execute(new PauseGroupCallback(), req.getAccessToken());
+        schedulerService.pauseGroup(req.getGroupId());
+        resp.setCode(ErrConstants.OK);
+        resp.setMsg(ErrConstants.MSG_OK);
+        return resp;
     }
 
     @Override
     public TResp stopGroup(TGroupJobReq req) {
-        class StopGroupCallback implements ScheduleCallback {
-            @Override
-            public TResp doSchedule() {
-                scheduleLinkHandle.stopGroup(req.getGroupId());
-                TResp tResult = new TResp();
-                tResult.setCode(ErrConstants.OK);
-                tResult.setMsg(ErrConstants.MSG_OK);
-                return tResult;
-            }
+        TResp resp = new TResp();
+        if (!SecurityUtils.check(accessKey, req.getAccessToken())) {
+            resp.setCode(ErrConstants.ERR_ACCESSTOKEN);
+            resp.setMsg(ErrConstants.MSG_ERRACCESTOKEN);
+            return resp;
         }
-        return chain.execute(new StopGroupCallback(), req.getAccessToken());
+        schedulerService.stopGroup(req.getGroupId());
+        resp.setCode(ErrConstants.OK);
+        resp.setMsg(ErrConstants.MSG_OK);
+        return resp;
     }
 
     @Override
     public TResp ack(TAckReq req) throws TException {
-        class AckCallback implements ScheduleCallback {
-            @Override
-            public TResp doSchedule() {
-                boolean ok = req.getCode() == ErrConstants.OK ? true : false;
-                scheduleLinkHandle.ackAction(req.getJobId(), ok);
-                TResp tResult = new TResp();
-                tResult.setCode(ErrConstants.OK);
-                tResult.setMsg(ErrConstants.MSG_OK);
-                return tResult;
-            }
+        TResp resp = new TResp();
+        if (!SecurityUtils.check(accessKey, req.getAccessToken())) {
+            resp.setCode(ErrConstants.ERR_ACCESSTOKEN);
+            resp.setMsg(ErrConstants.MSG_ERRACCESTOKEN);
+            return resp;
         }
-        return chain.execute(new AckCallback(), req.getAccessToken());
+        boolean ok = req.getCode() == ErrConstants.OK ? true : false;
+        schedulerService.ackAction(req.getJobId(), ok, getRetry());
+        resp.setCode(ErrConstants.OK);
+        resp.setMsg(ErrConstants.MSG_OK);
+        return resp;
+    }
+
+    @Override
+    public TGetJobGroupResp getGroup(TGetJobGroupReq req) throws TException {
+        TGetJobGroupResp resp = new TGetJobGroupResp();
+        if (!SecurityUtils.check(accessKey, req.getAccessToken())) {
+            resp.setCode(ErrConstants.ERR_ACCESSTOKEN);
+//            resp.setMsg(ErrConstants.MSG_ERRACCESTOKEN);
+            return resp;
+        }
+        JobGroup jobGroup = schedulerService.getJobGroup(req.getId());
+        if (jobGroup != null) {
+            TJobGroup tJobGroup = new TJobGroup();
+            tJobGroup.setId(jobGroup.getId());
+            tJobGroup.setStatus(GroupStatus.findByValue(jobGroup.getStatus()));
+            resp.setJobGroup(tJobGroup);
+        }
+        return resp;
+    }
+
+    @Override
+    public TGetJobResp getJob(TGetJobReq req) throws TException {
+        return null;
     }
 
 

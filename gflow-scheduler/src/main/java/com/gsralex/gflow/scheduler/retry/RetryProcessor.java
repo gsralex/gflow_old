@@ -4,7 +4,7 @@ import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.domain.Job;
 import com.gsralex.gflow.scheduler.schedule.ActionDesc;
 import com.gsralex.gflow.scheduler.schedule.ActionResult;
-import com.gsralex.gflow.scheduler.schedule.ScheduleActualHanle;
+import com.gsralex.gflow.scheduler.schedule.SchedulerService;
 import com.gsralex.gflow.scheduler.sql.JobDao;
 import com.gsralex.gflow.scheduler.sql.impl.JobDaoImpl;
 
@@ -22,7 +22,7 @@ public class RetryProcessor {
     //key->taskId,value->task，重试任务
     private Map<Long, RetryTask> retryTaskMap = new HashMap<>();
 
-    private ScheduleActualHanle actualHanle;
+    private SchedulerService actualHanle;
     private JobDao jobDao;
 
     private SchedulerContext context;

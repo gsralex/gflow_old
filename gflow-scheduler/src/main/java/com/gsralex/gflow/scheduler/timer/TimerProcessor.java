@@ -3,7 +3,7 @@ package com.gsralex.gflow.scheduler.timer;
 import com.gsralex.gflow.core.util.DtUtils;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.domain.TimerConfig;
-import com.gsralex.gflow.scheduler.schedule.ScheduleLinkHandle;
+import com.gsralex.gflow.scheduler.schedule.SchedulerService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +22,7 @@ public class TimerProcessor {
     private static final Logger LOGGER = LoggerFactory.getLogger(TimerProcessor.class);
 
     private Map<Long, TimerTask> map = new HashMap<>();
-    private ScheduleLinkHandle scheduleLinkHandle;
+    private SchedulerService schedulerService;
 
 
     private static final TimerProcessor current = new TimerProcessor();
@@ -32,7 +32,7 @@ public class TimerProcessor {
     }
 
     public void setContext(SchedulerContext context) {
-        scheduleLinkHandle = new ScheduleLinkHandle(context);
+        schedulerService = new SchedulerService(context);
     }
 
     public static TimerProcessor getInstance() {
@@ -137,7 +137,7 @@ public class TimerProcessor {
                     long interval = getInterval(timerTask, new Date());
                     if (interval < 0) {
                         TimerConfig config = timerTask.getTimerConfig();
-                        scheduleLinkHandle.scheduleGroup(config.getFlowGroupId(), config.getParameter(), config.getId());
+                        schedulerService.scheduleGroup(config.getFlowGroupId(), config.getParameter(), config.getId(), false);
                         timerTask.setLastExecutionTime(System.currentTimeMillis());
                     } else {
                         map.wait(interval);

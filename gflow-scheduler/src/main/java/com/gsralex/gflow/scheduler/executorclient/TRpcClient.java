@@ -1,4 +1,4 @@
-package com.gsralex.gflow.scheduler.client;
+package com.gsralex.gflow.scheduler.executorclient;
 
 import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.thriftgen.TResp;

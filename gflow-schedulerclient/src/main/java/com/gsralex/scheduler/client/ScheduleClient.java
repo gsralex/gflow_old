@@ -1,15 +1,12 @@
 package com.gsralex.scheduler.client;
 
-import com.gsralex.gflow.core.context.Parameter;
-import com.gsralex.gflow.core.model.Result;
+import com.gsralex.scheduler.client.action.scheduler.GetJobGroupResp;
+import com.gsralex.scheduler.client.action.scheduler.ScheduleGroupReq;
+import com.gsralex.scheduler.client.action.scheduler.ScheduleGroupResp;
 
 public interface ScheduleClient {
 
-    Result scheduleGroup(long id, Parameter parameter);
+    ScheduleGroupResp scheduleGroup(ScheduleGroupReq req);
 
-    Result pauseGroup(long id);
-
-    Result stopGroup(long id);
-
-    Result scheduleAction(long id,Parameter parameter);
+    GetJobGroupResp getJobGroup(long id);
 }

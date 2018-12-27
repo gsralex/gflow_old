@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 public class ThriftSchedulerServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ThriftSchedulerServer.class);
-    ;
+
     private TScheduleServiceImpl scheduleService;
     private SchedulerContext context;
 

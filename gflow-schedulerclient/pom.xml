@@ -29,7 +29,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.gsralex.scheduler.client.SchedulerClientContext</mainClass>
+                            <mainClass>com.gsralex.scheduler.client.ClientContext</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -44,6 +44,11 @@
         <dependency>
             <groupId>org.apache.thrift</groupId>
             <artifactId>libthrift</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gsralex.gflow</groupId>
+            <artifactId>gflow-scheduler</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

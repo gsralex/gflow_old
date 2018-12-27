@@ -29,4 +29,9 @@ public class DtUtils {
     public static int getBizDate() {
         return Integer.parseInt(formatBizDate(new Date()));
     }
+
+    public static int diffDays(Date start, Date end) {
+        int days = (int) ((end.getTime() - start.getTime()) / (1000 * 3600 * 24));
+        return days;
+    }
 }

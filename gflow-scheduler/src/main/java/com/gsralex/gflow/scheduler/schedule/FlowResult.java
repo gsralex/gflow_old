@@ -11,8 +11,18 @@ public class FlowResult {
 
     private List<ActionResult> results;
 
+    private Long jobGroupId;
+
     public FlowResult() {
         results = new ArrayList<>();
+    }
+
+    public Long getJobGroupId() {
+        return jobGroupId;
+    }
+
+    public void setJobGroupId(Long jobGroupId) {
+        this.jobGroupId = jobGroupId;
     }
 
     public List<ActionResult> getResults() {

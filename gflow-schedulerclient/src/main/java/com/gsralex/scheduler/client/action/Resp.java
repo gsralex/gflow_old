@@ -1,18 +1,13 @@
-package com.gsralex.gflow.core.model;
+package com.gsralex.scheduler.client.action;
 
-public class Result {
+/**
+ * @author gsralex
+ * @version 2018/12/27
+ */
+public  class Resp {
 
     private int code;
     private String msg;
-
-    public Result() {
-        this(0, "");
-    }
-
-    public Result(int code, String msg) {
-        this.code = code;
-        this.msg = msg;
-    }
 
     public int getCode() {
         return code;

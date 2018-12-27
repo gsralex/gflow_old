@@ -7,5 +7,11 @@ struct TResp{
 }
 
 
+exception TRespException{
+    1: required i32 code;
+    2: optional string msg;
+}
+
+
 
 

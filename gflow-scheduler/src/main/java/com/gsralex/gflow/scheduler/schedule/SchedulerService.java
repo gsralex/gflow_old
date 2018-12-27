@@ -7,7 +7,7 @@ import com.gsralex.gflow.core.thriftgen.TResp;
 import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
 import com.gsralex.gflow.core.util.DtUtils;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.client.TRpcClient;
+import com.gsralex.gflow.scheduler.executorclient.TRpcClient;
 import com.gsralex.gflow.scheduler.domain.Action;
 import com.gsralex.gflow.scheduler.domain.Job;
 import com.gsralex.gflow.scheduler.domain.JobGroup;
@@ -33,7 +33,7 @@ import java.util.Set;
  * @author gsralex
  * @version 2018/6/2
  */
-public class ScheduleActualHanle {
+public class SchedulerService {
 
     private ActionDao actionDao;
     private JobDao jobDao;
@@ -41,7 +41,7 @@ public class ScheduleActualHanle {
     private FlowMapHandle flowMapHandle;
     private ScheduleIpSelector ipSelector;
 
-    public ScheduleActualHanle(SchedulerContext context) {
+    public SchedulerService(SchedulerContext context) {
         actionDao = new ActionDaoImpl(context.getJdbcUtils());
         jobDao = new JobDaoImpl(context.getJdbcUtils());
         rpcClient = new TRpcClient();
@@ -51,7 +51,10 @@ public class ScheduleActualHanle {
     }
 
 
-    public FlowResult scheduleGroup(long triggerGroupId, String parameter, long timerConfigId, boolean retry) {
+    public FlowResult scheduleGroup(long triggerGroupId,
+                                    String parameter,
+                                    long timerConfigId,
+                                    boolean retry) {
         Parameter param = new Parameter(parameter);
         DynamicParamContext.getContext().parser(param);
 
@@ -67,10 +70,16 @@ public class ScheduleActualHanle {
 
         FlowGuide flowGuide = flowMapHandle.initGroup(jobGroup.getId(), triggerGroupId);
         List<FlowNode> rootList = flowGuide.listRoot();
-        return doActionList(triggerGroupId, jobGroup.getId(), parameter, rootList, retry);
+        FlowResult result = doActionList(triggerGroupId, jobGroup.getId(), parameter, rootList, retry);
+        result.setJobGroupId(jobGroup.getId());
+        return result;
     }
 
-    private FlowResult doActionList(long triggerGroupId, long jobGroupId, String groupParameter, List<FlowNode> nodeList, boolean retry) {
+    private FlowResult doActionList(long triggerGroupId,
+                                    long jobGroupId,
+                                    String groupParameter,
+                                    List<FlowNode> nodeList,
+                                    boolean retry) {
         FlowResult r = new FlowResult();
         for (FlowNode node : nodeList) {
             ActionDesc desc = new ActionDesc();
@@ -134,11 +143,11 @@ public class ScheduleActualHanle {
         return null;
     }
 
-    public void scheduleAction(long actionId, String parameter, boolean retry) {
+    public ActionResult scheduleAction(long actionId, String parameter, boolean retry) {
         ActionDesc desc = new ActionDesc();
         desc.setActionId(actionId);
         desc.setParameter(parameter);
-        scheduleAction(desc, retry);
+        return scheduleAction(desc, retry);
     }
 
     public ActionResult scheduleAction(ActionDesc desc, boolean retry) {
@@ -204,7 +213,7 @@ public class ScheduleActualHanle {
         return result;
     }
 
-    public FlowResult actionAck(long jobId, boolean jobOk, boolean retry) {
+    public FlowResult ackAction(long jobId, boolean jobOk, boolean retry) {
         FlowResult r = new FlowResult();
         Job job = jobDao.getJob(jobId);
         if (job != null) {
@@ -240,5 +249,10 @@ public class ScheduleActualHanle {
         }
         jobDao.updateJob(job);
         return r;
+    }
+
+
+    public JobGroup getJobGroup(long id) {
+        return jobDao.getJobGroup(id);
     }
 }

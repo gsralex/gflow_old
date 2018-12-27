@@ -55,10 +55,10 @@ public class TExecutorClient {
             req.setAccessToken(SecurityUtils.encrypt(accessKey));
             if (ok) {
                 req.setCode(ErrConstants.OK);
-                req.setErrmsg(ErrConstants.MSG_OK);
+                req.setMsg(ErrConstants.MSG_OK);
             } else {
                 req.setCode(ErrConstants.ERR_EXECUTEFAIL);
-                req.setErrmsg(ErrConstants.MSG_ERREXECUTEFAIL);
+                req.setMsg(ErrConstants.MSG_ERREXECUTEFAIL);
             }
             client.ack(req);
         } catch (TException e) {
