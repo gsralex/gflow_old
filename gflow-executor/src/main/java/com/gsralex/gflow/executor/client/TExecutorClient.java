@@ -1,4 +1,4 @@
-package com.gsralex.gflow.executor.connectclient;
+package com.gsralex.gflow.executor.client;
 
 import com.gsralex.gflow.core.connect.SecurityUtils;
 import com.gsralex.gflow.core.constants.ErrConstants;

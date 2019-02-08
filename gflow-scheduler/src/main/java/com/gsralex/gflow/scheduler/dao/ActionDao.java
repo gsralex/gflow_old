@@ -1,4 +1,4 @@
-package com.gsralex.gflow.scheduler.sql;
+package com.gsralex.gflow.scheduler.dao;
 
 import com.gsralex.gflow.scheduler.domain.*;
 

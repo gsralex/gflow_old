@@ -2,7 +2,7 @@ package com.gsralex.gflow.scheduler.recover;
 
 import com.gsralex.gflow.scheduler.domain.JobGroup;
 import com.gsralex.gflow.scheduler.schedule.SchedulerService;
-import com.gsralex.gflow.scheduler.sql.JobDao;
+import com.gsralex.gflow.scheduler.dao.JobDao;
 
 import java.util.List;
 

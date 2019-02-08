@@ -1,4 +1,4 @@
-package com.gsralex.gflow.scheduler.sql;
+package com.gsralex.gflow.scheduler.dao;
 
 import org.apache.commons.lang3.StringUtils;
 

@@ -37,6 +37,10 @@ public class Job {
     private Integer index;
     @Column("parameter")
     private String parameter;
+    @Column("execute_server")
+    private String executerServer;
+    @Column("schedule_server")
+    private String scheduleServer;
 
     public Integer getId() {
         return id;
@@ -140,5 +144,21 @@ public class Job {
 
     public void setParameter(String parameter) {
         this.parameter = parameter;
+    }
+
+    public String getExecuterServer() {
+        return executerServer;
+    }
+
+    public void setExecuterServer(String executerServer) {
+        this.executerServer = executerServer;
+    }
+
+    public String getScheduleServer() {
+        return scheduleServer;
+    }
+
+    public void setScheduleServer(String scheduleServer) {
+        this.scheduleServer = scheduleServer;
     }
 }

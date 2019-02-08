@@ -8,13 +8,7 @@ import com.gsralex.gflow.core.thriftgen.timer.TDelTimerReq;
 import com.gsralex.gflow.core.thriftgen.timer.TSettingsReq;
 import com.gsralex.gflow.core.thriftgen.timer.TTimeReq;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.domain.TimerConfig;
-import com.gsralex.gflow.scheduler.enums.ExecuteTimeEnum;
-import com.gsralex.gflow.scheduler.sql.TimerDao;
-import com.gsralex.gflow.scheduler.sql.impl.TimerDaoImpl;
-import com.gsralex.gflow.scheduler.timer.TimerProcessor;
 import com.gsralex.gflow.scheduler.timer.TimerService;
-import com.gsralex.gflow.scheduler.timer.TimerTask;
 import org.apache.thrift.TException;
 
 /**

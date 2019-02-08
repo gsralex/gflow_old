@@ -3,11 +3,14 @@ package com.gsralex.gflow.scheduler.schedule;
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.context.Parameter;
-import com.gsralex.gflow.core.thriftgen.TResp;
-import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
 import com.gsralex.gflow.core.util.DtUtils;
+import com.gsralex.gflow.executor.client.action.JobReq;
+import com.gsralex.gflow.executor.client.action.Resp;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.executorclient.TRpcClient;
+import com.gsralex.gflow.scheduler.dao.ActionDao;
+import com.gsralex.gflow.scheduler.dao.JobDao;
+import com.gsralex.gflow.scheduler.dao.impl.ActionDaoImpl;
+import com.gsralex.gflow.scheduler.dao.impl.JobDaoImpl;
 import com.gsralex.gflow.scheduler.domain.Action;
 import com.gsralex.gflow.scheduler.domain.Job;
 import com.gsralex.gflow.scheduler.domain.JobGroup;
@@ -18,11 +21,8 @@ import com.gsralex.gflow.scheduler.flow.FlowMapHandle;
 import com.gsralex.gflow.scheduler.flow.FlowNode;
 import com.gsralex.gflow.scheduler.parameter.DynamicParamContext;
 import com.gsralex.gflow.scheduler.retry.RetryTask;
-import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
-import com.gsralex.gflow.scheduler.sql.ActionDao;
-import com.gsralex.gflow.scheduler.sql.JobDao;
-import com.gsralex.gflow.scheduler.sql.impl.ActionDaoImpl;
-import com.gsralex.gflow.scheduler.sql.impl.JobDaoImpl;
+import com.gsralex.gflow.scheduler.retry.RetryTaskProcess;
+import org.apache.thrift.TException;
 
 import java.util.List;
 import java.util.Set;
@@ -37,16 +37,14 @@ public class SchedulerService {
 
     private ActionDao actionDao;
     private JobDao jobDao;
-    private TRpcClient rpcClient;
     private FlowMapHandle flowMapHandle;
-    private ScheduleIpSelector ipSelector;
+    private SchedulerContext context;
 
     public SchedulerService(SchedulerContext context) {
+        this.context = context;
         actionDao = new ActionDaoImpl(context.getJdbcUtils());
         jobDao = new JobDaoImpl(context.getJdbcUtils());
-        rpcClient = new TRpcClient();
         flowMapHandle = new FlowMapHandle(context);
-        ipSelector = new ScheduleIpSelector(context);
 
     }
 
@@ -178,16 +176,16 @@ public class SchedulerService {
         job.setParameter(parameter);
         jobDao.saveJob(job);
 
-        if (retry) {
-            RetryTask retryTask = new RetryTask();
-            retryTask.setActionDesc(desc);
-            retryTask.setRetryTime(System.currentTimeMillis());
-            retryTask.setJobId(job.getId());
-            retryTask.getActionDesc().setRetryJobId(job.getId());
-            //SchedulerContext.getContext().getRetryProcessor().put(retryTask);//加入重试队列
-        }
+//        if (retry) {
+//            RetryTask retryTask = new RetryTask();
+//            retryTask.setActionDesc(desc);
+//            retryTask.setRetryTime(System.currentTimeMillis());
+//            retryTask.setJobId(job.getId());
+//            retryTask.getActionDesc().setRetryJobId(job.getId());
+//            //SchedulerContext.getContext().getRetryProcessor().put(retryTask);//加入重试队列
+//        }
 
-        TJobReq req = new TJobReq();
+        JobReq req = new JobReq();
         req.setJobGroupId(desc.getJobGroupId());
         req.setActionId(desc.getActionId());
         req.setParameter(parameter);
@@ -195,13 +193,12 @@ public class SchedulerService {
         req.setIndex(desc.getIndex());
         req.setClassName(action.getClassName());
         boolean sendOk = false;
-        IpAddress ip = ipSelector.getIpAddress(action.getTagId());
         try {
-            TResp resp = rpcClient.schedule(ip, req);
+            Resp resp = context.getExecutorClient().schedule(req);
             if (resp.getCode() == ErrConstants.OK) {
                 sendOk = true;
             }
-        } catch (ScheduleTransportException e) {
+        } catch (TException e) {
             //连接失败
         }
         if (!sendOk) {
@@ -214,6 +211,40 @@ public class SchedulerService {
     }
 
     public FlowResult ackAction(long jobId, boolean jobOk, boolean retry) {
+        FlowResult r = new FlowResult();
+        Job job = jobDao.getJob(jobId);
+        if (job != null) {
+            if (job.getJobGroupId() != 0) { //任务组
+                JobGroup jobGroup = jobDao.getJobGroup(job.getJobGroupId());
+                if (jobGroup.getScheduleServer().equals(context.getMyServer())) {
+                    ackActionActual(jobId, jobOk, retry);
+                } else {
+                    RetryTaskProcess process = new RetryTaskProcess();
+                    boolean ok = process.doProcess(new RetryTask() {
+                        @Override
+                        public boolean doAction() {
+//                            IpAddress ipAddress = new IpAddress(jobGroup.getScheduleServer());
+//                            SchedulerClient client = new SchedulerClient();
+//                            return client.ackAction(jobId, jobOk);
+                            return false;
+                        }
+                    });
+
+                    if (!ok) {
+                        //sendMaster
+                    }
+                    //TODO:发送给指定ip
+                    //TODO:发送失败则交给master来处理
+                }
+            } else {
+                ackActionActual(jobId, jobOk, retry);
+            }
+        }
+        return r;
+    }
+
+
+    public FlowResult ackActionActual(long jobId, boolean jobOk, boolean retry) {
         FlowResult r = new FlowResult();
         Job job = jobDao.getJob(jobId);
         if (job != null) {

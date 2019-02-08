@@ -6,12 +6,12 @@ import com.gsralex.gflow.scheduler.domain.Job;
 import com.gsralex.gflow.scheduler.domain.JobGroup;
 import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.sql.ActionDao;
-import com.gsralex.gflow.scheduler.sql.FlowDao;
-import com.gsralex.gflow.scheduler.sql.JobDao;
-import com.gsralex.gflow.scheduler.sql.impl.ActionDaoImpl;
-import com.gsralex.gflow.scheduler.sql.impl.FlowDaoImpl;
-import com.gsralex.gflow.scheduler.sql.impl.JobDaoImpl;
+import com.gsralex.gflow.scheduler.dao.ActionDao;
+import com.gsralex.gflow.scheduler.dao.FlowDao;
+import com.gsralex.gflow.scheduler.dao.JobDao;
+import com.gsralex.gflow.scheduler.dao.impl.ActionDaoImpl;
+import com.gsralex.gflow.scheduler.dao.impl.FlowDaoImpl;
+import com.gsralex.gflow.scheduler.dao.impl.JobDaoImpl;
 
 import java.util.List;
 

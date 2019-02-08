@@ -3,8 +3,8 @@ package com.gsralex.gflow.scheduler.schedule;
 import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.domain.ActionTag;
-import com.gsralex.gflow.scheduler.sql.ActionDao;
-import com.gsralex.gflow.scheduler.sql.impl.ActionDaoImpl;
+import com.gsralex.gflow.scheduler.dao.ActionDao;
+import com.gsralex.gflow.scheduler.dao.impl.ActionDaoImpl;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;

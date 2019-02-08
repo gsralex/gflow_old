@@ -2,7 +2,7 @@ package com.gsralex.gflow.executor;
 
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
-import com.gsralex.gflow.executor.connectclient.TExecutorClient;
+import com.gsralex.gflow.executor.client.TExecutorClient;
 import org.apache.log4j.Logger;
 
 /**

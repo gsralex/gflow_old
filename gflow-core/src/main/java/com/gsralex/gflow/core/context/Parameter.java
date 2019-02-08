@@ -1,6 +1,8 @@
 package com.gsralex.gflow.core.context;
 
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -19,7 +21,7 @@ public class Parameter {
 
     public Parameter(String str) {
         map = new HashMap<>();
-        if (str != null) {
+        if (!StringUtils.isEmpty(str)) {
             String[] array = str.split(",");
             for (String item : array) {
                 String[] kv = item.split("=");

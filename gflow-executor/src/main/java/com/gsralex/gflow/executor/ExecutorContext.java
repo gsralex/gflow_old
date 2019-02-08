@@ -3,7 +3,7 @@ package com.gsralex.gflow.executor;
 import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.util.PropertiesUtils;
 import com.gsralex.gflow.executor.config.ExecutorConfig;
-import com.gsralex.gflow.executor.connectclient.TExecutorClient;
+import com.gsralex.gflow.executor.client.TExecutorClient;
 import com.gsralex.gflow.executor.spring.SpringContextHolder;
 import org.springframework.context.ApplicationContext;
 

@@ -83,7 +83,7 @@ public class ClientContext {
                     break;
                 }
                 try {
-                    Thread.sleep(1000 * 60);
+                    Thread.sleep(1000 * 10);
                 } catch (InterruptedException e) {
                 }
             }
@@ -95,12 +95,19 @@ public class ClientContext {
 //    public static void main(String[] args) throws IOException {
 //        ClientContext context = new ClientContext();
 //        context.init();
-//        Parameter parameter = new Parameter();
-//        parameter.put("bizdate", "20181209");
-//        parameter.put("id", "1");
 //
 //        ScheduleClient client = new ScheduleClientImpl(context);
-//        client.scheduleGroup(1, parameter);
+////        Parameter parameter = new Parameter();
+////        parameter.put("bizdate", "20181209");
+////        parameter.put("id", "1");
+////        ScheduleGroupReq req=new ScheduleGroupReq();
+////        req.setFlowGroupId(1);
+////        req.setParameter(parameter.toString());
+////        req.setAccessToken(context.getConfig().getAccessKey());
+////        client.scheduleGroup(req);
+//
+//
+//        GetJobGroupResp resp= client.getJobGroup(1);
 ////        client.scheduleAction(5, parameter);
 //    }
 

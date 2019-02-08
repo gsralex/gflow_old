@@ -3,8 +3,8 @@ package com.gsralex.gflow.scheduler.timer;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.domain.TimerConfig;
 import com.gsralex.gflow.scheduler.enums.ExecuteTimeEnum;
-import com.gsralex.gflow.scheduler.sql.TimerDao;
-import com.gsralex.gflow.scheduler.sql.impl.TimerDaoImpl;
+import com.gsralex.gflow.scheduler.dao.TimerDao;
+import com.gsralex.gflow.scheduler.dao.impl.TimerDaoImpl;
 
 /**
  * @author gsralex

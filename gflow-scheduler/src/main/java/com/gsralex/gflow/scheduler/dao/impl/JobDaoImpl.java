@@ -1,4 +1,4 @@
-package com.gsralex.gflow.scheduler.sql.impl;
+package com.gsralex.gflow.scheduler.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
 import com.gsralex.gflow.scheduler.domain.Job;
@@ -6,8 +6,8 @@ import com.gsralex.gflow.scheduler.domain.JobGroup;
 import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.enums.JobStatusEnum;
 import com.gsralex.gflow.scheduler.model.JobGroupExec;
-import com.gsralex.gflow.scheduler.sql.IdUtils;
-import com.gsralex.gflow.scheduler.sql.JobDao;
+import com.gsralex.gflow.scheduler.dao.IdUtils;
+import com.gsralex.gflow.scheduler.dao.JobDao;
 
 import java.util.List;
 

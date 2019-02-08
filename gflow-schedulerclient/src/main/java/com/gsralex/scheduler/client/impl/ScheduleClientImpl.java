@@ -2,6 +2,7 @@ package com.gsralex.scheduler.client.impl;
 
 import com.gsralex.gflow.core.connect.SecurityUtils;
 import com.gsralex.gflow.core.thriftgen.scheduler.*;
+import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
 import com.gsralex.scheduler.client.action.scheduler.GetJobGroupResp;
 import com.gsralex.scheduler.client.action.scheduler.ScheduleGroupReq;
 import com.gsralex.scheduler.client.action.scheduler.ScheduleGroupResp;
@@ -60,7 +61,11 @@ public class ScheduleClientImpl implements ScheduleClient {
                 req.setId(id);
                 TGetJobGroupResp tResp = client.getGroup(req);
                 GetJobGroupResp resp=new GetJobGroupResp();
-                resp.setJobGroupId(tResp.getJobGroup().getId());
+                if(tResp.getJobGroup()!=null) {
+                    resp.setJobGroupId(tResp.getJobGroup().getId());
+                    resp.setStatus(JobGroupStatusEnum.
+                            valueOf(tResp.getJobGroup().getStatus().getValue()));
+                }
                 return resp;
             }
         }

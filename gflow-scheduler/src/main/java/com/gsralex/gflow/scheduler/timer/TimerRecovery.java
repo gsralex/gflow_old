@@ -3,10 +3,10 @@ package com.gsralex.gflow.scheduler.timer;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.domain.TimerConfig;
 import com.gsralex.gflow.scheduler.model.JobGroupExec;
-import com.gsralex.gflow.scheduler.sql.JobDao;
-import com.gsralex.gflow.scheduler.sql.TimerDao;
-import com.gsralex.gflow.scheduler.sql.impl.JobDaoImpl;
-import com.gsralex.gflow.scheduler.sql.impl.TimerDaoImpl;
+import com.gsralex.gflow.scheduler.dao.JobDao;
+import com.gsralex.gflow.scheduler.dao.TimerDao;
+import com.gsralex.gflow.scheduler.dao.impl.JobDaoImpl;
+import com.gsralex.gflow.scheduler.dao.impl.TimerDaoImpl;
 
 import java.util.HashMap;
 import java.util.List;

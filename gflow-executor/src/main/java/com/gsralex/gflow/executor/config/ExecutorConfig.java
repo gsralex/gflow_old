@@ -25,7 +25,7 @@ public class ExecutorConfig {
 
     public void setSchedulerIps(String schedulerIps) {
         this.schedulerIps = schedulerIps;
-    }
+}
 
     public String getAccessKey() {
         return accessKey;

@@ -1,9 +1,9 @@
-package com.gsralex.gflow.scheduler.sql.impl;
+package com.gsralex.gflow.scheduler.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
 import com.gsralex.gflow.scheduler.domain.Flow;
 import com.gsralex.gflow.scheduler.domain.FlowDirect;
-import com.gsralex.gflow.scheduler.sql.FlowDao;
+import com.gsralex.gflow.scheduler.dao.FlowDao;
 
 import java.util.List;
 

@@ -101,14 +101,17 @@ service TScheduleService{
     gflow.TResp stopGroup(1:TGroupJobReq req);
     //任务应答
     gflow.TResp ack(1:TAckReq req);
-    //获取任务组
-    TGetJobGroupResp getGroup(1:TGetJobGroupReq req);
-    //获取action
-    TGetJobResp getJob(1:TGetJobReq req);
+    //同步任务
+    gflow.TResp ackMaster(1:TAckReq req);
+    //心跳
+    gflow.TResp executerHeartBeat();
+//    //获取任务组
+//    TGetJobGroupResp getGroup(1:TGetJobGroupReq req);
+//    //获取action
+//    TGetJobResp getJob(1:TGetJobReq req);
 }
 
 
 service TExecutorService{
     gflow.TResp schedule(1:TJobReq desc);
-    gflow.TResp heartbeat();
 }

@@ -31,6 +31,8 @@ public class JobGroup {
     private Long timerConfigId;
     private String parameter;
 
+    private String scheduleServer;
+
     public Long getId() {
         return id;
     }
@@ -109,5 +111,13 @@ public class JobGroup {
 
     public void setParameter(String parameter) {
         this.parameter = parameter;
+    }
+
+    public String getScheduleServer() {
+        return scheduleServer;
+    }
+
+    public void setScheduleServer(String scheduleServer) {
+        this.scheduleServer = scheduleServer;
     }
 }
