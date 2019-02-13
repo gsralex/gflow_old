@@ -1,10 +1,10 @@
 package com.gsralex.scheduler.client;
 
-import com.gsralex.scheduler.client.action.scheduler.GetJobGroupResp;
-import com.gsralex.scheduler.client.action.scheduler.ScheduleGroupReq;
-import com.gsralex.scheduler.client.action.scheduler.ScheduleGroupResp;
+import com.gsralex.scheduler.client.action.scheduler.*;
 
 public interface ScheduleClient {
+
+    JobResp scheduleAction(JobReq req);
 
     ScheduleGroupResp scheduleGroup(ScheduleGroupReq req);
 

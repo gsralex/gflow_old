@@ -4,7 +4,7 @@ package com.gsralex.scheduler.client.action.scheduler;
  * @author gsralex
  * @version 2018/12/27
  */
-public class ScheduleActionReq {
+public class JobReq {
     private long id;
     private long actionId;
     private long jobGroupId;

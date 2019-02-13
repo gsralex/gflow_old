@@ -4,7 +4,7 @@ package com.gsralex.scheduler.client.action;
  * @author gsralex
  * @version 2018/12/27
  */
-public  class Resp {
+public class Resp {
 
     private int code;
     private String msg;

@@ -4,9 +4,9 @@ import com.gsralex.gflow.core.thriftgen.scheduler.TScheduleService;
 import org.apache.thrift.TException;
 
 
-public interface ClientCallback {
+public interface ClientCallback<T> {
 
 
-    <T> T doSchedule(TScheduleService.Client client) throws TException;
+    T doAction(TScheduleService.Client client) throws TException;
 
 }

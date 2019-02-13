@@ -4,12 +4,11 @@ import com.gsralex.gflow.core.context.IpAddress;
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.util.DtUtils;
 import com.gsralex.gflow.core.util.PropertiesUtils;
+import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
 import com.gsralex.scheduler.client.action.scheduler.GetJobGroupResp;
 import com.gsralex.scheduler.client.action.scheduler.ScheduleGroupReq;
 import com.gsralex.scheduler.client.action.scheduler.ScheduleGroupResp;
-import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
 import com.gsralex.scheduler.client.config.ClientConfig;
-import com.gsralex.scheduler.client.impl.ScheduleClientImpl;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -57,7 +56,7 @@ public class ClientContext {
 
         ClientContext context = new ClientContext();
         context.init();
-        ScheduleClient scheduleClient = new ScheduleClientImpl(context);
+        ScheduleClient scheduleClient = null;// new ScheduleClientImpl(context);
 
         int id = Integer.parseInt(args[0]);
         String st = args[1];// "20181226";
@@ -90,31 +89,4 @@ public class ClientContext {
         }
 
     }
-
-
-//    public static void main(String[] args) throws IOException {
-//        ClientContext context = new ClientContext();
-//        context.init();
-//
-//        ScheduleClient client = new ScheduleClientImpl(context);
-////        Parameter parameter = new Parameter();
-////        parameter.put("bizdate", "20181209");
-////        parameter.put("id", "1");
-////        ScheduleGroupReq req=new ScheduleGroupReq();
-////        req.setFlowGroupId(1);
-////        req.setParameter(parameter.toString());
-////        req.setAccessToken(context.getConfig().getAccessKey());
-////        client.scheduleGroup(req);
-//
-//
-//        GetJobGroupResp resp= client.getJobGroup(1);
-////        client.scheduleAction(5, parameter);
-//    }
-
-//    public static void main(String[] args) throws IOException {
-//        ClientContext context = new ClientContext();
-//        context.init();
-//        ScheduleClient scheduleClient = new ScheduleClientImpl(context);
-//        Result<TJobGroup> result = scheduleClient.getJobGroup(1);
-//    }
 }

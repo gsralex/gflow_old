@@ -52,7 +52,7 @@ public class SchedulerContext {
      */
     private String myServer;
 
-    private ExecutorClient client;
+        private ExecutorClient client;
 
 
     private List<IpAddress> schedulerIps = new ArrayList<>();

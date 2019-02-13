@@ -6,7 +6,7 @@ import com.gsralex.scheduler.client.action.Resp;
  * @author gsralex
  * @version 2018/12/27
  */
-public class ScheduleActionResp extends Resp {
+public class JobResp extends Resp {
 
     private long jobId;
 

@@ -4,7 +4,7 @@ package com.gsralex.gflow.executor.client.action;
  * @author gsralex
  * @version 2019/2/8
  */
-public abstract class BaseReq {
+public abstract class Req {
 
     private String accessToken;
 

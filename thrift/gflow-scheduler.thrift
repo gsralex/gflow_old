@@ -104,7 +104,10 @@ service TScheduleService{
     //同步任务
     gflow.TResp ackMaster(1:TAckReq req);
     //心跳
-    gflow.TResp executerHeartBeat();
+    gflow.TResp executorHb();
+
+    gflow.TResp schedulerHb();
+
 //    //获取任务组
 //    TGetJobGroupResp getGroup(1:TGetJobGroupReq req);
 //    //获取action

@@ -7,11 +7,7 @@ import org.apache.thrift.TException;
  * @author gsralex
  * @version 2019/2/8
  */
-public interface ExecutorAction {
+public interface ClientCallback<T> {
 
-    void doAction(TExecutorService.Client client) throws TException;
-
-    default <T> T getResult() {
-        return null;
-    }
+    T doAction(TExecutorService.Client client) throws TException;
 }

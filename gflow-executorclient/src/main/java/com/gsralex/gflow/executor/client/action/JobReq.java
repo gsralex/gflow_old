@@ -4,7 +4,7 @@ package com.gsralex.gflow.executor.client.action;
  * @author gsralex
  * @version 2019/2/8
  */
-public class JobReq extends BaseReq {
+public class JobReq extends Req {
 
     private long id; // required
     private long actionId; // required

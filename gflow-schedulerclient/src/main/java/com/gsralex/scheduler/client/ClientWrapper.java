@@ -18,26 +18,15 @@ public class ClientWrapper {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ClientWrapper.class);
 
-    private ClientContext context;
 
-    public ClientWrapper(ClientContext context) {
-        this.context = context;
-    }
-
-    private IpAddress getIpAddress() {
-        return context.getIps().get(0);
-    }
-
-
-    public <T> T execute(ClientCallback callback) {
-        IpAddress ip = getIpAddress();
+    public static <T> T execute(ClientCallback<T> callback, IpAddress ip) {
         TTransport transport = new TSocket(ip.getIp(), ip.getPort());
         try {
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);
             TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "scheduler");
             TScheduleService.Client client = new TScheduleService.Client(multiProtocol);
-            return callback.doSchedule(client);
+            return callback.doAction(client);
         } catch (Exception e) {
             LOGGER.error("ScheduleClient.execute", e);
             throw new ClientTransportException(e);
