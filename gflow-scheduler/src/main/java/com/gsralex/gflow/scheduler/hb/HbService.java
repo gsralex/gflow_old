@@ -1,9 +1,9 @@
 package com.gsralex.gflow.scheduler.hb;
 
-import com.gsralex.gflow.core.connect.SecurityUtils;
+import com.gsralex.gflow.core.action.Resp;
+import com.gsralex.gflow.core.util.SecurityUtils;
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.IpAddr;
-import com.gsralex.gflow.executor.client.action.Resp;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
 import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;

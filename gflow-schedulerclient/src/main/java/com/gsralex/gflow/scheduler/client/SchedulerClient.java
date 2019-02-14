@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.client;
 
 import com.gsralex.gflow.scheduler.client.action.scheduler.*;
-import com.gsralex.gflow.scheduler.client.action.Resp;
+import com.gsralex.gflow.core.action.Resp;
 
 public interface SchedulerClient {
 

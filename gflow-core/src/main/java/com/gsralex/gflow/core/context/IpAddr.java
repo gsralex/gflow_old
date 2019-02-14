@@ -67,4 +67,17 @@ public class IpAddr {
     public String toString() {
         return ip + ":" + port;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+
+
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

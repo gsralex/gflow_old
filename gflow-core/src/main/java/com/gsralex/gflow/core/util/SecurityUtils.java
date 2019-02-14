@@ -1,4 +1,4 @@
-package com.gsralex.gflow.core.connect;
+package com.gsralex.gflow.core.util;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

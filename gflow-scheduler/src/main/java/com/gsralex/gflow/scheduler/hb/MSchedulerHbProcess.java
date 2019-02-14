@@ -32,21 +32,22 @@ public class MSchedulerHbProcess {
     }
 
     public void heartBeat(IpAddr ip) {
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("heartbeart:{}", ip);
-        }
-        SchedulerNode node = nodeMap.get(ip);
-        if (node != null) {
-            node.setOnline(true);
-            node.setLastHbTime(System.currentTimeMillis());
-        } else {
-            //全新节点加入
-            node = new SchedulerNode();
-            node.setIp(ip);
-            node.setMaster(false);
-            node.setOnline(true);
-            node.setLastHbTime(System.currentTimeMillis());
-            nodeMap.put(ip, node);
+        synchronized (nodeMap) {
+            SchedulerNode node = nodeMap.get(ip);
+            if (node != null) {
+                node.setOnline(true);
+                node.setLastHbTime(System.currentTimeMillis());
+                nodeMap.notify();
+            } else {
+                //全新节点加入
+                node = new SchedulerNode();
+                node.setIp(ip);
+                node.setMaster(false);
+                node.setOnline(true);
+                node.setLastHbTime(System.currentTimeMillis());
+                nodeMap.put(ip, node);
+                nodeMap.notify();
+            }
         }
     }
 
@@ -66,6 +67,18 @@ public class MSchedulerHbProcess {
     public void mainLoop() {
         while (!interrupt) {
             try {
+                synchronized (nodeMap) {
+                    int cnt = 0;
+                    for (Map.Entry<IpAddr, SchedulerNode> entry : nodeMap.entrySet()) {
+                        SchedulerNode node = entry.getValue();
+                        if (node.isOnline()) {
+                            cnt++;
+                        }
+                    }
+                    if (cnt == 0) {
+                        nodeMap.wait();
+                    }
+                }
                 for (Map.Entry<IpAddr, SchedulerNode> entry : nodeMap.entrySet()) {
                     SchedulerNode node = entry.getValue();
                     if (node.isOnline()) {
@@ -80,5 +93,13 @@ public class MSchedulerHbProcess {
                 LOGGER.error("MSchedulerHbProcess.mainLoop", e);
             }
         }
+    }
+
+    public static void main(String[] args) {
+        MSchedulerHbProcess process = new MSchedulerHbProcess();
+        process.start();
+        process.heartBeat(new IpAddr("123", 123));
+        process.heartBeat(new IpAddr("124", 123));
+        process.heartBeat(new IpAddr("123", 123));
     }
 }

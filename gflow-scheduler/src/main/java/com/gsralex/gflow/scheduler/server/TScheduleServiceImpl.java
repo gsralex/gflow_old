@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.server;
 
 
-import com.gsralex.gflow.core.connect.SecurityUtils;
+import com.gsralex.gflow.core.util.SecurityUtils;
 import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.thriftgen.TResp;

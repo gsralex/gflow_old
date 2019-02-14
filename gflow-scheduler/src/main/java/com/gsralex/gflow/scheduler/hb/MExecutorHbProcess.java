@@ -36,22 +36,26 @@ public class MExecutorHbProcess implements ExecutorHbProcess {
     }
 
     public void heartBeat(IpAddr ip, String tag) {
-        ExecutorNode node = nodeMap.get(ip);
-        if (node != null) {
-            node.setTag(tag);
-            node.setLastHbTime(System.currentTimeMillis());
-            if (!node.isOnline()) {
+        synchronized (nodeMap) {
+            ExecutorNode node = nodeMap.get(ip);
+            if (node != null) {
+                node.setTag(tag);
+                node.setLastHbTime(System.currentTimeMillis());
+                if (!node.isOnline()) {
+                    masterNotifyNode(node);
+                }
+                node.setOnline(true);
+                nodeMap.notify();
+            } else {
+                //全新节点加入
+                node = new ExecutorNode();
+                node.setIp(ip);
+                node.setOnline(true);
+                node.setLastHbTime(System.currentTimeMillis());
+                nodeMap.put(ip, node);
                 masterNotifyNode(node);
+                nodeMap.notify();
             }
-            node.setOnline(true);
-        } else {
-            //全新节点加入
-            node = new ExecutorNode();
-            node.setIp(ip);
-            node.setOnline(true);
-            node.setLastHbTime(System.currentTimeMillis());
-            nodeMap.put(ip, node);
-            masterNotifyNode(node);
         }
     }
 
@@ -70,19 +74,31 @@ public class MExecutorHbProcess implements ExecutorHbProcess {
 
     public void mainLoop() {
         while (!interrupt) {
-            for (Map.Entry<IpAddr, ExecutorNode> entry : nodeMap.entrySet()) {
-                ExecutorNode node = entry.getValue();
-                if (node.isOnline()) {
-                    long timeSpan = System.currentTimeMillis() - node.getLastHbTime();
-                    if (timeSpan > TimeConstants.HEARTBEAT_INTERVEL * TimeConstants.LOSE_TIMES) {
-                        node.setOnline(false);
-                        masterNotifyNode(node);
+            try {
+                synchronized (nodeMap) {
+                    int cnt = 0;
+                    for (Map.Entry<IpAddr, ExecutorNode> entry : nodeMap.entrySet()) {
+                        ExecutorNode node = entry.getValue();
+                        if (node.isOnline()) {
+                            cnt++;
+                        }
+                    }
+                    if (cnt == 0) {
+                        nodeMap.wait();
                     }
                 }
-            }
-            try {
+                for (Map.Entry<IpAddr, ExecutorNode> entry : nodeMap.entrySet()) {
+                    ExecutorNode node = entry.getValue();
+                    if (node.isOnline()) {
+                        long timeSpan = System.currentTimeMillis() - node.getLastHbTime();
+                        if (timeSpan > TimeConstants.HEARTBEAT_INTERVEL * TimeConstants.LOSE_TIMES) {
+                            node.setOnline(false);
+                            masterNotifyNode(node);
+                        }
+                    }
+                }
                 Thread.sleep(TimeConstants.HEARTBEAT_INTERVEL);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
             }
         }
     }

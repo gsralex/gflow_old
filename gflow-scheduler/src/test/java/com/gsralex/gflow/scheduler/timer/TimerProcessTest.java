@@ -18,8 +18,7 @@ public class TimerProcessTest {
 
         SchedulerContext context = new SchedulerContext();
         context.init();
-        TimerProcess processor = TimerProcess.getInstance();
-        processor.setContext(context);
+        TimerProcess processor = new TimerProcess(context);
 
         //设置现在时间
         Calendar now = Calendar.getInstance();

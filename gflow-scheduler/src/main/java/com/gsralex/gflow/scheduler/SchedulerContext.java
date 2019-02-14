@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.core.connect.SecurityUtils;
+import com.gsralex.gflow.core.util.SecurityUtils;
 import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.util.PropertiesUtils;
 import com.gsralex.gflow.scheduler.config.SchedulerConfig;
@@ -12,8 +12,6 @@ import org.apache.commons.dbcp.BasicDataSource;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -7,7 +7,7 @@ import com.gsralex.gflow.core.util.IpSelector;
 import com.gsralex.gflow.scheduler.client.ClientCallback;
 import com.gsralex.gflow.scheduler.client.ClientWrapper;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
-import com.gsralex.gflow.scheduler.client.action.Resp;
+import com.gsralex.gflow.core.action.Resp;
 import com.gsralex.gflow.scheduler.client.action.scheduler.*;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;

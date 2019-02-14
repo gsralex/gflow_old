@@ -1,5 +1,6 @@
 package com.gsralex.gflow.executor.client.impl;
 
+import com.gsralex.gflow.core.action.Resp;
 import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.thriftgen.TResp;
 import com.gsralex.gflow.core.thriftgen.scheduler.TExecutorService;
@@ -9,7 +10,6 @@ import com.gsralex.gflow.executor.client.ClientCallback;
 import com.gsralex.gflow.executor.client.ClientWrapper;
 import com.gsralex.gflow.executor.client.ExecutorClient;
 import com.gsralex.gflow.executor.client.action.JobReq;
-import com.gsralex.gflow.executor.client.action.Resp;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
