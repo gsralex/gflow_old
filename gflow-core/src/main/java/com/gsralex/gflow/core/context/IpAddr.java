@@ -4,14 +4,20 @@ package com.gsralex.gflow.core.context;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IpAddress {
+public class IpAddr {
 
     private String ip;
     private int port;
 
-    public IpAddress(String ip, int port) {
+    public IpAddr(String ip, int port) {
         this.ip = ip;
         this.port = port;
+    }
+
+    public IpAddr(String ipPort) {
+        String[] ipArr = ipPort.split(":");
+        this.ip = ipArr[0];
+        this.port = Integer.parseInt(ipArr[1]);
     }
 
     public String getIp() {
@@ -30,7 +36,7 @@ public class IpAddress {
         this.port = port;
     }
 
-    public static IpAddress getIp(String ip) {
+    public static IpAddr getIp(String ip) {
         String[] ipport = ip.split(":");
         if (ipport.length < 2) {
             //TODO:加入exception
@@ -43,15 +49,15 @@ public class IpAddress {
         } catch (NumberFormatException e) {
             //TODO:加入exception
         }
-        return new IpAddress(ipAddress, port);
+        return new IpAddr(ipAddress, port);
     }
 
-    public static List<IpAddress> getIpsByConfig(String ipStr) {
-        List<IpAddress> ipList = new ArrayList<>();
-        if (ipStr!=null) {
-            String[] ips =ipStr.split(",");
+    public static List<IpAddr> getIpsByConfig(String ipStr) {
+        List<IpAddr> ipList = new ArrayList<>();
+        if (ipStr != null) {
+            String[] ips = ipStr.split(",");
             for (String ip : ips) {
-                ipList.add(IpAddress.getIp(ip));
+                ipList.add(IpAddr.getIp(ip));
             }
         }
         return ipList;

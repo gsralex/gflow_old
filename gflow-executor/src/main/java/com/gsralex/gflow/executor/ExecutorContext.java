@@ -1,6 +1,6 @@
 package com.gsralex.gflow.executor;
 
-import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.util.PropertiesUtils;
 import com.gsralex.gflow.executor.config.ExecutorConfig;
 import com.gsralex.gflow.executor.client.TExecutorClient;
@@ -26,7 +26,7 @@ public class ExecutorContext {
 
     private ExecutorConfig config;
 
-    private List<IpAddress> schedulerIps = new ArrayList<>();
+    private List<IpAddr> schedulerIps = new ArrayList<>();
 
     private ExecutorContext() {
 
@@ -46,8 +46,8 @@ public class ExecutorContext {
         String[] ips = config.getSchedulerIps().split(",");
         for (String ip : ips) {
             String[] ipport = ip.split(":");
-            IpAddress ipAddress = new IpAddress(ipport[0], Integer.parseInt(ipport[1]));
-            schedulerIps.add(ipAddress);
+            IpAddr ipAddr = new IpAddr(ipport[0], Integer.parseInt(ipport[1]));
+            schedulerIps.add(ipAddr);
         }
     }
 
@@ -70,7 +70,7 @@ public class ExecutorContext {
         return this.spring;
     }
 
-    public List<IpAddress> getScheduleIps() {
+    public List<IpAddr> getScheduleIps() {
         return schedulerIps;
     }
 

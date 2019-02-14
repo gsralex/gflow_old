@@ -1,4 +1,4 @@
-package com.gsralex.gflow.scheduler.retry;
+package com.gsralex.gflow.core.retry;
 
 /**
  * @author gsralex

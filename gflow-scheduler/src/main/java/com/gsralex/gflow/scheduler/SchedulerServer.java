@@ -1,9 +1,13 @@
 package com.gsralex.gflow.scheduler;
 
+import com.gsralex.gflow.scheduler.hb.MExecutorHbProcess;
+import com.gsralex.gflow.scheduler.hb.MSchedulerHbProcess;
+import com.gsralex.gflow.scheduler.hb.SExecutorHbProcess;
+import com.gsralex.gflow.scheduler.hb.SSchedulerHbProcess;
 import com.gsralex.gflow.scheduler.parameter.DynamicParam;
 import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
 import com.gsralex.gflow.scheduler.server.ThriftSchedulerServer;
-import com.gsralex.gflow.scheduler.timer.TimerProcessor;
+import com.gsralex.gflow.scheduler.timer.TimerProcess;
 import com.gsralex.gflow.scheduler.timer.TimerRecovery;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -37,17 +41,28 @@ public class SchedulerServer {
 
     public void serve() throws ScheduleTransportException, IOException {
         LOGGER.info("====== SchedulerServer STARTING ======");
-
         ThriftSchedulerServer server = new ThriftSchedulerServer(context);
         server.start();
         LOGGER.info("====== SchedulerServer STARTED ======");
 
-        TimerProcessor timerProcessor = TimerProcessor.getInstance();
-        timerProcessor.setContext(context);
-        timerProcessor.start();
-        TimerRecovery timerRecovery = new TimerRecovery(timerProcessor, context);
-        timerRecovery.recovery();
+        if (context.isMaster()) {
+            //定时任务
+            TimerProcess timerProcess = new TimerProcess(context);
+            timerProcess.start();
+            TimerRecovery timerRecovery = new TimerRecovery(timerProcess, context);
+            timerRecovery.recovery();
 
+            //executor 心跳监测
+            MExecutorHbProcess executorHbProcess = new MExecutorHbProcess(context);
+            executorHbProcess.start();
+
+            MSchedulerHbProcess schedulerHbProcess = new MSchedulerHbProcess();
+            schedulerHbProcess.start();
+        } else {
+            SExecutorHbProcess executorHbProcess = new SExecutorHbProcess();
+            SSchedulerHbProcess sSchedulerHbProcess = new SSchedulerHbProcess(context);
+            sSchedulerHbProcess.start();
+        }
     }
 
     public static void main(String[] args) throws ScheduleTransportException, IOException {

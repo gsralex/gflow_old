@@ -1,6 +1,6 @@
 package com.gsralex.gflow.executor.client;
 
-import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.thriftgen.scheduler.TExecutorService;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -19,7 +19,7 @@ public class ClientWrapper {
     private static Logger LOG = LoggerFactory.getLogger(ClientWrapper.class);
 
 
-    public static <T> T wrap(ClientCallback<T> callback, IpAddress ip) throws TException {
+    public static <T> T execute(ClientCallback<T> callback, IpAddr ip) throws TException {
         LOG.debug("TRpcClient.send ip:" + ip.getIp() + ",port:" + ip.getPort());
         TTransport transport = new TSocket(ip.getIp(), ip.getPort());
         try {

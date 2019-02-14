@@ -1,6 +1,6 @@
 package com.gsralex.gflow.core.util;
 
-import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.context.IpAddr;
 
 import java.util.List;
 
@@ -10,29 +10,35 @@ import java.util.List;
  */
 public class IpSelector {
 
-    private IpAddress ip;
-    private List<IpAddress> ipList;
+    private IpAddr ip;
+    private List<IpAddr> ipList;
     private int seq;
 
-    public IpSelector(IpAddress ip) {
+    public IpSelector(IpAddr ip) {
         this.ip = ip;
     }
 
-    public IpSelector(List<IpAddress> ipList) {
+    public IpSelector(List<IpAddr> ipList) {
         this.ipList = ipList;
     }
 
-    public IpAddress getIp() {
+    public void setIp(List<IpAddr> ipList) {
+        this.ipList = ipList;
+    }
+
+    public IpAddr getIp() {
         if (ip != null) {
             return ip;
         }
-        if (ipList != null && ipList.size() != 0) {
-            if (seq >= ipList.size()) {
-                seq = 0;
+        synchronized (ipList) {
+            if (ipList != null && ipList.size() != 0) {
+                if (seq >= ipList.size()) {
+                    seq = 0;
+                }
+                IpAddr ip = ipList.get(seq);
+                seq++;
+                return ip;
             }
-            IpAddress ip = ipList.get(seq);
-            seq++;
-            return ip;
         }
         return null;
     }

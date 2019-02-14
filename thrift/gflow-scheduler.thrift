@@ -90,6 +90,20 @@ struct TGetJobResp{
 }
 
 
+struct TExecutorHbReq{
+    1:string ip
+    2:i32 port
+    3:string tag
+    4:bool online
+    5:string accessToken;
+}
+
+struct TScheduleHbReq{
+    1:string ip
+    2:i32 port
+    3:string accessToken
+}
+
 service TScheduleService{
     //调度action
     TJobResp scheduleAction(1:TJobReq req);
@@ -103,10 +117,14 @@ service TScheduleService{
     gflow.TResp ack(1:TAckReq req);
     //同步任务
     gflow.TResp ackMaster(1:TAckReq req);
-    //心跳
-    gflow.TResp executorHb();
+    //executor 心跳
+    gflow.TResp executorHb(1:TExecutorHbReq req);
+    //scheduler 心跳
+    gflow.TResp schedulerHb(1:TScheduleHbReq req);
+    //更新executor节点
+    gflow.TResp updateExecutorNode(1:TExecutorHbReq req);
 
-    gflow.TResp schedulerHb();
+    string serverStatus();
 
 //    //获取任务组
 //    TGetJobGroupResp getGroup(1:TGetJobGroupReq req);

@@ -1,9 +1,12 @@
 package com.gsralex.gflow.scheduler.schedule;
 
+import com.gsralex.gflow.core.connect.SecurityUtils;
 import com.gsralex.gflow.core.constants.ErrConstants;
-import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.util.DtUtils;
+import com.gsralex.gflow.executor.client.ExecutorClient;
+import com.gsralex.gflow.executor.client.ExecutorClientFactory;
 import com.gsralex.gflow.executor.client.action.JobReq;
 import com.gsralex.gflow.executor.client.action.Resp;
 import com.gsralex.gflow.scheduler.SchedulerContext;
@@ -20,8 +23,9 @@ import com.gsralex.gflow.scheduler.flow.FlowGuide;
 import com.gsralex.gflow.scheduler.flow.FlowMapHandle;
 import com.gsralex.gflow.scheduler.flow.FlowNode;
 import com.gsralex.gflow.scheduler.parameter.DynamicParamContext;
-import com.gsralex.gflow.scheduler.retry.RetryTask;
-import com.gsralex.gflow.scheduler.retry.RetryTaskProcess;
+import com.gsralex.scheduler.client.SchedulerClient;
+import com.gsralex.scheduler.client.SchedulerClientFactory;
+import com.gsralex.scheduler.client.action.scheduler.AckReq;
 import org.apache.thrift.TException;
 
 import java.util.List;
@@ -194,7 +198,10 @@ public class SchedulerService {
         req.setClassName(action.getClassName());
         boolean sendOk = false;
         try {
-            Resp resp = context.getExecutorClient().schedule(req);
+            List<IpAddr> ipList = context.getExecutorIps(action.getTag());
+            String accessToken = SecurityUtils.encrypt(context.getConfig().getAccessKey());
+            ExecutorClient client = ExecutorClientFactory.create(ipList, accessToken);
+            Resp resp = client.schedule(req);
             if (resp.getCode() == ErrConstants.OK) {
                 sendOk = true;
             }
@@ -210,57 +217,93 @@ public class SchedulerService {
         return result;
     }
 
-    public FlowResult ackAction(long jobId, boolean jobOk, boolean retry) {
-        FlowResult r = new FlowResult();
+    /**
+     * 触发回复任务
+     *
+     * @param jobId
+     * @param code
+     * @param msg*  @param retry
+     * @return
+     */
+    public boolean ackAction(long jobId, int code, String msg, boolean retry) {
+        boolean result = false;
         Job job = jobDao.getJob(jobId);
         if (job != null) {
             if (job.getJobGroupId() != 0) { //任务组
                 JobGroup jobGroup = jobDao.getJobGroup(job.getJobGroupId());
-                if (jobGroup.getScheduleServer().equals(context.getMyServer())) {
-                    ackActionActual(jobId, jobOk, retry);
+                //如果ack回应的服务器恰好是任务发起的服务器则直接处理并返回
+                if (jobGroup.getStartServer().equals(context.getMyIp())) {
+                    result = ackActionActual(jobId, code, msg, retry);
                 } else {
-                    RetryTaskProcess process = new RetryTaskProcess();
-                    boolean ok = process.doProcess(new RetryTask() {
-                        @Override
-                        public boolean doAction() {
-//                            IpAddress ipAddress = new IpAddress(jobGroup.getScheduleServer());
-//                            SchedulerClient client = new SchedulerClient();
-//                            return client.ackAction(jobId, jobOk);
-                            return false;
+                    //不是触发服务器，则发送给触发服务器
+                    IpAddr ip = new IpAddr(jobGroup.getStartServer());
+                    boolean startOk = sendAckWithIp(ip, jobId, code, msg);
+                    if (!startOk) {//如果触发服务器发送失败，则交给master服务器
+                        if (context.isMaster()) {
+                            result = ackMaster(jobId, code, msg, true);
+                        } else {
+                            IpAddr masterIp = new IpAddr(jobGroup.getStartServer());
+                            result = sendAckMasterWithIp(masterIp, jobId, code, msg);
                         }
-                    });
-
-                    if (!ok) {
-                        //sendMaster
+                    } else {
+                        result = startOk;
                     }
-                    //TODO:发送给指定ip
-                    //TODO:发送失败则交给master来处理
                 }
             } else {
-                ackActionActual(jobId, jobOk, retry);
+                //如果不是任务组，则任何一台机器都可以接受并保存
+                result = ackActionActual(jobId, code, msg, retry);
             }
         }
-        return r;
+        return result;
+    }
+
+    public boolean ackMaster(long jobId, int code, String msg, boolean retry) {
+        Job job = jobDao.getJob(jobId);
+        if (job != null) {
+            if (job.getJobGroupId() != 0) { //任务组
+                JobGroup jobGroup = jobDao.getJobGroup(job.getJobGroupId());
+                jobGroup.setStartServer(context.getMyIp().toString());
+                jobDao.updateJobGroup(jobGroup);
+                return ackActionActual(jobId, code, msg, retry);
+            }
+        }
+        return false;
+    }
+
+    private boolean sendAckWithIp(IpAddr ip, long jobId, int code, String msg) {
+        SchedulerClient client = SchedulerClientFactory.create(ip, context.getConfig().getAccessKey());
+        AckReq req = new AckReq();
+        req.setJobId(jobId);
+        req.setCode(code);
+        req.setMsg(msg);
+        Resp resp = client.ack(req);
+        return resp.getCode() == ErrConstants.OK ? true : false;
+    }
+
+    private boolean sendAckMasterWithIp(IpAddr ip, long jobId, int code, String msg) {
+        SchedulerClient client = SchedulerClientFactory.create(ip, context.getConfig().getAccessKey());
+        AckReq req = new AckReq();
+        req.setJobId(jobId);
+        req.setCode(code);
+        req.setMsg(msg);
+        Resp resp = client.ackMaster(req);
+        return resp.getCode() == ErrConstants.OK ? true : false;
     }
 
 
-    public FlowResult ackActionActual(long jobId, boolean jobOk, boolean retry) {
-        FlowResult r = new FlowResult();
+    private boolean ackActionActual(long jobId, int code, String msg, boolean retry) {
+        boolean jobOk = code == ErrConstants.OK ? true : false;
         Job job = jobDao.getJob(jobId);
         if (job != null) {
             job.setEndTime(System.currentTimeMillis());//更新任务结束时间
             if (job.getJobGroupId() != 0) {
                 FlowGuide flowGuide = flowMapHandle.getFlowGuide(job.getJobGroupId());
-                if (retry) {
-                    //SchedulerContext.getContext().getRetryProcessor().mark(jobId, job.getRetryJobId(), jobOk);
-                }
                 if (jobOk) {
                     flowGuide.updateNodeOk(job.getIndex(), jobOk);
                     job.setStatus(JobStatusEnum.ExecuteOk.getValue());
                     //加入判断，当任务暂停的时候
                     if (flowGuide.getStatus() != JobGroupStatusEnum.PAUSE
                             && flowGuide.getStatus() != JobGroupStatusEnum.STOP) {
-
                         JobGroup jobGroup = jobDao.getJobGroup(job.getJobGroupId());
                         if (flowGuide.isFinish()) { //如果任务组已完成
                             jobGroup.setStatus(JobGroupStatusEnum.FINISH.getValue());
@@ -279,7 +322,7 @@ public class SchedulerService {
             }
         }
         jobDao.updateJob(job);
-        return r;
+        return true;
     }
 
 

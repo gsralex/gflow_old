@@ -1,16 +1,18 @@
-package com.gsralex.gflow.scheduler.retry;
+package com.gsralex.gflow.core.retry;
 
 /**
  * @author gsralex
  * @version 2019/2/7
  */
-public class RetryTaskProcess {
+public class RetryTaskUtils {
 
-    public boolean doProcess(RetryTask task) {
-        return doProcess(task, 3);
+    private static final int RETRY_TIMES = 3;
+
+    public static boolean doProcess(RetryTask task) {
+        return doProcess(task, RETRY_TIMES);
     }
 
-    public boolean doProcess(RetryTask task, int times) {
+    public static boolean doProcess(RetryTask task, int times) {
         boolean ok;
         int cnt = 0;
         while (true) {

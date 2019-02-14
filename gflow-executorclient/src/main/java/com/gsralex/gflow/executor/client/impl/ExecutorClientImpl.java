@@ -1,6 +1,6 @@
 package com.gsralex.gflow.executor.client.impl;
 
-import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.thriftgen.TResp;
 import com.gsralex.gflow.core.thriftgen.scheduler.TExecutorService;
 import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
@@ -27,12 +27,13 @@ public class ExecutorClientImpl implements ExecutorClient {
     private IpSelector ipSelector;
     private String accessToken;
 
-    public ExecutorClientImpl(List<IpAddress> ipList, String accessToken) {
+
+    public ExecutorClientImpl(List<IpAddr> ipList, String accessToken) {
         this.ipSelector = new IpSelector(ipList);
         this.accessToken = accessToken;
     }
 
-    public ExecutorClientImpl(IpAddress ip, String accessToken) {
+    public ExecutorClientImpl(IpAddr ip, String accessToken) {
         this.ipSelector = new IpSelector(ip);
         this.accessToken = accessToken;
     }
@@ -58,7 +59,7 @@ public class ExecutorClientImpl implements ExecutorClient {
                 return resp;
             }
         }
-        ;
-        return ClientWrapper.wrap(new Callback(), ipSelector.getIp());
+
+        return ClientWrapper.execute(new Callback(), ipSelector.getIp());
     }
 }

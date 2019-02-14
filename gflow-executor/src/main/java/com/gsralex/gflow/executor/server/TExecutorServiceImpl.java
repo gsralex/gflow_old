@@ -80,8 +80,4 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
         return instance;
     }
 
-    @Override
-    public TResp heartbeat() throws TException {
-        return new TResp(ErrConstants.OK, ErrConstants.MSG_OK);
-    }
 }

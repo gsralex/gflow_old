@@ -3,10 +3,11 @@ package com.gsralex.gflow.scheduler.server;
 
 import com.gsralex.gflow.core.connect.SecurityUtils;
 import com.gsralex.gflow.core.constants.ErrConstants;
+import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.thriftgen.TResp;
 import com.gsralex.gflow.core.thriftgen.scheduler.*;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.domain.JobGroup;
+import com.gsralex.gflow.scheduler.hb.HbService;
 import com.gsralex.gflow.scheduler.schedule.ActionResult;
 import com.gsralex.gflow.scheduler.schedule.FlowResult;
 import com.gsralex.gflow.scheduler.schedule.SchedulerService;
@@ -20,11 +21,13 @@ public class TScheduleServiceImpl implements TScheduleService.Iface {
 
 
     private SchedulerService schedulerService;
+    private HbService hbService;
     private String accessKey;
 
     public TScheduleServiceImpl(SchedulerContext context) {
         accessKey = context.getConfig().getAccessKey();
         schedulerService = new SchedulerService(context);
+        hbService = new HbService(context);
     }
 
 
@@ -99,33 +102,51 @@ public class TScheduleServiceImpl implements TScheduleService.Iface {
             resp.setMsg(ErrConstants.MSG_ERRACCESTOKEN);
             return resp;
         }
-        boolean ok = req.getCode() == ErrConstants.OK ? true : false;
-        schedulerService.ackAction(req.getJobId(), ok, getRetry());
-        resp.setCode(ErrConstants.OK);
-        resp.setMsg(ErrConstants.MSG_OK);
+        boolean ok = schedulerService.ackAction(req.getJobId(), req.getCode(), req.getMsg(), getRetry());
+        resp.setCode(ok ? ErrConstants.OK : ErrConstants.ERR_INTERNAL);
         return resp;
     }
 
     @Override
-    public TGetJobGroupResp getGroup(TGetJobGroupReq req) throws TException {
-        TGetJobGroupResp resp = new TGetJobGroupResp();
+    public TResp ackMaster(TAckReq req) throws TException {
+        TResp resp = new TResp();
         if (!SecurityUtils.check(accessKey, req.getAccessToken())) {
             resp.setCode(ErrConstants.ERR_ACCESSTOKEN);
-//            resp.setMsg(ErrConstants.MSG_ERRACCESTOKEN);
+            resp.setMsg(ErrConstants.MSG_ERRACCESTOKEN);
             return resp;
         }
-        JobGroup jobGroup = schedulerService.getJobGroup(req.getId());
-        if (jobGroup != null) {
-            TJobGroup tJobGroup = new TJobGroup();
-            tJobGroup.setId(jobGroup.getId());
-            tJobGroup.setStatus(GroupStatus.findByValue(jobGroup.getStatus()));
-            resp.setJobGroup(tJobGroup);
-        }
+        boolean ok = schedulerService.ackMaster(req.getJobId(), req.getCode(), req.getMsg(), getRetry());
+        resp.setCode(ok ? ErrConstants.OK : ErrConstants.ERR_INTERNAL);
         return resp;
     }
 
     @Override
-    public TGetJobResp getJob(TGetJobReq req) throws TException {
+    public TResp executorHb(TExecutorHbReq req) throws TException {
+        boolean ok = hbService.executorHb(new IpAddr(req.getIp(), req.getPort()), req.getTag());
+        TResp resp = new TResp();
+        resp.setCode(ok ? ErrConstants.OK : ErrConstants.ERR_INTERNAL);
+        return resp;
+    }
+
+    @Override
+    public TResp schedulerHb(TScheduleHbReq req) throws TException {
+        boolean ok = hbService.schedulerHb(new IpAddr(req.getIp(), req.getPort()));
+        TResp resp = new TResp();
+        resp.setCode(ok ? ErrConstants.OK : ErrConstants.ERR_INTERNAL);
+        return resp;
+    }
+
+    @Override
+    public TResp updateExecutorNode(TExecutorHbReq req) throws TException {
+        boolean ok = hbService.updateExecutorNode(new IpAddr(req.getIp(), req.getPort()), req.getTag(), req.isOnline());
+        TResp resp = new TResp();
+        resp.setCode(ok ? ErrConstants.OK : ErrConstants.ERR_INTERNAL);
+        return resp;
+    }
+
+
+    @Override
+    public String serverStatus() throws TException {
         return null;
     }
 

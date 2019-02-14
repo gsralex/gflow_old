@@ -15,8 +15,8 @@ public class Action {
     private Long createTime;
     @Column("mod_time")
     private Long modTime;
-    @Column("tag_id")
-    private Long tagId;
+    @Column("tag")
+    private String tag;
 
     public long getId() {
         return id;
@@ -58,11 +58,11 @@ public class Action {
         this.modTime = modTime;
     }
 
-    public Long getTagId() {
-        return tagId;
+    public String getTag() {
+        return tag;
     }
 
-    public void setTagId(Long tagId) {
-        this.tagId = tagId;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

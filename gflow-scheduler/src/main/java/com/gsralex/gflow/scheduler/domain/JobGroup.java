@@ -31,7 +31,7 @@ public class JobGroup {
     private Long timerConfigId;
     private String parameter;
 
-    private String scheduleServer;
+    private String startServer;
 
     public Long getId() {
         return id;
@@ -113,11 +113,11 @@ public class JobGroup {
         this.parameter = parameter;
     }
 
-    public String getScheduleServer() {
-        return scheduleServer;
+    public String getStartServer() {
+        return startServer;
     }
 
-    public void setScheduleServer(String scheduleServer) {
-        this.scheduleServer = scheduleServer;
+    public void setStartServer(String startServer) {
+        this.startServer = startServer;
     }
 }

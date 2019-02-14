@@ -17,28 +17,23 @@ import java.util.Map;
  * @author gsralex
  * @version 2018/8/21
  */
-public class TimerProcessor {
+public class TimerProcess {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TimerProcessor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TimerProcess.class);
 
     private Map<Long, TimerTask> map = new HashMap<>();
     private SchedulerService schedulerService;
+    private volatile boolean interrupt = false;
 
 
-    private static final TimerProcessor current = new TimerProcessor();
-
-    private TimerProcessor() {
-
-    }
-
-    public void setContext(SchedulerContext context) {
+    public TimerProcess(SchedulerContext context) {
         schedulerService = new SchedulerService(context);
     }
 
-    public static TimerProcessor getInstance() {
-        return current;
-    }
 
+    public void stop() {
+        interrupt = true;
+    }
 
     public void start() {
         new Thread(new Runnable() {
@@ -124,7 +119,7 @@ public class TimerProcessor {
 
 
     public void mainLoop() {
-        while (true) {
+        while (!interrupt) {
             try {
                 synchronized (map) {
                     if (map.size() == 0) {
@@ -144,7 +139,7 @@ public class TimerProcessor {
                     }
                 }
             } catch (Exception e) {
-                LOGGER.error("TimerProcessor.mainLoop", e);
+                LOGGER.error("TimerProcess.mainLoop", e);
             }
         }
     }

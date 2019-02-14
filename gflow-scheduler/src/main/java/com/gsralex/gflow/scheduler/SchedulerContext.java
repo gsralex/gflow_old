@@ -1,19 +1,19 @@
 package com.gsralex.gflow.scheduler;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.connect.SecurityUtils;
+import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.util.PropertiesUtils;
-import com.gsralex.gflow.executor.client.ExecutorClient;
-import com.gsralex.gflow.executor.client.ExecutorClientFactory;
 import com.gsralex.gflow.scheduler.config.SchedulerConfig;
 import com.gsralex.gflow.scheduler.flow.FlowGuideMap;
 import com.gsralex.gflow.scheduler.parameter.DynamicParam;
 import com.gsralex.gflow.scheduler.parameter.DynamicParamContext;
-import com.gsralex.gflow.scheduler.server.ServerStatus;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +22,8 @@ import java.util.List;
  * @version 2018/9/21
  */
 public class SchedulerContext {
-
     private static final String CONFIG_FILEPATH = "/gflow.properties";
-
     private SchedulerConfig config;
-
     /**
      * 所有未完成的flow
      */
@@ -41,30 +38,31 @@ public class SchedulerContext {
     /**
      * 服务当前状态
      */
-    private ServerStatus serverStatus;
+    private boolean master;
+
+    private IpAddr masterIp;
     /**
      * 执行器ip
      */
-    private List<IpAddress> executorIps = new ArrayList<>();
-
+    private List<IpAddr> executorIps = new ArrayList<>();
     /**
-     * 服务器名+ip
+     * 当前主机名端口
      */
-    private String myServer;
+    private IpAddr myIp;
+    private List<IpAddr> schedulerIps = new ArrayList<>();
 
-        private ExecutorClient client;
 
+    private String accessToken;
 
-    private List<IpAddress> schedulerIps = new ArrayList<>();
+    private HbContext hbContext;
 
     public void init() throws IOException {
         InputStream is = PropertiesUtils.class.getResourceAsStream(CONFIG_FILEPATH);
         config = PropertiesUtils.getConfig(is, SchedulerConfig.class);
         initJdbc();
         initIps();
-        client = ExecutorClientFactory.create(new IpAddress("m1", 10001));
+        masterIp = new IpAddr(config.getSchedulerMaster());
     }
-
 
     private void initJdbc() {
         BasicDataSource dataSource = new BasicDataSource();
@@ -79,13 +77,12 @@ public class SchedulerContext {
         String[] ips = config.getExecutorIps().split(",");
         for (String ip : ips) {
             String[] ipport = ip.split(":");
-            IpAddress ipAddress = new IpAddress(ipport[0], Integer.parseInt(ipport[1]));
-            executorIps.add(ipAddress);
+            IpAddr ipAddr = new IpAddr(ipport[0], Integer.parseInt(ipport[1]));
+            executorIps.add(ipAddr);
         }
     }
 
-
-    public List<IpAddress> getIps() {
+    public List<IpAddr> getIps() {
         return executorIps;
     }
 
@@ -110,27 +107,55 @@ public class SchedulerContext {
         return jdbcUtils;
     }
 
-    public ServerStatus getServerStatus() {
-        return serverStatus;
+    public boolean isMaster() {
+        return master;
     }
 
-    public List<IpAddress> getSchedulerIps() {
-        return schedulerIps;
-    }
-
-    public void setSchedulerIps(List<IpAddress> schedulerIps) {
+    public void setSchedulerIps(List<IpAddr> schedulerIps) {
         this.schedulerIps = schedulerIps;
     }
 
-    public String getMyServer() {
-        return myServer;
+    public IpAddr getMyIp() {
+        return myIp;
     }
 
-    public void setMyServer(String myServer) {
-        this.myServer = myServer;
+    public String getAccessToken() {
+        return SecurityUtils.encrypt(this.getConfig().getAccessKey());
     }
 
-    public ExecutorClient getExecutorClient() {
-        return client;
+    /**
+     * 获取scheduler ip(仅master使用)
+     *
+     * @return
+     */
+    public List<IpAddr> getSchedulerIps() {
+        return schedulerIps;
     }
+
+    public HbContext getHbContext() {
+        return hbContext;
+    }
+
+    public void setHbContext(HbContext hbContext) {
+        this.hbContext = hbContext;
+    }
+
+    /**
+     * 获取executor ip
+     *
+     * @param tag
+     * @return
+     */
+    public List<IpAddr> getExecutorIps(String tag) {
+        if (isMaster()) {
+            return hbContext.getmExecutorHbProcess().listOnlineIp(tag);
+        } else {
+            return hbContext.getsExecutorHbProcess().listOnlineIp(tag);
+        }
+    }
+
+    public IpAddr getMasterIp() {
+        return masterIp;
+    }
+
 }

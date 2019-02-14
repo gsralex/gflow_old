@@ -10,6 +10,8 @@ public class ExecutorConfig {
     private String schedulerIps;
     @PropertyName(name = "gflow.accesskey")
     private String accessKey;
+    @PropertyName(name = "gflow.executor.tag")
+    private String tag;
 
     public int getPort() {
         return port;
@@ -25,7 +27,7 @@ public class ExecutorConfig {
 
     public void setSchedulerIps(String schedulerIps) {
         this.schedulerIps = schedulerIps;
-}
+    }
 
     public String getAccessKey() {
         return accessKey;
@@ -33,5 +35,13 @@ public class ExecutorConfig {
 
     public void setAccessKey(String accessKey) {
         this.accessKey = accessKey;
+    }
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 }

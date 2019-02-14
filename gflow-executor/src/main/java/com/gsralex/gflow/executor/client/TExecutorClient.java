@@ -2,7 +2,7 @@ package com.gsralex.gflow.executor.client;
 
 import com.gsralex.gflow.core.connect.SecurityUtils;
 import com.gsralex.gflow.core.constants.ErrConstants;
-import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.thriftgen.scheduler.TAckReq;
 import com.gsralex.gflow.core.thriftgen.scheduler.TScheduleService;
 import com.gsralex.gflow.executor.ExecutorContext;
@@ -42,8 +42,8 @@ public class TExecutorClient {
     public void ack(long jobId, boolean ok) {
         TTransport transport = null;
         try {
-            List<IpAddress> list = context.getScheduleIps();
-            IpAddress ip = list.get(0);
+            List<IpAddr> list = context.getScheduleIps();
+            IpAddr ip = list.get(0);
             transport = new TSocket(ip.getIp(), ip.getPort());
             transport.open();
             TProtocol protocol = new TBinaryProtocol(transport);

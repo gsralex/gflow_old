@@ -1,6 +1,6 @@
 package com.gsralex.scheduler.client;
 
-import com.gsralex.gflow.core.context.IpAddress;
+import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.thriftgen.scheduler.TScheduleService;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
@@ -18,8 +18,7 @@ public class ClientWrapper {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ClientWrapper.class);
 
-
-    public static <T> T execute(ClientCallback<T> callback, IpAddress ip) {
+    public static <T> T execute(ClientCallback<T> callback, IpAddr ip) {
         TTransport transport = new TSocket(ip.getIp(), ip.getPort());
         try {
             transport.open();
@@ -28,7 +27,7 @@ public class ClientWrapper {
             TScheduleService.Client client = new TScheduleService.Client(multiProtocol);
             return callback.doAction(client);
         } catch (Exception e) {
-            LOGGER.error("ScheduleClient.execute", e);
+            LOGGER.error("SchedulerClient.execute", e);
             throw new ClientTransportException(e);
         } finally {
             if (transport != null) {

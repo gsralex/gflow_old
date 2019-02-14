@@ -1,10 +1,10 @@
 package com.gsralex.gflow.scheduler.timer;
 
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.domain.TimerConfig;
-import com.gsralex.gflow.scheduler.enums.ExecuteTimeEnum;
 import com.gsralex.gflow.scheduler.dao.TimerDao;
 import com.gsralex.gflow.scheduler.dao.impl.TimerDaoImpl;
+import com.gsralex.gflow.scheduler.domain.TimerConfig;
+import com.gsralex.gflow.scheduler.enums.ExecuteTimeEnum;
 
 /**
  * @author gsralex
@@ -13,8 +13,10 @@ import com.gsralex.gflow.scheduler.dao.impl.TimerDaoImpl;
 public class TimerService {
 
     private TimerDao timerDao;
+    private SchedulerContext context;
 
     public TimerService(SchedulerContext context) {
+        this.context = context;
         timerDao = new TimerDaoImpl(context.getJdbcUtils());
     }
 
@@ -30,7 +32,8 @@ public class TimerService {
         timerDao.saveTimer(config);
         if (config.getActive()) {
             TimerTask timerTask = new TimerTask(config);
-            TimerProcessor.getInstance().setTimer(timerTask);
+//            TimerProcess.getInstance().setTimer(timerTask);
+            //TODO:加入timerProcess
         }
         return true;
     }
@@ -45,7 +48,8 @@ public class TimerService {
             timerDao.updateTimer(config);
 
             TimerTask timerTask = new TimerTask(config);
-            TimerProcessor.getInstance().setTimer(timerTask);
+//            TimerProcess.getInstance().setTimer(timerTask);
+            //TODO:加入timerProcess
             return true;
         }
         return false;

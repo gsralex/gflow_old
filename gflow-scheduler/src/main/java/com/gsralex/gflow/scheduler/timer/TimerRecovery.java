@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
  */
 public class TimerRecovery {
 
-    private TimerProcessor processor;
+    private TimerProcess processor;
     private JobDao jobDao;
     private TimerDao timerDao;
 
-    public TimerRecovery(TimerProcessor processor, SchedulerContext context) {
+    public TimerRecovery(TimerProcess processor, SchedulerContext context) {
         this.processor = processor;
         jobDao = new JobDaoImpl(context.getJdbcUtils());
         timerDao = new TimerDaoImpl(context.getJdbcUtils());
