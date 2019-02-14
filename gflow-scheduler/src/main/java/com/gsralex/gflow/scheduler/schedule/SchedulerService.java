@@ -23,9 +23,9 @@ import com.gsralex.gflow.scheduler.flow.FlowGuide;
 import com.gsralex.gflow.scheduler.flow.FlowMapHandle;
 import com.gsralex.gflow.scheduler.flow.FlowNode;
 import com.gsralex.gflow.scheduler.parameter.DynamicParamContext;
-import com.gsralex.scheduler.client.SchedulerClient;
-import com.gsralex.scheduler.client.SchedulerClientFactory;
-import com.gsralex.scheduler.client.action.scheduler.AckReq;
+import com.gsralex.gflow.scheduler.client.SchedulerClient;
+import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
+import com.gsralex.gflow.scheduler.client.action.scheduler.AckReq;
 import org.apache.thrift.TException;
 
 import java.util.List;

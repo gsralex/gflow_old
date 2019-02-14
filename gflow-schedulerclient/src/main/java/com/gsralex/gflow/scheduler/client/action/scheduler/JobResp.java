@@ -1,6 +1,6 @@
-package com.gsralex.scheduler.client.action.scheduler;
+package com.gsralex.gflow.scheduler.client.action.scheduler;
 
-import com.gsralex.scheduler.client.action.Resp;
+import com.gsralex.gflow.scheduler.client.action.Resp;
 
 /**
  * @author gsralex

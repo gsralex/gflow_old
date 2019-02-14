@@ -1,4 +1,4 @@
-package com.gsralex.scheduler.client.action.timer;
+package com.gsralex.gflow.scheduler.client.action.timer;
 
 /**
  * @author gsralex

@@ -1,4 +1,4 @@
-package com.gsralex.scheduler.client;
+package com.gsralex.gflow.scheduler.client;
 
 /**
  * @author gsralex

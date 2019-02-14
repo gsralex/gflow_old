@@ -78,16 +78,15 @@
             <groupId>com.gsralex.gflow</groupId>
             <artifactId>gflow-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.gsralex.gflow</groupId>
-            <artifactId>gflow-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
 
         <dependency>
             <groupId>com.gsralex.gflow</groupId>
             <artifactId>gflow-executorclient</artifactId>
-            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gsralex.gflow</groupId>
+            <artifactId>gflow-schedulerclient</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -100,11 +99,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.gsralex.gflow</groupId>
-            <artifactId>gflow-schedulerclient</artifactId>
-            <version>1.0-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

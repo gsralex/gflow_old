@@ -1,15 +1,13 @@
-package com.gsralex.scheduler.client;
+package com.gsralex.gflow.scheduler.client;
 
-import com.gsralex.gflow.executor.client.action.Resp;
-import com.gsralex.scheduler.client.action.scheduler.*;
+import com.gsralex.gflow.scheduler.client.action.scheduler.*;
+import com.gsralex.gflow.scheduler.client.action.Resp;
 
 public interface SchedulerClient {
 
     JobResp scheduleAction(JobReq req);
 
     ScheduleGroupResp scheduleGroup(ScheduleGroupReq req);
-
-    GetJobGroupResp getJobGroup(long id);
 
     Resp ack(AckReq req);
 

@@ -1,7 +1,7 @@
-package com.gsralex.scheduler.client;
+package com.gsralex.gflow.scheduler.client;
 
 import com.gsralex.gflow.core.context.IpAddr;
-import com.gsralex.scheduler.client.impl.SchedulerClientImpl;
+import com.gsralex.gflow.scheduler.client.impl.SchedulerClientImpl;
 
 import java.util.List;
 

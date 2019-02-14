@@ -1,4 +1,4 @@
-package com.gsralex.scheduler.client.config;
+package com.gsralex.gflow.scheduler.client.config;
 
 import com.gsralex.gflow.core.util.PropertyName;
 

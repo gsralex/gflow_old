@@ -5,9 +5,9 @@ import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.executor.client.action.Resp;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.scheduler.client.SchedulerClient;
-import com.gsralex.scheduler.client.SchedulerClientFactory;
-import com.gsralex.scheduler.client.action.scheduler.ExecutorHbReq;
+import com.gsralex.gflow.scheduler.client.SchedulerClient;
+import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
+import com.gsralex.gflow.scheduler.client.action.scheduler.ExecutorHbReq;
 
 /**
  * @author gsralex

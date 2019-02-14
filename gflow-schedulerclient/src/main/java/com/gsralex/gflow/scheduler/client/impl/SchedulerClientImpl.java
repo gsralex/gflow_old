@@ -1,14 +1,14 @@
-package com.gsralex.scheduler.client.impl;
+package com.gsralex.gflow.scheduler.client.impl;
 
 import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.thriftgen.TResp;
 import com.gsralex.gflow.core.thriftgen.scheduler.*;
 import com.gsralex.gflow.core.util.IpSelector;
-import com.gsralex.gflow.executor.client.action.Resp;
-import com.gsralex.scheduler.client.ClientCallback;
-import com.gsralex.scheduler.client.ClientWrapper;
-import com.gsralex.scheduler.client.SchedulerClient;
-import com.gsralex.scheduler.client.action.scheduler.*;
+import com.gsralex.gflow.scheduler.client.ClientCallback;
+import com.gsralex.gflow.scheduler.client.ClientWrapper;
+import com.gsralex.gflow.scheduler.client.SchedulerClient;
+import com.gsralex.gflow.scheduler.client.action.Resp;
+import com.gsralex.gflow.scheduler.client.action.scheduler.*;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,32 +80,6 @@ public class SchedulerClientImpl implements SchedulerClient {
         }
         return ClientWrapper.execute(new Callback(), ipSelector.getIp());
     }
-
-    @Override
-    public GetJobGroupResp getJobGroup(long id) {
-        return null;
-    }
-
-//    @Override
-//    public GetJobGroupResp getJobGroup(long id) {
-//        class Callback implements ClientCallback<GetJobGroupResp> {
-//            @Override
-//            public GetJobGroupResp doAction(TScheduleService.Client client) throws TException {
-//                TGetJobGroupReq req = new TGetJobGroupReq();
-//                req.setAccessToken(accessToken);
-//                req.setId(id);
-//                TGetJobGroupResp tResp = client.getGroup(req);
-//                GetJobGroupResp resp = new GetJobGroupResp();
-//                if (tResp.getJobGroup() != null) {
-//                    resp.setJobGroupId(tResp.getJobGroup().getId());
-//                    resp.setStatus(JobGroupStatusEnum.
-//                            valueOf(tResp.getJobGroup().getStatus().getValue()));
-//                }
-//                return resp;
-//            }
-//        }
-//        return ClientWrapper.execute(new Callback(), ipSelector.getIp());
-//    }
 
     @Override
     public Resp ack(AckReq req) {

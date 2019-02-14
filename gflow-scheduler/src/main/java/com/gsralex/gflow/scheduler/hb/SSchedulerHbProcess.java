@@ -3,9 +3,9 @@ package com.gsralex.gflow.scheduler.hb;
 import com.gsralex.gflow.core.constants.TimeConstants;
 import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.scheduler.client.SchedulerClient;
-import com.gsralex.scheduler.client.SchedulerClientFactory;
-import com.gsralex.scheduler.client.action.scheduler.ScheduleHbReq;
+import com.gsralex.gflow.scheduler.client.SchedulerClient;
+import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
+import com.gsralex.gflow.scheduler.client.action.scheduler.ScheduleHbReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
