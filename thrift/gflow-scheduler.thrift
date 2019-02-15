@@ -1,4 +1,4 @@
-namespace java com.gsralex.gflow.core.thriftgen.scheduler
+namespace java com.gsralex.gflow.pub.thriftgen.scheduler
 
 
 include "gflow.thrift"

@@ -39,11 +39,16 @@
     <dependencies>
         <dependency>
             <groupId>com.gsralex.gflow</groupId>
-            <artifactId>gflow-core</artifactId>
+            <artifactId>gflow-pub</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.thrift</groupId>
             <artifactId>libthrift</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gsralex.gflow</groupId>
+            <artifactId>gflow-pub</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

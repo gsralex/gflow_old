@@ -1,7 +1,6 @@
 package com.gsralex.gflow.scheduler.parameter;
 
-import com.gsralex.gflow.core.context.Parameter;
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
+import com.gsralex.gflow.pub.context.Parameter;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Assert;
@@ -10,8 +9,6 @@ import org.junit.Test;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static org.junit.Assert.*;
 
 /**
  * @author gsralex

@@ -1,10 +1,10 @@
 package com.gsralex.gflow.executor.server;
 
-import com.gsralex.gflow.core.constants.ErrConstants;
-import com.gsralex.gflow.core.context.Parameter;
-import com.gsralex.gflow.core.thriftgen.TResp;
-import com.gsralex.gflow.core.thriftgen.scheduler.TExecutorService;
-import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
+import com.gsralex.gflow.pub.constants.ErrConstants;
+import com.gsralex.gflow.pub.context.Parameter;
+import com.gsralex.gflow.pub.thriftgen.TResp;
+import com.gsralex.gflow.pub.thriftgen.scheduler.TExecutorService;
+import com.gsralex.gflow.pub.thriftgen.scheduler.TJobReq;
 import com.gsralex.gflow.executor.AckExecuteProcess;
 import com.gsralex.gflow.executor.ExecuteProcess;
 import com.gsralex.gflow.executor.ExecutorContext;

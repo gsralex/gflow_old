@@ -1,9 +1,9 @@
 package com.gsralex.gflow.executor;
 
-import com.gsralex.gflow.core.constants.ErrConstants;
-import com.gsralex.gflow.core.context.Parameter;
-import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
-import com.gsralex.gflow.core.util.IpSelector;
+import com.gsralex.gflow.pub.constants.ErrConstants;
+import com.gsralex.gflow.pub.context.Parameter;
+import com.gsralex.gflow.pub.thriftgen.scheduler.TJobReq;
+import com.gsralex.gflow.pub.util.IpSelector;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
 import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
 import com.gsralex.gflow.scheduler.client.action.scheduler.AckReq;

@@ -15,7 +15,8 @@
     <dependencies>
         <dependency>
             <groupId>com.gsralex.gflow</groupId>
-            <artifactId>gflow-core</artifactId>
+            <artifactId>gflow-pub</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

@@ -1,13 +1,13 @@
 package com.gsralex.gflow.scheduler.client.impl;
 
-import com.gsralex.gflow.core.context.IpAddr;
-import com.gsralex.gflow.core.thriftgen.TResp;
-import com.gsralex.gflow.core.thriftgen.scheduler.*;
-import com.gsralex.gflow.core.util.IpSelector;
+import com.gsralex.gflow.pub.context.IpAddr;
+import com.gsralex.gflow.pub.thriftgen.TResp;
+import com.gsralex.gflow.pub.thriftgen.scheduler.*;
+import com.gsralex.gflow.pub.util.IpSelector;
 import com.gsralex.gflow.scheduler.client.ClientCallback;
 import com.gsralex.gflow.scheduler.client.ClientWrapper;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
-import com.gsralex.gflow.core.action.Resp;
+import com.gsralex.gflow.pub.action.Resp;
 import com.gsralex.gflow.scheduler.client.action.scheduler.*;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;

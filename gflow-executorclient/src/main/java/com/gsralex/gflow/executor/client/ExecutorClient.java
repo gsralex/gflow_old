@@ -1,7 +1,7 @@
 package com.gsralex.gflow.executor.client;
 
 
-import com.gsralex.gflow.core.action.Resp;
+import com.gsralex.gflow.pub.action.Resp;
 import com.gsralex.gflow.executor.client.action.JobReq;
 import org.apache.thrift.TException;
 

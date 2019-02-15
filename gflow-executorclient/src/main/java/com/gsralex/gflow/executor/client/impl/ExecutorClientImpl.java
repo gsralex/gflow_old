@@ -1,11 +1,11 @@
 package com.gsralex.gflow.executor.client.impl;
 
-import com.gsralex.gflow.core.action.Resp;
-import com.gsralex.gflow.core.context.IpAddr;
-import com.gsralex.gflow.core.thriftgen.TResp;
-import com.gsralex.gflow.core.thriftgen.scheduler.TExecutorService;
-import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
-import com.gsralex.gflow.core.util.IpSelector;
+import com.gsralex.gflow.pub.action.Resp;
+import com.gsralex.gflow.pub.context.IpAddr;
+import com.gsralex.gflow.pub.thriftgen.TResp;
+import com.gsralex.gflow.pub.thriftgen.scheduler.TExecutorService;
+import com.gsralex.gflow.pub.thriftgen.scheduler.TJobReq;
+import com.gsralex.gflow.pub.util.IpSelector;
 import com.gsralex.gflow.executor.client.ClientCallback;
 import com.gsralex.gflow.executor.client.ClientWrapper;
 import com.gsralex.gflow.executor.client.ExecutorClient;

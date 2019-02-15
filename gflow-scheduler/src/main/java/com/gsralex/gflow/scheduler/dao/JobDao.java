@@ -3,7 +3,7 @@ package com.gsralex.gflow.scheduler.dao;
 
 import com.gsralex.gflow.scheduler.domain.Job;
 import com.gsralex.gflow.scheduler.domain.JobGroup;
-import com.gsralex.gflow.scheduler.model.JobGroupExec;
+import com.gsralex.gflow.scheduler.model.TimerExecuteRecord;
 
 import java.util.List;
 
@@ -47,5 +47,5 @@ public interface JobDao {
 
     List<Job> listJobNeedRetry(int maxRetryCnt);
 
-    List<JobGroupExec> listJobGroupExec(List<Long> timerIdList);
+    List<TimerExecuteRecord> listJobGroupExec(List<Long> timerIdList);
 }

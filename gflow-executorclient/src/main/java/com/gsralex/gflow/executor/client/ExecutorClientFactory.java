@@ -1,6 +1,6 @@
 package com.gsralex.gflow.executor.client;
 
-import com.gsralex.gflow.core.context.IpAddr;
+import com.gsralex.gflow.pub.context.IpAddr;
 import com.gsralex.gflow.executor.client.impl.ExecutorClientImpl;
 
 import java.util.List;

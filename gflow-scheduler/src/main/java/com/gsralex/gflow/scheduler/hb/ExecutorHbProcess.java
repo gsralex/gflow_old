@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.hb;
 
-import com.gsralex.gflow.core.context.IpAddr;
+import com.gsralex.gflow.pub.context.IpAddr;
 
 import java.util.List;
 

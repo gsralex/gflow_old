@@ -1,6 +1,6 @@
 package com.gsralex.gflow.executor;
 
-import com.gsralex.gflow.core.context.Parameter;
+import com.gsralex.gflow.pub.context.Parameter;
 
 /**
  * @author gsralex

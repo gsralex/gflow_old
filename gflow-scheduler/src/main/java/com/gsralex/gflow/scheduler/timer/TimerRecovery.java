@@ -2,7 +2,7 @@ package com.gsralex.gflow.scheduler.timer;
 
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.domain.TimerConfig;
-import com.gsralex.gflow.scheduler.model.JobGroupExec;
+import com.gsralex.gflow.scheduler.model.TimerExecuteRecord;
 import com.gsralex.gflow.scheduler.dao.JobDao;
 import com.gsralex.gflow.scheduler.dao.TimerDao;
 import com.gsralex.gflow.scheduler.dao.impl.JobDaoImpl;
@@ -34,9 +34,9 @@ public class TimerRecovery {
     public void recovery() {
         List<TimerConfig> timerList = timerDao.listTimer();
         List<Long> timerIdList = timerList.stream().map(x -> x.getId()).collect(Collectors.toList());
-        List<JobGroupExec> execList = jobDao.listJobGroupExec(timerIdList);
+        List<TimerExecuteRecord> execList = jobDao.listJobGroupExec(timerIdList);
         Map<Long, Long> execMap = new HashMap<>();
-        for (JobGroupExec exec : execList) {
+        for (TimerExecuteRecord exec : execList) {
             execMap.put(exec.getTimerConfigId(), exec.getCreateTime());
         }
         for (TimerConfig timer : timerList) {

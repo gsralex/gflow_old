@@ -5,7 +5,7 @@ import com.gsralex.gflow.scheduler.domain.Job;
 import com.gsralex.gflow.scheduler.domain.JobGroup;
 import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.enums.JobStatusEnum;
-import com.gsralex.gflow.scheduler.model.JobGroupExec;
+import com.gsralex.gflow.scheduler.model.TimerExecuteRecord;
 import com.gsralex.gflow.scheduler.dao.IdUtils;
 import com.gsralex.gflow.scheduler.dao.JobDao;
 
@@ -85,12 +85,12 @@ public class JobDaoImpl implements JobDao {
     }
 
     @Override
-    public List<JobGroupExec> listJobGroupExec(List<Long> timerIdList) {
+    public List<TimerExecuteRecord> listJobGroupExec(List<Long> timerIdList) {
         String sql="select max(create_time) as createtime,timer_config_id as timerconfigid from gflow_jobgroup  ";
         String ids= IdUtils.longToInts(timerIdList);
         sql+="where timer_config_id in ("+ids+")";
         sql+="group by timer_config_id";
-        return jdbcUtils.queryForList(sql,null,JobGroupExec.class);
+        return jdbcUtils.queryForList(sql,null,TimerExecuteRecord.class);
     }
 
 

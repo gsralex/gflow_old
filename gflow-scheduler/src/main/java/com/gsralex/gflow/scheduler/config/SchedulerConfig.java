@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.config;
 
-import com.gsralex.gflow.core.util.PropertyName;
+import com.gsralex.gflow.pub.util.PropertyName;
 
 public class SchedulerConfig {
 

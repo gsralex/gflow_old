@@ -1,4 +1,4 @@
-namespace java com.gsralex.gflow.core.thriftgen
+namespace java com.gsralex.gflow.pub.thriftgen
 
 //调度结果
 struct TResp{

@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
+        <module>gflow-pub</module>
         <module>gflow-scheduler</module>
         <module>gflow-executor</module>
         <module>gflow-schedulerclient</module>
@@ -18,7 +19,7 @@
         <commonslang3.version>3.4</commonslang3.version>
         <slf4j.version>1.7.25</slf4j.version>
         <lang3.version>3.8.1</lang3.version>
-        <thrift.verison>0.12.0</thrift.verison>
+        <thrift.verison>0.11.0</thrift.verison>
         <dbcp.version>1.4</dbcp.version>
         <mysql.version>5.1.39</mysql.version>
         <gdata.version>1.08</gdata.version>

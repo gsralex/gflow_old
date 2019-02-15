@@ -1,7 +1,6 @@
 package com.gsralex.gflow.scheduler.parameter;
 
-import com.gsralex.gflow.core.context.Parameter;
-import org.apache.commons.lang3.StringUtils;
+import com.gsralex.gflow.pub.context.Parameter;
 
 import java.util.*;
 import java.util.regex.Matcher;

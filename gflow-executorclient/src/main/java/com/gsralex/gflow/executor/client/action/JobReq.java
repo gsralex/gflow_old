@@ -1,6 +1,6 @@
 package com.gsralex.gflow.executor.client.action;
 
-import com.gsralex.gflow.core.action.Req;
+import com.gsralex.gflow.pub.action.Req;
 
 /**
  * @author gsralex

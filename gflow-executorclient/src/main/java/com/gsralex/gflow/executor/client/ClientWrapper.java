@@ -1,7 +1,7 @@
 package com.gsralex.gflow.executor.client;
 
-import com.gsralex.gflow.core.context.IpAddr;
-import com.gsralex.gflow.core.thriftgen.scheduler.TExecutorService;
+import com.gsralex.gflow.pub.context.IpAddr;
+import com.gsralex.gflow.pub.thriftgen.scheduler.TExecutorService;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;

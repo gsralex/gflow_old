@@ -1,4 +1,4 @@
-namespace java com.gsralex.gflow.core.thriftgen.timer
+namespace java com.gsralex.gflow.pub.thriftgen.timer
 
 include "gflow.thrift"
 

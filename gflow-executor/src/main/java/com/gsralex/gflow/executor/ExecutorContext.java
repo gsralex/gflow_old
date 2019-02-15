@@ -1,7 +1,7 @@
 package com.gsralex.gflow.executor;
 
-import com.gsralex.gflow.core.context.IpAddr;
-import com.gsralex.gflow.core.util.PropertiesUtils;
+import com.gsralex.gflow.pub.context.IpAddr;
+import com.gsralex.gflow.pub.util.PropertiesUtils;
 import com.gsralex.gflow.executor.config.ExecutorConfig;
 import com.gsralex.gflow.executor.spring.SpringContextHolder;
 import org.springframework.context.ApplicationContext;

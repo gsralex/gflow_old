@@ -1,6 +1,6 @@
 package com.gsralex.gflow.executor.client;
 
-import com.gsralex.gflow.core.thriftgen.scheduler.TExecutorService;
+import com.gsralex.gflow.pub.thriftgen.scheduler.TExecutorService;
 import org.apache.thrift.TException;
 
 /**
