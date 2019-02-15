@@ -16,14 +16,14 @@ import org.slf4j.LoggerFactory;
  * @author gsralex
  * @version 2018/3/18
  */
-public class ThriftSchedulerServer {
+public class TSchedulerServer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ThriftSchedulerServer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TSchedulerServer.class);
 
     private TScheduleServiceImpl scheduleService;
     private SchedulerContext context;
 
-    public ThriftSchedulerServer(SchedulerContext context) {
+    public TSchedulerServer(SchedulerContext context) {
         scheduleService = new TScheduleServiceImpl(context);
         this.context = context;
     }
@@ -47,7 +47,7 @@ public class ThriftSchedulerServer {
             }).start();
 
         } catch (TTransportException e) {
-            LOGGER.error("ThriftSchedulerServer.start", e);
+            LOGGER.error("TSchedulerServer.start", e);
             throw new ScheduleTransportException(e);
         }
     }

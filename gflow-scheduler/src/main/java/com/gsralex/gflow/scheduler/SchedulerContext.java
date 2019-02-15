@@ -1,9 +1,9 @@
 package com.gsralex.gflow.scheduler;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.core.util.SecurityUtils;
 import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.util.PropertiesUtils;
+import com.gsralex.gflow.core.util.SecurityUtils;
 import com.gsralex.gflow.scheduler.config.SchedulerConfig;
 import com.gsralex.gflow.scheduler.flow.FlowGuideMap;
 import com.gsralex.gflow.scheduler.parameter.DynamicParam;
@@ -12,6 +12,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class SchedulerContext {
     /**
      * 服务当前状态
      */
-    private boolean master;
+    private boolean master = false;
 
     private IpAddr masterIp;
     /**
@@ -59,7 +60,18 @@ public class SchedulerContext {
         config = PropertiesUtils.getConfig(is, SchedulerConfig.class);
         initJdbc();
         initIps();
+        //主ip
         masterIp = new IpAddr(config.getSchedulerMaster());
+
+        InetAddress addr = InetAddress.getLocalHost();
+        myIp = new IpAddr(addr.getHostAddress(), config.getPort());
+
+        if (config.getSchedulerIps() != null) {
+            String[] schedulerIps = config.getSchedulerIps().split(",");
+            for (String ip : schedulerIps) {
+                this.schedulerIps.add(new IpAddr(ip));
+            }
+        }
     }
 
     private void initJdbc() {

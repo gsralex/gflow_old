@@ -6,6 +6,8 @@ import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
 import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
 import com.gsralex.gflow.scheduler.client.action.scheduler.ExecutorHbReq;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +20,7 @@ import java.util.Map;
  */
 public class MExecutorHbProcess implements ExecutorHbProcess {
 
+    private static Logger LOG = LoggerFactory.getLogger(MExecutorHbProcess.class);
     private Map<IpAddr, ExecutorNode> nodeMap = new HashMap<>();
     private boolean interrupt;
     private SchedulerContext context;
@@ -37,12 +40,15 @@ public class MExecutorHbProcess implements ExecutorHbProcess {
 
     public void heartBeat(IpAddr ip, String tag) {
         synchronized (nodeMap) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Heartbeat from Executor ip:{},myIp:{}", ip, context.getMyIp());
+            }
             ExecutorNode node = nodeMap.get(ip);
             if (node != null) {
                 node.setTag(tag);
                 node.setLastHbTime(System.currentTimeMillis());
                 if (!node.isOnline()) {
-                    masterNotifyNode(node);
+                    notifySlaveNode(node);
                 }
                 node.setOnline(true);
                 nodeMap.notify();
@@ -53,7 +59,7 @@ public class MExecutorHbProcess implements ExecutorHbProcess {
                 node.setOnline(true);
                 node.setLastHbTime(System.currentTimeMillis());
                 nodeMap.put(ip, node);
-                masterNotifyNode(node);
+                notifySlaveNode(node);
                 nodeMap.notify();
             }
         }
@@ -93,7 +99,7 @@ public class MExecutorHbProcess implements ExecutorHbProcess {
                         long timeSpan = System.currentTimeMillis() - node.getLastHbTime();
                         if (timeSpan > TimeConstants.HEARTBEAT_INTERVEL * TimeConstants.LOSE_TIMES) {
                             node.setOnline(false);
-                            masterNotifyNode(node);
+                            notifySlaveNode(node);
                         }
                     }
                 }
@@ -107,17 +113,21 @@ public class MExecutorHbProcess implements ExecutorHbProcess {
     /**
      * master scheduler通知
      */
-    private void masterNotifyNode(ExecutorNode node) {
-        List<IpAddr> ipList = context.getSchedulerIps();
+    private void notifySlaveNode(ExecutorNode node) {
+        List<IpAddr> ipList = context.getHbContext().getmSchedulerHbProcess().listOnlineSlaveIp();
         //轮播
         for (IpAddr nodeIp : ipList) {
-            SchedulerClient client = new SchedulerClientFactory().create(nodeIp, context.getAccessToken());
-            ExecutorHbReq req = new ExecutorHbReq();
-            req.setIp(node.getIp().getIp());
-            req.setPort(node.getIp().getPort());
-            req.setOnline(node.isOnline());
-            req.setTag(node.getTag());
-            client.updateExecutorNode(req);
+            try {
+                SchedulerClient client = new SchedulerClientFactory().create(nodeIp, context.getAccessToken());
+                ExecutorHbReq req = new ExecutorHbReq();
+                req.setIp(node.getIp().getIp());
+                req.setPort(node.getIp().getPort());
+                req.setOnline(node.isOnline());
+                req.setTag(node.getTag());
+                client.updateExecutorNode(req);
+            } catch (Exception e) {
+                LOG.error("MExecutorHbProcess.notifySlaveNode ip:{}", nodeIp, e);
+            }
         }
     }
 

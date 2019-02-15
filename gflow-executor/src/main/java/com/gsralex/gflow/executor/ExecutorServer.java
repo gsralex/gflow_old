@@ -1,5 +1,6 @@
 package com.gsralex.gflow.executor;
 
+import com.gsralex.gflow.executor.hb.ExecutorHbProcess;
 import com.gsralex.gflow.executor.server.TExecutorServer;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
@@ -34,7 +35,10 @@ public class ExecutorServer {
         LOGGER.info("port:{}", context.getConfig().getPort());
         TExecutorServer server = new TExecutorServer(context);
         server.start();
+        LOGGER.info("====== ExecutorServer STARTED ======");
 
+        ExecutorHbProcess process = new ExecutorHbProcess(context);
+        process.start();
     }
 
     public static void main(String[] args) throws IOException, TTransportException {

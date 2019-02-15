@@ -71,13 +71,17 @@ public class IpAddr {
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
-
-
-        return super.equals(obj);
+        if (obj instanceof IpAddr) {
+            IpAddr ip = (IpAddr) obj;
+            if (ip.getIp().equals(this.ip) && ip.getPort() == this.port) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return this.ip.hashCode() ^ this.port;
     }
 }

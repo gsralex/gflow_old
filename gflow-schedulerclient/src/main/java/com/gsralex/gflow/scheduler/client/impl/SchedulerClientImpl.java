@@ -63,7 +63,6 @@ public class SchedulerClientImpl implements SchedulerClient {
     @Override
     public ScheduleGroupResp scheduleGroup(ScheduleGroupReq req) {
         class Callback implements ClientCallback<ScheduleGroupResp> {
-
             @Override
             public ScheduleGroupResp doAction(TScheduleService.Client client) throws TException {
                 TGroupJobReq tReq = new TGroupJobReq();
@@ -84,7 +83,6 @@ public class SchedulerClientImpl implements SchedulerClient {
     @Override
     public Resp ack(AckReq req) {
         class Callback implements ClientCallback<Resp> {
-
             @Override
             public Resp doAction(TScheduleService.Client client) throws TException {
                 TAckReq tReq = new TAckReq();
@@ -112,7 +110,6 @@ public class SchedulerClientImpl implements SchedulerClient {
             @Override
             public Resp doAction(TScheduleService.Client client) throws TException {
                 TExecutorHbReq tReq = new TExecutorHbReq();
-                tReq.setOnline(req.isOnline());
                 tReq.setIp(req.getIp());
                 tReq.setPort(req.getPort());
                 tReq.setTag(req.getTag());

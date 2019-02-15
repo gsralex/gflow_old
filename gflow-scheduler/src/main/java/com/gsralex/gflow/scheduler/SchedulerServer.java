@@ -6,7 +6,7 @@ import com.gsralex.gflow.scheduler.hb.SExecutorHbProcess;
 import com.gsralex.gflow.scheduler.hb.SSchedulerHbProcess;
 import com.gsralex.gflow.scheduler.parameter.DynamicParam;
 import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
-import com.gsralex.gflow.scheduler.server.ThriftSchedulerServer;
+import com.gsralex.gflow.scheduler.server.TSchedulerServer;
 import com.gsralex.gflow.scheduler.timer.TimerProcess;
 import com.gsralex.gflow.scheduler.timer.TimerRecovery;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -41,7 +41,7 @@ public class SchedulerServer {
 
     public void serve() throws ScheduleTransportException, IOException {
         LOGGER.info("====== SchedulerServer STARTING ======");
-        ThriftSchedulerServer server = new ThriftSchedulerServer(context);
+        TSchedulerServer server = new TSchedulerServer(context);
         server.start();
         LOGGER.info("====== SchedulerServer STARTED ======");
 
@@ -52,16 +52,26 @@ public class SchedulerServer {
             TimerRecovery timerRecovery = new TimerRecovery(timerProcess, context);
             timerRecovery.recovery();
 
+            //scheduler 心跳监测
+            MSchedulerHbProcess schedulerHbProcess = new MSchedulerHbProcess(context);
+            schedulerHbProcess.start();
             //executor 心跳监测
             MExecutorHbProcess executorHbProcess = new MExecutorHbProcess(context);
             executorHbProcess.start();
 
-            MSchedulerHbProcess schedulerHbProcess = new MSchedulerHbProcess();
-            schedulerHbProcess.start();
+            HbContext hbContext = new HbContext();
+            hbContext.setmSchedulerHbProcess(schedulerHbProcess);
+            hbContext.setmExecutorHbProcess(executorHbProcess);
+            context.setHbContext(hbContext);
         } else {
             SExecutorHbProcess executorHbProcess = new SExecutorHbProcess();
-            SSchedulerHbProcess sSchedulerHbProcess = new SSchedulerHbProcess(context);
-            sSchedulerHbProcess.start();
+            SSchedulerHbProcess schedulerHbProcess = new SSchedulerHbProcess(context);
+            schedulerHbProcess.start();
+
+            HbContext hbContext = new HbContext();
+            hbContext.setsSchedulerHbProcess(schedulerHbProcess);
+            hbContext.setsExecutorHbProcess(executorHbProcess);
+            context.setHbContext(hbContext);
         }
     }
 

@@ -40,10 +40,10 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <excludes>
-                    <exclude>*.properties</exclude>
-                </excludes>
+                <!--<filtering>true</filtering>-->
+                <!--<excludes>-->
+                    <!--<exclude>*.properties</exclude>-->
+                <!--</excludes>-->
             </resource>
         </resources>
     </build>
@@ -56,6 +56,11 @@
         <dependency>
             <groupId>com.gsralex.gflow</groupId>
             <artifactId>gflow-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.gsralex.gflow</groupId>
+            <artifactId>gflow-schedulerclient</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

@@ -1,28 +1,27 @@
-package com.gsralex.gflow.scheduler.hb;
+package com.gsralex.gflow.executor.hb;
 
 import com.gsralex.gflow.core.constants.TimeConstants;
 import com.gsralex.gflow.core.context.IpAddr;
-import com.gsralex.gflow.scheduler.SchedulerContext;
+import com.gsralex.gflow.core.util.IpSelector;
+import com.gsralex.gflow.executor.ExecutorContext;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
 import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
-import com.gsralex.gflow.scheduler.client.action.scheduler.ScheduleHbReq;
+import com.gsralex.gflow.scheduler.client.action.scheduler.ExecutorHbReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * slave scheduler 心跳处理
- * 向master上报心跳
- *
  * @author gsralex
- * @version 2019/2/14
+ * @version 2019/2/15
  */
-public class SSchedulerHbProcess {
+public class ExecutorHbProcess {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SSchedulerHbProcess.class);
-    private SchedulerContext context;
+    private static final Logger LOG = LoggerFactory.getLogger(ExecutorHbProcess.class);
+
+    private ExecutorContext context;
     private boolean interrupt;
 
-    public SSchedulerHbProcess(SchedulerContext context) {
+    public ExecutorHbProcess(ExecutorContext context) {
         this.context = context;
     }
 
@@ -36,21 +35,23 @@ public class SSchedulerHbProcess {
     }
 
     public void stop() {
-        interrupt = false;
+        interrupt = true;
     }
 
     private void mainLoop() {
+        IpSelector ipSelector = new IpSelector(context.getScheduleIps());
         while (!interrupt) {
             try {
-                IpAddr masterIp = context.getMasterIp();
-                SchedulerClient client = SchedulerClientFactory.create(masterIp, context.getAccessToken());
-                ScheduleHbReq req = new ScheduleHbReq();
+                IpAddr schedulerIp = ipSelector.getIp();
+                SchedulerClient client = SchedulerClientFactory.create(schedulerIp, context.getAccessToken());
+                ExecutorHbReq req = new ExecutorHbReq();
                 IpAddr myIp = context.getMyIp();
                 req.setIp(myIp.getIp());
                 req.setPort(myIp.getPort());
-                client.schedulerHb(req);
+                req.setTag(context.getConfig().getTag());
+                client.executorHb(req);
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("Salve Scheduler Heartbeat masterIp:{},myIp:{}", masterIp.toString(), myIp.toString());
+                    LOG.debug("Executor heartbeat ip:{},myIp:{}", schedulerIp.toString(), myIp.toString());
                 }
                 Thread.sleep(TimeConstants.HEARTBEAT_INTERVEL);
             } catch (Exception e) {

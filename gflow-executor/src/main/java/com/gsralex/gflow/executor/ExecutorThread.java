@@ -1,8 +1,12 @@
 package com.gsralex.gflow.executor;
 
+import com.gsralex.gflow.core.constants.ErrConstants;
 import com.gsralex.gflow.core.context.Parameter;
 import com.gsralex.gflow.core.thriftgen.scheduler.TJobReq;
-import com.gsralex.gflow.executor.client.TExecutorClient;
+import com.gsralex.gflow.core.util.IpSelector;
+import com.gsralex.gflow.scheduler.client.SchedulerClient;
+import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
+import com.gsralex.gflow.scheduler.client.action.scheduler.AckReq;
 import org.apache.log4j.Logger;
 
 /**
@@ -16,11 +20,14 @@ public class ExecutorThread implements Runnable {
     private AckExecuteProcess ackProcess;
     private Parameter parameter;
     private TJobReq req;
-    private TExecutorClient client;
+    private ExecutorContext context;
+
+    private IpSelector ipSelector;
 
     public ExecutorThread(ExecuteProcess process, ExecutorContext context) {
         this.process = process;
-        this.client = new TExecutorClient(context);
+        this.ipSelector = new IpSelector(context.getScheduleIps());
+        this.context = context;
     }
 
     public ExecutorThread(AckExecuteProcess ackProcess) {
@@ -46,7 +53,12 @@ public class ExecutorThread implements Runnable {
             } catch (Exception e) {
                 LOGGER.error(process.getClass().getName() + ":" + e);
             }
-            client.ack(jobReq.getJobId(), ok);
+
+            SchedulerClient client = SchedulerClientFactory.create(ipSelector.getIp(), context.getAccessToken());
+            AckReq req = new AckReq();
+            req.setJobId(req.getJobId());
+            req.setCode(ok ? ErrConstants.OK : ErrConstants.ERR_INTERNAL);
+            client.ack(req);
         } else if (ackProcess != null) {
             try {
                 ackProcess.process(jobReq);

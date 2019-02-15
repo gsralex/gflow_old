@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * 只接受master的更新executor状态
+ *
  * @author gsralex
  * @version 2019/2/14
  */
@@ -29,7 +30,6 @@ public class SExecutorHbProcess implements ExecutorHbProcess {
         ExecutorNode node = nodeMap.get(ip);
         if (node != null) {
             node.setTag(tag);
-            node.setOnline(true);
             node.setOnline(online);
         } else {
             //全新节点加入
