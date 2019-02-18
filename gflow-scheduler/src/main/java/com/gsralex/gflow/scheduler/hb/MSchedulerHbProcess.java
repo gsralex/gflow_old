@@ -27,7 +27,7 @@ public class MSchedulerHbProcess {
         this.context = context;
     }
 
-    private Map<IpAddr, SchedulerNode> nodeMap = new HashMap<>();
+    private static Map<IpAddr, SchedulerNode> nodeMap = new HashMap<>();
     private boolean interrupt;
 
     public void setIps(List<IpAddr> list) {

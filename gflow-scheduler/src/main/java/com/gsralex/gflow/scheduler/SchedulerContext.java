@@ -8,6 +8,7 @@ import com.gsralex.gflow.scheduler.config.SchedulerConfig;
 import com.gsralex.gflow.scheduler.flow.FlowGuideMap;
 import com.gsralex.gflow.scheduler.parameter.DynamicParam;
 import com.gsralex.gflow.scheduler.parameter.DynamicParamContext;
+import com.gsralex.gflow.scheduler.timer.TimerProcess;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import java.io.IOException;
@@ -51,9 +52,12 @@ public class SchedulerContext {
     private List<IpAddr> schedulerIps = new ArrayList<>();
 
 
+
     private String accessToken;
 
     private HbContext hbContext;
+
+    private TimerProcess timerProcess;
 
     public void init() throws IOException {
         InputStream is = PropertiesUtils.class.getResourceAsStream(CONFIG_FILEPATH);
@@ -121,6 +125,10 @@ public class SchedulerContext {
         return master;
     }
 
+    public void setMaster(boolean master) {
+        this.master = master;
+    }
+
     public void setSchedulerIps(List<IpAddr> schedulerIps) {
         this.schedulerIps = schedulerIps;
     }
@@ -150,6 +158,14 @@ public class SchedulerContext {
         this.hbContext = hbContext;
     }
 
+    public TimerProcess getTimerProcess() {
+        return timerProcess;
+    }
+
+    public void setTimerProcess(TimerProcess timerProcess) {
+        this.timerProcess = timerProcess;
+    }
+
     /**
      * 获取executor ip
      *
@@ -168,4 +184,7 @@ public class SchedulerContext {
         return masterIp;
     }
 
+    public void setMasterIp(IpAddr masterIp) {
+        this.masterIp = masterIp;
+    }
 }

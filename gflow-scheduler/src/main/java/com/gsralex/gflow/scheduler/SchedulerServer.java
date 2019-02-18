@@ -1,14 +1,11 @@
 package com.gsralex.gflow.scheduler;
 
-import com.gsralex.gflow.scheduler.hb.MExecutorHbProcess;
-import com.gsralex.gflow.scheduler.hb.MSchedulerHbProcess;
-import com.gsralex.gflow.scheduler.hb.SExecutorHbProcess;
-import com.gsralex.gflow.scheduler.hb.SSchedulerHbProcess;
+import com.gsralex.gflow.scheduler.ha.MasterSwitchAction;
+import com.gsralex.gflow.scheduler.ha.SlaveSwitchAction;
+import com.gsralex.gflow.scheduler.ha.ZkRegisterMaster;
 import com.gsralex.gflow.scheduler.parameter.DynamicParam;
 import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
 import com.gsralex.gflow.scheduler.server.TSchedulerServer;
-import com.gsralex.gflow.scheduler.timer.TimerProcess;
-import com.gsralex.gflow.scheduler.timer.TimerRecovery;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -45,33 +42,26 @@ public class SchedulerServer {
         server.start();
         LOGGER.info("====== SchedulerServer STARTED ======");
 
+        //如果有zk，则用zk注册master
+        String zkServer = context.getConfig().getZkServer();
+        if (zkServer != null && zkServer.length() != 0) {
+            ZkRegisterMaster zkRegisterMaster = new ZkRegisterMaster(context);
+            if (zkRegisterMaster.registerMaster()) {
+                context.setMaster(true);
+                context.setMasterIp(context.getMyIp());
+            } else {
+                zkRegisterMaster.subscribe();
+                context.setMaster(false);
+                context.setMasterIp(zkRegisterMaster.getMasterIp());
+            }
+        }
         if (context.isMaster()) {
             //定时任务
-            TimerProcess timerProcess = new TimerProcess(context);
-            timerProcess.start();
-            TimerRecovery timerRecovery = new TimerRecovery(timerProcess, context);
-            timerRecovery.recovery();
-
-            //scheduler 心跳监测
-            MSchedulerHbProcess schedulerHbProcess = new MSchedulerHbProcess(context);
-            schedulerHbProcess.start();
-            //executor 心跳监测
-            MExecutorHbProcess executorHbProcess = new MExecutorHbProcess(context);
-            executorHbProcess.start();
-
-            HbContext hbContext = new HbContext();
-            hbContext.setmSchedulerHbProcess(schedulerHbProcess);
-            hbContext.setmExecutorHbProcess(executorHbProcess);
-            context.setHbContext(hbContext);
+            MasterSwitchAction master = new MasterSwitchAction(context);
+            master.start();
         } else {
-            SExecutorHbProcess executorHbProcess = new SExecutorHbProcess();
-            SSchedulerHbProcess schedulerHbProcess = new SSchedulerHbProcess(context);
-            schedulerHbProcess.start();
-
-            HbContext hbContext = new HbContext();
-            hbContext.setsSchedulerHbProcess(schedulerHbProcess);
-            hbContext.setsExecutorHbProcess(executorHbProcess);
-            context.setHbContext(hbContext);
+            SlaveSwitchAction slave = new SlaveSwitchAction(context);
+            slave.start();
         }
     }
 
