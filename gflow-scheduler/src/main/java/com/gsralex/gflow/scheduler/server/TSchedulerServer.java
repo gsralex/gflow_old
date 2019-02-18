@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public class TSchedulerServer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TSchedulerServer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TSchedulerServer.class);
 
     private TScheduleServiceImpl scheduleService;
     private SchedulerContext context;
@@ -47,7 +47,7 @@ public class TSchedulerServer {
             }).start();
 
         } catch (TTransportException e) {
-            LOGGER.error("TSchedulerServer.start", e);
+            LOG.error("TSchedulerServer.start", e);
             throw new ScheduleTransportException(e);
         }
     }

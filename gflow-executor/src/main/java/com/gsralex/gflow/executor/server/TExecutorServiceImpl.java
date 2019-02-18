@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 public class TExecutorServiceImpl implements TExecutorService.Iface {
 
 
-    private static final Logger LOGGER = Logger.getLogger(TExecutorServiceImpl.class);
+    private static final Logger LOG = Logger.getLogger(TExecutorServiceImpl.class);
     private ExecutorService executorService;
 
     private ExecutorContext context;
@@ -62,7 +62,7 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
         } catch (Exception e) {
             errMsg = e.getMessage();
             code = ErrConstants.ERR_INTERNAL;
-            LOGGER.error("TExecutorServiceImpl.schedule", e);
+            LOG.error("TExecutorServiceImpl.schedule", e);
         }
         TResp resp = new TResp();
         resp.setCode(code);

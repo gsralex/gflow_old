@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ClientWrapper {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(ClientWrapper.class);
+    private static Logger LOG = LoggerFactory.getLogger(ClientWrapper.class);
 
     public static <T> T execute(ClientCallback<T> callback, IpAddr ip) {
         TTransport transport = new TSocket(ip.getIp(), ip.getPort());
@@ -27,7 +27,7 @@ public class ClientWrapper {
             TScheduleService.Client client = new TScheduleService.Client(multiProtocol);
             return callback.doAction(client);
         } catch (Exception e) {
-            LOGGER.error("SchedulerClient.execute", e);
+            LOG.error("SchedulerClient.execute", e);
             throw new ClientTransportException(e);
         } finally {
             if (transport != null) {

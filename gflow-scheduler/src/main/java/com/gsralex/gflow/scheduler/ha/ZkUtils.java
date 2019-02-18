@@ -20,6 +20,7 @@ public class ZkUtils {
         for (ZkNode node : list) {
             if (node.isParent()) {
                 if (!zkClient.exists(node.path)) {
+                    //临时节点的不存在子节点，所以父级是持久化节点
                     zkClient.create(node.path, node.path, CreateMode.PERSISTENT);
                 }
             } else {

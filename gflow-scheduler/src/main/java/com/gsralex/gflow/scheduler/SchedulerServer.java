@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  */
 public class SchedulerServer {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(SchedulerServer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SchedulerServer.class);
 
     private SchedulerContext context;
 
@@ -37,10 +37,10 @@ public class SchedulerServer {
     }
 
     public void serve() throws ScheduleTransportException, IOException {
-        LOGGER.info("====== SchedulerServer STARTING ======");
+        LOG.info("====== SchedulerServer STARTING ======");
         TSchedulerServer server = new TSchedulerServer(context);
         server.start();
-        LOGGER.info("====== SchedulerServer STARTED ======");
+        LOG.info("====== SchedulerServer STARTED ======");
 
         //如果有zk，则用zk注册master
         String zkServer = context.getConfig().getZkServer();

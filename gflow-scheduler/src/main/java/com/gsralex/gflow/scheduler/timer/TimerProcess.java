@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class TimerProcess {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TimerProcess.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TimerProcess.class);
 
     private Map<Long, TimerTask> map = new HashMap<>();
     private SchedulerService schedulerService;
@@ -139,7 +139,7 @@ public class TimerProcess {
                     }
                 }
             } catch (Exception e) {
-                LOGGER.error("TimerProcess.mainLoop", e);
+                LOG.error("TimerProcess.mainLoop", e);
             }
         }
     }

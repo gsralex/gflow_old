@@ -17,7 +17,7 @@ import java.io.IOException;
 public class ExecutorServer {
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ExecutorServer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ExecutorServer.class);
 
     private ExecutorContext context;
 
@@ -31,11 +31,11 @@ public class ExecutorServer {
     }
 
     public void serve() throws TTransportException {
-        LOGGER.info("====== ExecutorServer STARTING ======");
-        LOGGER.info("port:{}", context.getConfig().getPort());
+        LOG.info("====== ExecutorServer STARTING ======");
+        LOG.info("port:{}", context.getConfig().getPort());
         TExecutorServer server = new TExecutorServer(context);
         server.start();
-        LOGGER.info("====== ExecutorServer STARTED ======");
+        LOG.info("====== ExecutorServer STARTED ======");
 
         ExecutorHbProcess process = new ExecutorHbProcess(context);
         process.start();

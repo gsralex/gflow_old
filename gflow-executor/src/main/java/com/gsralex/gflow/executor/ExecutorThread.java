@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
  */
 public class ExecutorThread implements Runnable {
 
-    private static final Logger LOGGER = Logger.getLogger(ExecutorThread.class);
+    private static final Logger LOG = Logger.getLogger(ExecutorThread.class);
     private ExecuteProcess process;
     private AckExecuteProcess ackProcess;
     private Parameter parameter;
@@ -51,7 +51,7 @@ public class ExecutorThread implements Runnable {
             try {
                 ok = process.process(jobReq);
             } catch (Exception e) {
-                LOGGER.error(process.getClass().getName() + ":" + e);
+                LOG.error(process.getClass().getName() + ":" + e);
             }
 
             SchedulerClient client = SchedulerClientFactory.create(ipSelector.getIp(), context.getAccessToken());
@@ -63,7 +63,7 @@ public class ExecutorThread implements Runnable {
             try {
                 ackProcess.process(jobReq);
             } catch (Exception e) {
-                LOGGER.error(ackProcess.getClass().getName() + ":" + e);
+                LOG.error(ackProcess.getClass().getName() + ":" + e);
             }
         }
     }
