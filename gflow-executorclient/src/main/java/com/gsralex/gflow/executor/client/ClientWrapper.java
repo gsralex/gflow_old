@@ -18,7 +18,6 @@ public class ClientWrapper {
 
     private static Logger LOG = LoggerFactory.getLogger(ClientWrapper.class);
 
-
     public static <T> T execute(ClientCallback<T> callback, IpAddr ip) throws TException {
         LOG.debug("TRpcClient.send ip:" + ip.getIp() + ",port:" + ip.getPort());
         TTransport transport = new TSocket(ip.getIp(), ip.getPort());

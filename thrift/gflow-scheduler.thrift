@@ -101,8 +101,21 @@ struct TExecutorHbReq{
 struct TScheduleHbReq{
     1:string ip
     2:i32 port
-    3:string accessToken
+    3:string online
+    4:string accessToken
 }
+
+struct TNode{
+    1:string ip;
+    2:i32 port;
+}
+
+struct TNodeResp{
+    1:i32 code;
+    2:string msg;
+    3:list<TNode> nodeList;
+}
+
 
 service TScheduleService{
     //调度action
@@ -123,6 +136,8 @@ service TScheduleService{
     gflow.TResp schedulerHb(1:TScheduleHbReq req);
     //更新executor节点
     gflow.TResp updateExecutorNode(1:TExecutorHbReq req);
+    //获取所有的调度节点
+    TNodeResp listSchedulerNode(1:gflow.TReq req);
 
     string serverStatus();
 
@@ -135,4 +150,5 @@ service TScheduleService{
 
 service TExecutorService{
     gflow.TResp schedule(1:TJobReq desc);
+    gflow.TResp updateSchedulerNode(1:TScheduleHbReq req);
 }

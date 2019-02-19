@@ -7,6 +7,10 @@ struct TResp{
 }
 
 
+struct TReq{
+    1:string accessToken;
+}
+
 exception TRespException{
     1: required i32 code;
     2: optional string msg;

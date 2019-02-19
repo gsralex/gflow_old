@@ -14,8 +14,4 @@ public class ExecutorClientFactory {
     public static ExecutorClient create(IpAddr ip, String accessToken) {
         return new ExecutorClientImpl(ip, accessToken);
     }
-
-    public static ExecutorClient create(List<IpAddr> ipList, String accessToken) {
-        return new ExecutorClientImpl(ipList, accessToken);
-    }
 }

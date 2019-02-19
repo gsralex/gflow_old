@@ -1,9 +1,9 @@
 package com.gsralex.gflow.executor.hb;
 
+import com.gsralex.gflow.executor.ExecutorContext;
 import com.gsralex.gflow.pub.constants.TimeConstants;
 import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.pub.util.IpSelector;
-import com.gsralex.gflow.executor.ExecutorContext;
+import com.gsralex.gflow.pub.context.IpSeqSelector;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
 import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
 import com.gsralex.gflow.scheduler.client.action.scheduler.ExecutorHbReq;
@@ -39,9 +39,10 @@ public class ExecutorHbProcess {
     }
 
     private void mainLoop() {
-        IpSelector ipSelector = new IpSelector(context.getScheduleIps());
+        IpSeqSelector ipSelector = new IpSeqSelector(context.getSchedulerHbProcess().listOnlineIp());
         while (!interrupt) {
             try {
+                ipSelector.setIpList(context.getSchedulerHbProcess().listOnlineIp());
                 IpAddr schedulerIp = ipSelector.getIp();
                 SchedulerClient client = SchedulerClientFactory.create(schedulerIp, context.getAccessToken());
                 ExecutorHbReq req = new ExecutorHbReq();

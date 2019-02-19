@@ -11,4 +11,6 @@ import java.util.List;
 public interface ExecutorHbProcess {
 
     List<IpAddr> listOnlineIp(String tag);
+
+    IpAddr getOnlineIpSeq(String tag);
 }

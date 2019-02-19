@@ -24,9 +24,11 @@ public class MExecutorHbProcess implements ExecutorHbProcess {
     private Map<IpAddr, ExecutorNode> nodeMap = new HashMap<>();
     private boolean interrupt;
     private SchedulerContext context;
+    private ExecutorIpSelector ipSelector;
 
     public MExecutorHbProcess(SchedulerContext context) {
         this.context = context;
+        ipSelector = new ExecutorIpSelector();
     }
 
     public void setIps(List<IpAddr> list) {
@@ -148,5 +150,10 @@ public class MExecutorHbProcess implements ExecutorHbProcess {
             }
         }
         return onelineList;
+    }
+
+    @Override
+    public IpAddr getOnlineIpSeq(String tag) {
+        return ipSelector.getTagIpSeq(tag, listOnlineIp(tag));
     }
 }

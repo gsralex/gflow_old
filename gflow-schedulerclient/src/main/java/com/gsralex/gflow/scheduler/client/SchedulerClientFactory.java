@@ -14,8 +14,4 @@ public class SchedulerClientFactory {
     public static SchedulerClient create(IpAddr ip, String accessToken) {
         return new SchedulerClientImpl(ip, accessToken);
     }
-
-    public static SchedulerClient create(List<IpAddr> ipList, String accessToken) {
-        return new SchedulerClientImpl(ipList, accessToken);
-    }
 }

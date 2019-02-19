@@ -78,11 +78,6 @@
                 <version>${gdata.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.gsralex.gflow</groupId>
-                <artifactId>gflow-core</artifactId>
-                <version>${gflow.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${lang3.version}</version>

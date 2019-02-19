@@ -1,14 +1,14 @@
 package com.gsralex.gflow.scheduler.schedule;
 
+import com.gsralex.gflow.executor.client.ExecutorClient;
+import com.gsralex.gflow.executor.client.ExecutorClientFactory;
+import com.gsralex.gflow.executor.client.action.JobReq;
 import com.gsralex.gflow.pub.action.Resp;
-import com.gsralex.gflow.pub.util.SecurityUtils;
 import com.gsralex.gflow.pub.constants.ErrConstants;
 import com.gsralex.gflow.pub.context.IpAddr;
 import com.gsralex.gflow.pub.context.Parameter;
 import com.gsralex.gflow.pub.util.DtUtils;
-import com.gsralex.gflow.executor.client.ExecutorClient;
-import com.gsralex.gflow.executor.client.ExecutorClientFactory;
-import com.gsralex.gflow.executor.client.action.JobReq;
+import com.gsralex.gflow.pub.util.SecurityUtils;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
 import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
@@ -198,9 +198,9 @@ public class SchedulerService {
         req.setClassName(action.getClassName());
         boolean sendOk = false;
         try {
-            List<IpAddr> ipList = context.getExecutorIps(action.getTag());
+            IpAddr ip = context.getExecutorIp(action.getTag());
             String accessToken = SecurityUtils.encrypt(context.getConfig().getAccessKey());
-            ExecutorClient client = ExecutorClientFactory.create(ipList, accessToken);
+            ExecutorClient client = ExecutorClientFactory.create(ip, accessToken);
             Resp resp = client.schedule(req);
             if (resp.getCode() == ErrConstants.OK) {
                 sendOk = true;

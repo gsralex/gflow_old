@@ -16,6 +16,12 @@ import java.util.Map;
 public class SExecutorHbProcess implements ExecutorHbProcess {
 
     private Map<IpAddr, ExecutorNode> nodeMap = new HashMap<>();
+    private ExecutorIpSelector ipSelector;
+
+
+    public SExecutorHbProcess() {
+        ipSelector = new ExecutorIpSelector();
+    }
 
     public void setIps(List<IpAddr> list) {
         for (IpAddr ip : list) {
@@ -58,5 +64,10 @@ public class SExecutorHbProcess implements ExecutorHbProcess {
             }
         }
         return onelineList;
+    }
+
+    @Override
+    public IpAddr getOnlineIpSeq(String tag) {
+        return ipSelector.getTagIpSeq(tag, listOnlineIp(tag));
     }
 }

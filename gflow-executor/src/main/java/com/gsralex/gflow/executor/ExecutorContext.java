@@ -1,5 +1,6 @@
 package com.gsralex.gflow.executor;
 
+import com.gsralex.gflow.executor.hb.SchedulerHbProcess;
 import com.gsralex.gflow.pub.context.IpAddr;
 import com.gsralex.gflow.pub.util.PropertiesUtils;
 import com.gsralex.gflow.executor.config.ExecutorConfig;
@@ -24,13 +25,13 @@ public class ExecutorContext {
 
     private ExecutorConfig config;
 
-    private List<IpAddr> schedulerIps = new ArrayList<>();
     private IpAddr myIp;
 
     private String accessToken;
 
-    private ExecutorContext() {
+    private SchedulerHbProcess schedulerHbProcess;
 
+    private ExecutorContext() {
     }
 
     public static ExecutorContext getInstance() {
@@ -39,17 +40,8 @@ public class ExecutorContext {
 
     public void init() throws IOException {
         config = PropertiesUtils.getConfig(CONFIG_FILEPATH, ExecutorConfig.class);
-        initIps();
         InetAddress addr = InetAddress.getLocalHost();
         this.myIp = new IpAddr(addr.getHostAddress(), config.getPort());
-    }
-
-    private void initIps() {
-        String[] ips = config.getSchedulerIps().split(",");
-        for (String ip : ips) {
-            IpAddr ipAddr = new IpAddr(ip);
-            schedulerIps.add(ipAddr);
-        }
     }
 
     public <T> T getSpringBean(Class<T> type) {
@@ -65,10 +57,6 @@ public class ExecutorContext {
         return this.spring;
     }
 
-    public List<IpAddr> getScheduleIps() {
-        return schedulerIps;
-    }
-
     public IpAddr getMyIp() {
         return myIp;
     }
@@ -79,5 +67,13 @@ public class ExecutorContext {
 
     public String getAccessToken() {
         return accessToken;
+    }
+
+    public SchedulerHbProcess getSchedulerHbProcess() {
+        return schedulerHbProcess;
+    }
+
+    public void setSchedulerHbProcess(SchedulerHbProcess schedulerHbProcess) {
+        this.schedulerHbProcess = schedulerHbProcess;
     }
 }

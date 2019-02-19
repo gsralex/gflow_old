@@ -1,17 +1,24 @@
 package com.gsralex.gflow.scheduler.server;
 
 
-import com.gsralex.gflow.pub.util.SecurityUtils;
 import com.gsralex.gflow.pub.constants.ErrConstants;
 import com.gsralex.gflow.pub.context.IpAddr;
+import com.gsralex.gflow.pub.thriftgen.TReq;
 import com.gsralex.gflow.pub.thriftgen.TResp;
 import com.gsralex.gflow.pub.thriftgen.scheduler.*;
+import com.gsralex.gflow.pub.util.SecurityUtils;
 import com.gsralex.gflow.scheduler.SchedulerContext;
+import com.gsralex.gflow.scheduler.client.SchedulerClient;
+import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
+import com.gsralex.gflow.scheduler.client.action.scheduler.NodeResp;
 import com.gsralex.gflow.scheduler.hb.HbService;
 import com.gsralex.gflow.scheduler.schedule.ActionResult;
 import com.gsralex.gflow.scheduler.schedule.FlowResult;
 import com.gsralex.gflow.scheduler.schedule.SchedulerService;
 import org.apache.thrift.TException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author gsralex
@@ -20,11 +27,13 @@ import org.apache.thrift.TException;
 public class TScheduleServiceImpl implements TScheduleService.Iface {
 
 
+    private SchedulerContext context;
     private SchedulerService schedulerService;
     private HbService hbService;
     private String accessKey;
 
     public TScheduleServiceImpl(SchedulerContext context) {
+        this.context = context;
         accessKey = context.getConfig().getAccessKey();
         schedulerService = new SchedulerService(context);
         hbService = new HbService(context);
@@ -144,11 +153,44 @@ public class TScheduleServiceImpl implements TScheduleService.Iface {
         return resp;
     }
 
+    @Override
+    public TNodeResp listSchedulerNode(TReq req) throws TException {
+        if (context.isMaster()) {
+            TNodeResp tNodeResp = new TNodeResp();
+            List<IpAddr> ipList = context.getHbContext().getmSchedulerHbProcess().listOnlineSlaveIp();
+            tNodeResp.setNodeList(convertTNodeToIp(ipList));
+            return tNodeResp;
+        } else {
+            SchedulerClient client = SchedulerClientFactory.create(context.getMasterIp(), context.getAccessToken());
+            NodeResp nodeResp = client.listSchedulerNode();
+            TNodeResp tNodeResp = new TNodeResp();
+            tNodeResp.setCode(nodeResp.getCode());
+            tNodeResp.setMsg(nodeResp.getMsg());
+            List<IpAddr> ipList = nodeResp.getNodeList();
+            tNodeResp.setNodeList(convertTNodeToIp(ipList));
+            return tNodeResp;
+        }
+    }
+
+    private List<TNode> convertTNodeToIp(List<IpAddr> ipList) {
+        List<TNode> tNodeList = new ArrayList<>();
+        for (IpAddr ip : ipList) {
+            TNode tNode = new TNode();
+            tNode.setIp(ip.getIp());
+            tNode.setPort(ip.getPort());
+            tNodeList.add(tNode);
+        }
+        return tNodeList;
+    }
+
 
     @Override
     public String serverStatus() throws TException {
-        return null;
+        if (context.isMaster()) {
+            return "master";
+        } else {
+            return "slave";
+        }
     }
-
 
 }

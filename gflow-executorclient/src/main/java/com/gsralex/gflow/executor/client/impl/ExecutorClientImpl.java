@@ -1,20 +1,17 @@
 package com.gsralex.gflow.executor.client.impl;
 
+import com.gsralex.gflow.executor.client.ClientCallback;
+import com.gsralex.gflow.executor.client.ClientWrapper;
+import com.gsralex.gflow.executor.client.ExecutorClient;
+import com.gsralex.gflow.executor.client.action.JobReq;
 import com.gsralex.gflow.pub.action.Resp;
 import com.gsralex.gflow.pub.context.IpAddr;
 import com.gsralex.gflow.pub.thriftgen.TResp;
 import com.gsralex.gflow.pub.thriftgen.scheduler.TExecutorService;
 import com.gsralex.gflow.pub.thriftgen.scheduler.TJobReq;
-import com.gsralex.gflow.pub.util.IpSelector;
-import com.gsralex.gflow.executor.client.ClientCallback;
-import com.gsralex.gflow.executor.client.ClientWrapper;
-import com.gsralex.gflow.executor.client.ExecutorClient;
-import com.gsralex.gflow.executor.client.action.JobReq;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 /**
  * @author gsralex
@@ -24,17 +21,11 @@ public class ExecutorClientImpl implements ExecutorClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExecutorClientImpl.class);
 
-    private IpSelector ipSelector;
+    private IpAddr ip;
     private String accessToken;
 
-
-    public ExecutorClientImpl(List<IpAddr> ipList, String accessToken) {
-        this.ipSelector = new IpSelector(ipList);
-        this.accessToken = accessToken;
-    }
-
     public ExecutorClientImpl(IpAddr ip, String accessToken) {
-        this.ipSelector = new IpSelector(ip);
+        this.ip = ip;
         this.accessToken = accessToken;
     }
 
@@ -60,6 +51,6 @@ public class ExecutorClientImpl implements ExecutorClient {
             }
         }
 
-        return ClientWrapper.execute(new Callback(), ipSelector.getIp());
+        return ClientWrapper.execute(new Callback(), ip);
     }
 }

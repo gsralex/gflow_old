@@ -1,18 +1,20 @@
 package com.gsralex.gflow.scheduler.client.impl;
 
+import com.gsralex.gflow.pub.action.Req;
+import com.gsralex.gflow.pub.action.Resp;
 import com.gsralex.gflow.pub.context.IpAddr;
+import com.gsralex.gflow.pub.thriftgen.TReq;
 import com.gsralex.gflow.pub.thriftgen.TResp;
 import com.gsralex.gflow.pub.thriftgen.scheduler.*;
-import com.gsralex.gflow.pub.util.IpSelector;
 import com.gsralex.gflow.scheduler.client.ClientCallback;
 import com.gsralex.gflow.scheduler.client.ClientWrapper;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
-import com.gsralex.gflow.pub.action.Resp;
 import com.gsralex.gflow.scheduler.client.action.scheduler.*;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,17 +26,13 @@ public class SchedulerClientImpl implements SchedulerClient {
     private static final Logger LOG = LoggerFactory.getLogger(SchedulerClientImpl.class);
 
     private String accessToken;
-    private IpSelector ipSelector;
+    private IpAddr ip;
 
     public SchedulerClientImpl(IpAddr ip, String accessToken) {
-        this.ipSelector = new IpSelector(ip);
+        this.ip = ip;
         this.accessToken = accessToken;
     }
 
-    public SchedulerClientImpl(List<IpAddr> ipList, String accessToken) {
-        this.ipSelector = new IpSelector(ipList);
-        this.accessToken = accessToken;
-    }
 
     @Override
     public JobResp scheduleAction(JobReq req) {
@@ -57,7 +55,7 @@ public class SchedulerClientImpl implements SchedulerClient {
                 return resp;
             }
         }
-        return ClientWrapper.execute(new Callback(), ipSelector.getIp());
+        return ClientWrapper.execute(new Callback(), this.ip);
     }
 
     @Override
@@ -77,7 +75,7 @@ public class SchedulerClientImpl implements SchedulerClient {
                 return resp;
             }
         }
-        return ClientWrapper.execute(new Callback(), ipSelector.getIp());
+        return ClientWrapper.execute(new Callback(), this.ip);
     }
 
     @Override
@@ -96,7 +94,7 @@ public class SchedulerClientImpl implements SchedulerClient {
                 return resp;
             }
         }
-        return ClientWrapper.execute(new Callback(), ipSelector.getIp());
+        return ClientWrapper.execute(new Callback(), this.ip);
     }
 
     @Override
@@ -120,7 +118,7 @@ public class SchedulerClientImpl implements SchedulerClient {
                 return resp;
             }
         }
-        return ClientWrapper.execute(new Callback(), ipSelector.getIp());
+        return ClientWrapper.execute(new Callback(), this.ip);
     }
 
     @Override
@@ -138,7 +136,7 @@ public class SchedulerClientImpl implements SchedulerClient {
                 return resp;
             }
         }
-        return ClientWrapper.execute(new Callback(), ipSelector.getIp());
+        return ClientWrapper.execute(new Callback(), this.ip);
     }
 
     @Override
@@ -156,6 +154,29 @@ public class SchedulerClientImpl implements SchedulerClient {
                 return resp;
             }
         }
-        return ClientWrapper.execute(new Callback(), ipSelector.getIp());
+        return ClientWrapper.execute(new Callback(), this.ip);
+    }
+
+    @Override
+    public NodeResp listSchedulerNode() {
+        class Callback implements ClientCallback<NodeResp> {
+            @Override
+            public NodeResp doAction(TScheduleService.Client client) throws TException {
+                TReq tReq = new TReq();
+                tReq.setAccessToken(accessToken);
+                TNodeResp tResp = client.listSchedulerNode(tReq);
+                NodeResp resp = new NodeResp();
+                resp.setCode(tResp.getCode());
+                resp.setMsg(tResp.getMsg());
+                List<TNode> tNodeList = tResp.getNodeList();
+                List<IpAddr> nodeList = new ArrayList<>();
+                for (TNode tNode : tNodeList) {
+                    nodeList.add(new IpAddr(tNode.getIp(), tNode.getPort()));
+                }
+                resp.setNodeList(nodeList);
+                return resp;
+            }
+        }
+        return ClientWrapper.execute(new Callback(), this.ip);
     }
 }
