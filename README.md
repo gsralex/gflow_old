@@ -1,7 +1,7 @@
 # gflow
 分布式流程调度
 适用于大数据流程调度，工作流调度开发
-![blockchain](https://upload-images.jianshu.io/upload_images/1366612-329bbcadd90ea89a.png "gflow")
+![gflow](https://upload-images.jianshu.io/upload_images/1366612-329bbcadd90ea89a.png "gflow")
 
 
 ### scheduler
@@ -11,3 +11,8 @@ scheduler支持主从结构，在一个scheduler集群中仅有一台是master�
 ### executor
 executor
 executor采用tag标记，具有相同tag标记的executor为提供功能一致的executor，在executor端，scheduler的主从结构对于executor来说是透明的。
+
+
+### 心跳机制
+![gflow](https://upload-images.jianshu.io/upload_images/1366612-6106527002ba97bd.png "gflow")
+使用心跳来确保scheduler和executor在线状态
