@@ -16,11 +16,13 @@ public class SchedulerConfig {
     private String dbPrefix;
     @PropertyName(name = "gflow.zk.server")
     private String zkServer;
+    @PropertyName(name = "gflow.zk.active")
+    private Boolean zkActive;
     @PropertyName(name = "gflow.port")
     private Integer port;
     @PropertyName(name = "gflow.executer.ips")
     private String executorIps;
-    @PropertyName(name="gflow.scheduler.ips")
+    @PropertyName(name = "gflow.scheduler.ips")
     private String schedulerIps;
     @PropertyName(name = "gflow.scheduler.master")
     private String schedulerMaster;
@@ -74,6 +76,14 @@ public class SchedulerConfig {
 
     public void setZkServer(String zkServer) {
         this.zkServer = zkServer;
+    }
+
+    public Boolean getZkActive() {
+        return zkActive;
+    }
+
+    public void setZkActive(Boolean zkActive) {
+        this.zkActive = zkActive;
     }
 
     public Integer getPort() {

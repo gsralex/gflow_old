@@ -43,8 +43,8 @@ public class SchedulerServer {
         LOG.info("====== SchedulerServer STARTED ======");
 
         //如果有zk，则用zk注册master
-        String zkServer = context.getConfig().getZkServer();
-        if (zkServer != null && zkServer.length() != 0) {
+        if (context.getConfig().getZkActive() != null
+                && context.getConfig().getZkActive()) {
             ZkRegisterMaster zkRegisterMaster = new ZkRegisterMaster(context);
             if (zkRegisterMaster.registerMaster()) {
                 context.setMaster(true);
