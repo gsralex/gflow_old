@@ -11,6 +11,11 @@ struct TReq{
     1:string accessToken;
 }
 
+struct TIdReq{
+    1:i64 id,
+    2:string accessToken;
+}
+
 exception TRespException{
     1: required i32 code;
     2: optional string msg;

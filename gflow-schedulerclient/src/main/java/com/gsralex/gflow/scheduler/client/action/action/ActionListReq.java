@@ -1,14 +1,15 @@
-package com.gsralex.gflow.web.req;
+package com.gsralex.gflow.scheduler.client.action.action;
+
+import com.gsralex.gflow.pub.action.Req;
 
 /**
  * @author gsralex
- * @version 2019/2/26
+ * @version 2019/3/3
  */
-public class TimerListReq {
+public class ActionListReq extends Req {
 
     private int pageSize;
     private int pageIndex;
-
 
     public int getPageSize() {
         return pageSize;

@@ -44,7 +44,7 @@ public class ExecutorHbProcess {
             try {
                 ipSelector.setIpList(context.getSchedulerHbProcess().listOnlineIp());
                 IpAddr schedulerIp = ipSelector.getIp();
-                SchedulerClient client = SchedulerClientFactory.create(schedulerIp, context.getAccessToken());
+                SchedulerClient client = SchedulerClientFactory.createScheduler(schedulerIp, context.getAccessToken());
                 ExecutorHbReq req = new ExecutorHbReq();
                 IpAddr myIp = context.getMyIp();
                 req.setIp(myIp.getIp());

@@ -35,7 +35,7 @@ public class HbService {
         } else {
             //转发master
             IpAddr masterIp = context.getMasterIp();
-            SchedulerClient client = SchedulerClientFactory.create(masterIp, context.getAccessToken());
+            SchedulerClient client = SchedulerClientFactory.createScheduler(masterIp, context.getAccessToken());
             ExecutorHbReq req = new ExecutorHbReq();
             req.setIp(ip.getIp());
             req.setPort(ip.getPort());

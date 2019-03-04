@@ -271,7 +271,7 @@ public class SchedulerService {
     }
 
     private boolean sendAckWithIp(IpAddr ip, long jobId, int code, String msg) {
-        SchedulerClient client = SchedulerClientFactory.create(ip, context.getConfig().getAccessKey());
+        SchedulerClient client = SchedulerClientFactory.createScheduler(ip, context.getConfig().getAccessKey());
         AckReq req = new AckReq();
         req.setJobId(jobId);
         req.setCode(code);
@@ -281,7 +281,7 @@ public class SchedulerService {
     }
 
     private boolean sendAckMasterWithIp(IpAddr ip, long jobId, int code, String msg) {
-        SchedulerClient client = SchedulerClientFactory.create(ip, context.getConfig().getAccessKey());
+        SchedulerClient client = SchedulerClientFactory.createScheduler(ip, context.getConfig().getAccessKey());
         AckReq req = new AckReq();
         req.setJobId(jobId);
         req.setCode(code);

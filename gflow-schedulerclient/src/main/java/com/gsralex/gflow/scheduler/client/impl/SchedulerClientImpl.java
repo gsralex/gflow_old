@@ -1,16 +1,19 @@
 package com.gsralex.gflow.scheduler.client.impl;
 
-import com.gsralex.gflow.pub.action.Req;
 import com.gsralex.gflow.pub.action.Resp;
 import com.gsralex.gflow.pub.context.IpAddr;
 import com.gsralex.gflow.pub.thriftgen.TReq;
 import com.gsralex.gflow.pub.thriftgen.TResp;
 import com.gsralex.gflow.pub.thriftgen.scheduler.*;
-import com.gsralex.gflow.scheduler.client.ClientCallback;
-import com.gsralex.gflow.scheduler.client.ClientWrapper;
+import com.gsralex.gflow.scheduler.client.ClientTransportException;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
 import com.gsralex.gflow.scheduler.client.action.scheduler.*;
 import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TMultiplexedProtocol;
+import org.apache.thrift.protocol.TProtocol;
+import org.apache.thrift.transport.TSocket;
+import org.apache.thrift.transport.TTransport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +36,6 @@ public class SchedulerClientImpl implements SchedulerClient {
         this.accessToken = accessToken;
     }
 
-
     @Override
     public JobResp scheduleAction(JobReq req) {
         class Callback implements ClientCallback<JobResp> {
@@ -55,7 +57,7 @@ public class SchedulerClientImpl implements SchedulerClient {
                 return resp;
             }
         }
-        return ClientWrapper.execute(new Callback(), this.ip);
+        return execute(new Callback(), this.ip);
     }
 
     @Override
@@ -75,7 +77,7 @@ public class SchedulerClientImpl implements SchedulerClient {
                 return resp;
             }
         }
-        return ClientWrapper.execute(new Callback(), this.ip);
+        return execute(new Callback(), this.ip);
     }
 
     @Override
@@ -94,7 +96,7 @@ public class SchedulerClientImpl implements SchedulerClient {
                 return resp;
             }
         }
-        return ClientWrapper.execute(new Callback(), this.ip);
+        return execute(new Callback(), this.ip);
     }
 
     @Override
@@ -118,7 +120,7 @@ public class SchedulerClientImpl implements SchedulerClient {
                 return resp;
             }
         }
-        return ClientWrapper.execute(new Callback(), this.ip);
+        return execute(new Callback(), this.ip);
     }
 
     @Override
@@ -136,7 +138,7 @@ public class SchedulerClientImpl implements SchedulerClient {
                 return resp;
             }
         }
-        return ClientWrapper.execute(new Callback(), this.ip);
+        return execute(new Callback(), this.ip);
     }
 
     @Override
@@ -154,7 +156,7 @@ public class SchedulerClientImpl implements SchedulerClient {
                 return resp;
             }
         }
-        return ClientWrapper.execute(new Callback(), this.ip);
+        return execute(new Callback(), this.ip);
     }
 
     @Override
@@ -177,6 +179,31 @@ public class SchedulerClientImpl implements SchedulerClient {
                 return resp;
             }
         }
-        return ClientWrapper.execute(new Callback(), this.ip);
+        return execute(new Callback(), this.ip);
     }
+
+
+    public interface ClientCallback<T> {
+        T doAction(TScheduleService.Client client) throws TException;
+    }
+
+    public static <T> T execute(ClientCallback<T> callback, IpAddr ip) {
+        TTransport transport = new TSocket(ip.getIp(), ip.getPort());
+        try {
+            transport.open();
+            TProtocol protocol = new TBinaryProtocol(transport);
+            TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "scheduler");
+            TScheduleService.Client client = new TScheduleService.Client(multiProtocol);
+            return callback.doAction(client);
+        } catch (Exception e) {
+            LOG.error("SchedulerClient.execute", e);
+            throw new ClientTransportException(e);
+        } finally {
+            if (transport != null) {
+                transport.close();
+            }
+        }
+    }
+
+
 }

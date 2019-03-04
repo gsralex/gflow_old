@@ -48,7 +48,7 @@ public class ExecutorThread implements Runnable {
                 LOG.error(process.getClass().getName() + ":" + e);
                 throw e;
             }
-            SchedulerClient client = SchedulerClientFactory.create(ip, context.getAccessToken());
+            SchedulerClient client = SchedulerClientFactory.createScheduler(ip, context.getAccessToken());
             AckReq req = new AckReq();
             req.setJobId(req.getJobId());
             req.setCode(ok ? ErrConstants.OK : ErrConstants.ERR_INTERNAL);

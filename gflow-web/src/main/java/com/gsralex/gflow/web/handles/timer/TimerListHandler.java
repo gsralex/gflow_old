@@ -1,5 +1,6 @@
-package com.gsralex.gflow.web.handles;
+package com.gsralex.gflow.web.handles.timer;
 
+import com.gsralex.gflow.web.handles.HttpHandler;
 import com.gsralex.gflow.web.req.TimerListReq;
 import com.gsralex.gflow.web.resp.TimerListResp;
 
@@ -9,8 +10,8 @@ import com.gsralex.gflow.web.resp.TimerListResp;
  */
 public class TimerListHandler implements HttpHandler<TimerListReq, TimerListResp> {
 
-
-    private static final String URL = "/timer/list";
+    public TimerListHandler() {
+    }
 
     @Override
     public TimerListResp doAction(TimerListReq req) {
@@ -22,6 +23,6 @@ public class TimerListHandler implements HttpHandler<TimerListReq, TimerListResp
 
     @Override
     public String getRequestPath() {
-        return URL;
+        return "/timer/list";
     }
 }

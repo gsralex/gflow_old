@@ -105,6 +105,8 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter {
         DefaultFullHttpResponse resp = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK,
                 Unpooled.wrappedBuffer(respContent.getBytes()));
         HttpHeaders headers = resp.headers();
+        headers.add(HttpHeaderNames.ACCESS_CONTROL_ALLOW_CREDENTIALS, true);
+        headers.add(HttpHeaderNames.ACCESS_CONTROL_ALLOW_ORIGIN, "*");
         headers.add(HttpHeaderNames.CONTENT_TYPE, contentType + ";charset=" + ENCODING.toString());
         headers.add(HttpHeaderNames.CONTENT_LENGTH, resp.content().readableBytes());
         headers.add(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);

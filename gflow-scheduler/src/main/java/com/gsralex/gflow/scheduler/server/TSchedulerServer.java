@@ -1,5 +1,6 @@
 package com.gsralex.gflow.scheduler.server;
 
+import com.gsralex.gflow.pub.thriftgen.action.TActionService;
 import com.gsralex.gflow.pub.thriftgen.scheduler.TScheduleService;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import org.apache.thrift.TMultiplexedProcessor;
@@ -21,10 +22,12 @@ public class TSchedulerServer {
     private static final Logger LOG = LoggerFactory.getLogger(TSchedulerServer.class);
 
     private TScheduleServiceImpl scheduleService;
+    private TActionServiceImpl actionService;
     private SchedulerContext context;
 
     public TSchedulerServer(SchedulerContext context) {
         scheduleService = new TScheduleServiceImpl(context);
+        actionService = new TActionServiceImpl(context);
         this.context = context;
     }
 
@@ -37,6 +40,9 @@ public class TSchedulerServer {
                     new TScheduleService.Processor<>(scheduleService);
             processor.registerProcessor("scheduler", schedule);
 
+
+            TActionService.Processor<TActionServiceImpl> action = new TActionService.Processor<>(actionService);
+            processor.registerProcessor("action", action);
 
             TThreadPoolServer.Args args = new TThreadPoolServer.Args(tServerSocket);
             args.processor(processor);

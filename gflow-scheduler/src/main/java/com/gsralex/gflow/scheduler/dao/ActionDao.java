@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.dao;
 
-import com.gsralex.gflow.scheduler.domain.*;
+import com.gsralex.gflow.scheduler.domain.Action;
 
 import java.util.List;
 
@@ -11,8 +11,14 @@ import java.util.List;
 public interface ActionDao {
 
 
+    boolean saveAction(Action action);
+
+    boolean updateAction(Action action);
+
+    boolean removeAction(long id);
+
     Action getAction(long id);
 
-    List<ActionTag> listActionTag();
+    List<Action> listAction(int pageSize, int pageIndex);
 
 }

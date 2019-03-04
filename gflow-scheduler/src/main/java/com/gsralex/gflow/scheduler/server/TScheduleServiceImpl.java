@@ -161,7 +161,7 @@ public class TScheduleServiceImpl implements TScheduleService.Iface {
             tNodeResp.setNodeList(convertTNodeToIp(ipList));
             return tNodeResp;
         } else {
-            SchedulerClient client = SchedulerClientFactory.create(context.getMasterIp(), context.getAccessToken());
+            SchedulerClient client = SchedulerClientFactory.createScheduler(context.getMasterIp(), context.getAccessToken());
             NodeResp nodeResp = client.listSchedulerNode();
             TNodeResp tNodeResp = new TNodeResp();
             tNodeResp.setCode(nodeResp.getCode());

@@ -1,6 +1,8 @@
 package com.gsralex.gflow.web;
 
-import com.gsralex.gflow.web.handles.TimerListHandler;
+import com.gsralex.gflow.web.handles.actions.ActionListHandler;
+import com.gsralex.gflow.web.handles.actions.SaveActionHandler;
+import com.gsralex.gflow.web.handles.timer.TimerListHandler;
 import com.gsralex.gflow.web.handles.UrlLocation;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -56,7 +58,11 @@ public class HttpServer {
     }
 
     private void registerUrlHandler() {
+        //timer
         urlLocation.addHttpHandler(new TimerListHandler());
+        //action
+        urlLocation.addHttpHandler(new SaveActionHandler());
+        urlLocation.addHttpHandler(new ActionListHandler());
     }
 
     public static void main(String[] args) throws InterruptedException {

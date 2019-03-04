@@ -19,7 +19,7 @@ public class HbService {
     }
 
     public void listSchedulerNode(IpAddr askIp) {
-        SchedulerClient client = SchedulerClientFactory.create(askIp, context.getAccessToken());
+        SchedulerClient client = SchedulerClientFactory.createScheduler(askIp, context.getAccessToken());
         NodeResp resp = client.listSchedulerNode();
         resp.getNodeList();
         for (IpAddr ip : resp.getNodeList()) {

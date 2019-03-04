@@ -43,7 +43,7 @@ public class SSchedulerHbProcess {
         while (!interrupt) {
             try {
                 IpAddr masterIp = context.getMasterIp();
-                SchedulerClient client = SchedulerClientFactory.create(masterIp, context.getAccessToken());
+                SchedulerClient client = SchedulerClientFactory.createScheduler(masterIp, context.getAccessToken());
                 ScheduleHbReq req = new ScheduleHbReq();
                 IpAddr myIp = context.getMyIp();
                 req.setIp(myIp.getIp());

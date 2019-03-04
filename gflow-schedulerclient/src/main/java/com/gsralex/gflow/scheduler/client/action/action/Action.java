@@ -1,32 +1,23 @@
-package com.gsralex.gflow.scheduler.domain;
-
-import com.gsralex.gdata.bean.annotation.Column;
-import com.gsralex.gdata.bean.annotation.Table;
+package com.gsralex.gflow.scheduler.client.action.action;
 
 /**
  * @author gsralex
- * @date 2017/12/25
+ * @version 2019/3/3
  */
-@Table("gflow_action")
 public class Action {
-    private long id;
-    private String name;
-    @Column("class_name")
-    private String className;
-    @Column("create_time")
-    private Long createTime;
-    @Column("mod_time")
-    private Long modTime;
-    @Column("tag")
-    private String tag;
-    @Column("del")
-    private Boolean del;
 
-    public long getId() {
+    private Long id;
+    private String name;
+    private String className;
+    private Long createTime;
+    private Long updateTime;
+    private String tag;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -54,12 +45,12 @@ public class Action {
         this.createTime = createTime;
     }
 
-    public Long getModTime() {
-        return modTime;
+    public Long getUpdateTime() {
+        return updateTime;
     }
 
-    public void setModTime(Long modTime) {
-        this.modTime = modTime;
+    public void setUpdateTime(Long updateTime) {
+        this.updateTime = updateTime;
     }
 
     public String getTag() {
@@ -68,13 +59,5 @@ public class Action {
 
     public void setTag(String tag) {
         this.tag = tag;
-    }
-
-    public Boolean getDel() {
-        return del;
-    }
-
-    public void setDel(Boolean del) {
-        this.del = del;
     }
 }
