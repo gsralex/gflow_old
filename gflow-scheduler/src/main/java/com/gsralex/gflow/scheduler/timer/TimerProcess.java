@@ -1,12 +1,13 @@
 package com.gsralex.gflow.scheduler.timer;
 
+import com.gsralex.gflow.pub.domain.TimerConfig;
 import com.gsralex.gflow.pub.util.DtUtils;
-import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.domain.TimerConfig;
-import com.gsralex.gflow.scheduler.schedule.SchedulerService;
+import com.gsralex.gflow.scheduler.service.SchedulerService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -17,20 +18,15 @@ import java.util.Map;
  * @author gsralex
  * @version 2018/8/21
  */
+@Component
 public class TimerProcess {
 
     private static final Logger LOG = LoggerFactory.getLogger(TimerProcess.class);
 
     private Map<Long, TimerTask> map = new HashMap<>();
+    @Autowired
     private SchedulerService schedulerService;
     private volatile boolean interrupt = false;
-
-
-    public TimerProcess(SchedulerContext context) {
-        schedulerService = new SchedulerService(context);
-    }
-
-
     public void stop() {
         interrupt = true;
     }
@@ -142,6 +138,15 @@ public class TimerProcess {
                 LOG.error("TimerProcess.mainLoop", e);
             }
         }
+    }
+
+    public static void main(String[] args) {
+        TimerProcess process = new TimerProcess();
+        process.start();
+
+        TimerConfig config = new TimerConfig();
+        TimerTask timerTask = new TimerTask(config);
+        process.setTimer(timerTask);
     }
 
 }

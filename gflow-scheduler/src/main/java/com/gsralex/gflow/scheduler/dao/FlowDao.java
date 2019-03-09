@@ -1,13 +1,13 @@
 package com.gsralex.gflow.scheduler.dao;
 
-import com.gsralex.gflow.scheduler.domain.Flow;
-import com.gsralex.gflow.scheduler.domain.FlowDirect;
+import com.gsralex.gflow.pub.domain.Flow;
+import com.gsralex.gflow.pub.domain.FlowDirect;
 
 import java.util.List;
 
 /**
  * @author gsralex
- * @version 2018/12/18
+ * @version 2019/3/9
  */
 public interface FlowDao {
 

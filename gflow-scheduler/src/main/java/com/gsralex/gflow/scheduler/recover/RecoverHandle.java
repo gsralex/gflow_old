@@ -1,8 +1,8 @@
 package com.gsralex.gflow.scheduler.recover;
 
-import com.gsralex.gflow.scheduler.domain.JobGroup;
-import com.gsralex.gflow.scheduler.schedule.SchedulerService;
+import com.gsralex.gflow.pub.domain.JobGroup;
 import com.gsralex.gflow.scheduler.dao.JobDao;
+import com.gsralex.gflow.scheduler.service.impl.SchedulerServiceImpl;
 
 import java.util.List;
 
@@ -14,12 +14,12 @@ import java.util.List;
 public class RecoverHandle {
 
     private JobDao jobDao;
-    private SchedulerService schedulerService;
+    private SchedulerServiceImpl schedulerServiceImpl;
 
     private void recoverTask() {
         List<JobGroup> groupList = jobDao.listJobGroupExecuting();
         for (JobGroup group : groupList) {
-            schedulerService.continueGroup(group.getId(), false);
+            schedulerServiceImpl.continueGroup(group.getId(), false);
         }
     }
 }

@@ -1,27 +1,27 @@
 package com.gsralex.gflow.scheduler.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.scheduler.domain.Job;
-import com.gsralex.gflow.scheduler.domain.JobGroup;
-import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
-import com.gsralex.gflow.scheduler.enums.JobStatusEnum;
-import com.gsralex.gflow.scheduler.model.TimerExecuteRecord;
+import com.gsralex.gflow.pub.domain.Job;
+import com.gsralex.gflow.pub.domain.JobGroup;
+import com.gsralex.gflow.pub.enums.JobGroupStatusEnum;
+import com.gsralex.gflow.pub.enums.JobStatusEnum;
 import com.gsralex.gflow.scheduler.dao.IdUtils;
 import com.gsralex.gflow.scheduler.dao.JobDao;
+import com.gsralex.gflow.scheduler.dao.TimerExecuteRecord;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * @author gsralex
- * @version 2018/5/12
+ * @version 2019/3/9
  */
+@Repository
 public class JobDaoImpl implements JobDao {
 
+    @Autowired
     private JdbcUtils jdbcUtils;
-
-    public JobDaoImpl(JdbcUtils jdbcUtils) {
-        this.jdbcUtils = jdbcUtils;
-    }
 
     @Override
     public boolean saveJobGroup(JobGroup jobGroup) {
@@ -92,6 +92,4 @@ public class JobDaoImpl implements JobDao {
         sql+="group by timer_config_id";
         return jdbcUtils.queryForList(sql,null,TimerExecuteRecord.class);
     }
-
-
 }

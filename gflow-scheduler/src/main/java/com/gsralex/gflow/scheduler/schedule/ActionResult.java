@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.schedule;
 
 
-import com.gsralex.gflow.scheduler.enums.JobStatusEnum;
+import com.gsralex.gflow.pub.enums.JobStatusEnum;
 
 /**
  * @author gsralex

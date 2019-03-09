@@ -1,8 +1,8 @@
 package com.gsralex.gflow.scheduler.client;
 
 import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.scheduler.client.impl.ActionClientImpl;
 import com.gsralex.gflow.scheduler.client.impl.SchedulerClientImpl;
+import com.gsralex.gflow.scheduler.client.impl.TimerClientImpl;
 
 /**
  * @author gsralex
@@ -14,7 +14,7 @@ public class SchedulerClientFactory {
         return new SchedulerClientImpl(ip, accessToken);
     }
 
-    public static ActionClient createAction(IpAddr ip, String accessToken) {
-        return new ActionClientImpl(ip, accessToken);
+    public static TimerClient createTimer(IpAddr ip, String accessToken) {
+        return new TimerClientImpl(ip);
     }
 }

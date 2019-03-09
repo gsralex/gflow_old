@@ -1,12 +1,11 @@
 package com.gsralex.gflow.scheduler.timer;
 
+import com.gsralex.gflow.pub.domain.TimerConfig;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.domain.TimerConfig;
-import com.gsralex.gflow.scheduler.model.TimerExecuteRecord;
 import com.gsralex.gflow.scheduler.dao.JobDao;
 import com.gsralex.gflow.scheduler.dao.TimerDao;
-import com.gsralex.gflow.scheduler.dao.impl.JobDaoImpl;
-import com.gsralex.gflow.scheduler.dao.impl.TimerDaoImpl;
+import com.gsralex.gflow.scheduler.dao.TimerExecuteRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,15 +20,10 @@ import java.util.stream.Collectors;
  */
 public class TimerRecovery {
 
-    private TimerProcess processor;
+    @Autowired
     private JobDao jobDao;
+    @Autowired
     private TimerDao timerDao;
-
-    public TimerRecovery(TimerProcess processor, SchedulerContext context) {
-        this.processor = processor;
-        jobDao = new JobDaoImpl(context.getJdbcUtils());
-        timerDao = new TimerDaoImpl(context.getJdbcUtils());
-    }
 
     public void recovery() {
         List<TimerConfig> timerList = timerDao.listTimer();
@@ -41,10 +35,11 @@ public class TimerRecovery {
         }
         for (TimerConfig timer : timerList) {
             Long execTime = execMap.get(timer.getId());
-            if (execTime == null)
+            if (execTime == null) {
                 execTime = 0L;
+            }
             TimerTask timerTask = new TimerTask(timer, execTime);
-            processor.setTimer(timerTask);
+            SchedulerContext.getInstance().getTimerProcess().setTimer(timerTask);
         }
     }
 }

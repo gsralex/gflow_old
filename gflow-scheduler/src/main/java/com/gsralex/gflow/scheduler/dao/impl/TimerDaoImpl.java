@@ -1,8 +1,10 @@
 package com.gsralex.gflow.scheduler.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.scheduler.domain.TimerConfig;
+import com.gsralex.gflow.pub.domain.TimerConfig;
 import com.gsralex.gflow.scheduler.dao.TimerDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -10,14 +12,11 @@ import java.util.List;
  * @author gsralex
  * @version 2018/12/18
  */
+@Repository
 public class TimerDaoImpl implements TimerDao {
 
-
+    @Autowired
     private JdbcUtils jdbcUtils;
-
-    public TimerDaoImpl(JdbcUtils jdbcUtils) {
-        this.jdbcUtils = jdbcUtils;
-    }
 
     @Override
     public boolean saveTimer(TimerConfig config) {

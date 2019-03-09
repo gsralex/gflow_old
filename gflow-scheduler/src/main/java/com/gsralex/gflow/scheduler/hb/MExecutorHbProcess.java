@@ -120,7 +120,7 @@ public class MExecutorHbProcess implements ExecutorHbProcess {
         //轮播
         for (IpAddr nodeIp : ipList) {
             try {
-                SchedulerClient client = new SchedulerClientFactory().createScheduler(nodeIp, context.getAccessToken());
+                SchedulerClient client = SchedulerClientFactory.createScheduler(nodeIp, context.getAccessToken());
                 ExecutorHbReq req = new ExecutorHbReq();
                 req.setIp(node.getIp().getIp());
                 req.setPort(node.getIp().getPort());

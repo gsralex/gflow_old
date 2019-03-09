@@ -12,30 +12,30 @@ import com.gsralex.gflow.scheduler.timer.TimerProcess;
  */
 public class MasterSwitchAction implements SwitchAction {
 
-    private SchedulerContext context;
+    private SchedulerContext context = SchedulerContext.getInstance();
 
-    public MasterSwitchAction(SchedulerContext context) {
-        this.context = context;
-    }
-
+    @Override
     public void start() {
         if (context.getHbContext() == null) {
             context.setHbContext(new HbContext());
+            MSchedulerHbProcess mSchedulerHbProcess = new MSchedulerHbProcess(context);
+            mSchedulerHbProcess.start();
+            context.getHbContext().setmSchedulerHbProcess(mSchedulerHbProcess);
+
+            MExecutorHbProcess mExecutorHbProcess = new MExecutorHbProcess(context);
+            mExecutorHbProcess.start();
+            context.getHbContext().setmExecutorHbProcess(mExecutorHbProcess);
+
+            TimerProcess timerProcess = new TimerProcess();
+            timerProcess.start();
+            context.setTimerProcess(timerProcess);
+        } else {
+            context.getHbContext().getmSchedulerHbProcess().start();
+            context.getHbContext().getmExecutorHbProcess().start();
         }
-
-        MSchedulerHbProcess mSchedulerHbProcess = new MSchedulerHbProcess(context);
-        mSchedulerHbProcess.start();
-        context.getHbContext().setmSchedulerHbProcess(mSchedulerHbProcess);
-
-        MExecutorHbProcess mExecutorHbProcess = new MExecutorHbProcess(context);
-        mExecutorHbProcess.start();
-        context.getHbContext().setmExecutorHbProcess(mExecutorHbProcess);
-
-        TimerProcess timerProcess = new TimerProcess(context);
-        timerProcess.start();
-        context.setTimerProcess(timerProcess);
     }
 
+    @Override
     public void stop() {
         context.getHbContext().getmSchedulerHbProcess().stop();
         context.getHbContext().getsSchedulerHbProcess().stop();

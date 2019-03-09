@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.timer;
 
+import com.gsralex.gflow.pub.domain.TimerConfig;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.domain.TimerConfig;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,9 +16,8 @@ public class TimerProcessTest {
     @Test
     public void getMin() throws Exception {
 
-        SchedulerContext context = new SchedulerContext();
-        context.init();
-        TimerProcess processor = new TimerProcess(context);
+        SchedulerContext.getInstance().init();
+        TimerProcess processor = new TimerProcess();
 
         //设置现在时间
         Calendar now = Calendar.getInstance();

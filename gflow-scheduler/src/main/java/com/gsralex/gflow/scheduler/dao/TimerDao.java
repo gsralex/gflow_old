@@ -1,6 +1,7 @@
 package com.gsralex.gflow.scheduler.dao;
 
-import com.gsralex.gflow.scheduler.domain.TimerConfig;
+
+import com.gsralex.gflow.pub.domain.TimerConfig;
 
 import java.util.List;
 

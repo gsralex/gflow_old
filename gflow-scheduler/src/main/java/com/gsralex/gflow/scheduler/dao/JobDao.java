@@ -1,15 +1,13 @@
 package com.gsralex.gflow.scheduler.dao;
 
-
-import com.gsralex.gflow.scheduler.domain.Job;
-import com.gsralex.gflow.scheduler.domain.JobGroup;
-import com.gsralex.gflow.scheduler.model.TimerExecuteRecord;
+import com.gsralex.gflow.pub.domain.Job;
+import com.gsralex.gflow.pub.domain.JobGroup;
 
 import java.util.List;
 
 /**
  * @author gsralex
- * @version 2018/5/12
+ * @version 2019/3/9
  */
 public interface JobDao {
 

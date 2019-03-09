@@ -36,6 +36,24 @@ public class SchedulerClientImpl implements SchedulerClient {
         this.accessToken = accessToken;
     }
 
+    public static <T> T execute(ClientCallback<T> callback, IpAddr ip) {
+        TTransport transport = new TSocket(ip.getIp(), ip.getPort());
+        try {
+            transport.open();
+            TProtocol protocol = new TBinaryProtocol(transport);
+            TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "scheduler");
+            TScheduleService.Client client = new TScheduleService.Client(multiProtocol);
+            return callback.doAction(client);
+        } catch (Exception e) {
+            LOG.error("SchedulerClient.execute", e);
+            throw new ClientTransportException(e);
+        } finally {
+            if (transport != null) {
+                transport.close();
+            }
+        }
+    }
+
     @Override
     public JobResp scheduleAction(JobReq req) {
         class Callback implements ClientCallback<JobResp> {
@@ -182,27 +200,8 @@ public class SchedulerClientImpl implements SchedulerClient {
         return execute(new Callback(), this.ip);
     }
 
-
     public interface ClientCallback<T> {
         T doAction(TScheduleService.Client client) throws TException;
-    }
-
-    public static <T> T execute(ClientCallback<T> callback, IpAddr ip) {
-        TTransport transport = new TSocket(ip.getIp(), ip.getPort());
-        try {
-            transport.open();
-            TProtocol protocol = new TBinaryProtocol(transport);
-            TMultiplexedProtocol multiProtocol = new TMultiplexedProtocol(protocol, "scheduler");
-            TScheduleService.Client client = new TScheduleService.Client(multiProtocol);
-            return callback.doAction(client);
-        } catch (Exception e) {
-            LOG.error("SchedulerClient.execute", e);
-            throw new ClientTransportException(e);
-        } finally {
-            if (transport != null) {
-                transport.close();
-            }
-        }
     }
 
 

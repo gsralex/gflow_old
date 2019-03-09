@@ -25,27 +25,24 @@ public class SchedulerServer {
 
     private static final Logger LOG = LoggerFactory.getLogger(SchedulerServer.class);
 
-    private SchedulerContext context;
-
-    public SchedulerServer() throws IOException {
-        context = new SchedulerContext();
-        context.init();
-    }
 
     public void addParameter(DynamicParam parameter) {
-        context.addParam(parameter);
+        SchedulerContext.getInstance().addParam(parameter);
     }
 
     public void serve() throws ScheduleTransportException, IOException {
+        SchedulerContext context = SchedulerContext.getInstance();
+        context.init();
+
         LOG.info("====== SchedulerServer STARTING ======");
-        TSchedulerServer server = new TSchedulerServer(context);
-        server.start();
+        TSchedulerServer server = context.getBean(TSchedulerServer.class);
+        server.start(context.getConfig().getPort());
         LOG.info("====== SchedulerServer STARTED ======");
 
         //如果有zk，则用zk注册master
         if (context.getConfig().getZkActive() != null
                 && context.getConfig().getZkActive()) {
-            ZkRegisterMaster zkRegisterMaster = new ZkRegisterMaster(context);
+            ZkRegisterMaster zkRegisterMaster = new ZkRegisterMaster();
             if (zkRegisterMaster.registerMaster()) {
                 context.setMaster(true);
                 context.setMasterIp(context.getMyIp());
@@ -57,13 +54,14 @@ public class SchedulerServer {
         }
         if (context.isMaster()) {
             //定时任务
-            MasterSwitchAction master = new MasterSwitchAction(context);
+            MasterSwitchAction master = new MasterSwitchAction();
             master.start();
         } else {
-            SlaveSwitchAction slave = new SlaveSwitchAction(context);
+            SlaveSwitchAction slave = new SlaveSwitchAction();
             slave.start();
         }
     }
+
 
     public static void main(String[] args) throws ScheduleTransportException, IOException {
         SchedulerServer server = new SchedulerServer();
@@ -71,12 +69,13 @@ public class SchedulerServer {
         server.serve();
     }
 
+    private static final Pattern PATTERN_BIZDATE = Pattern.compile("bizdate(-(?<day>\\d+)d)?");
+
     private static DynamicParam getBizdataParam() {
         return new DynamicParam() {
             @Override
             public String getValue(String key) {
-                Pattern pattern = Pattern.compile("bizdate(-(?<day>\\d+)d)?");
-                Matcher matcher = pattern.matcher(key);
+                Matcher matcher = PATTERN_BIZDATE.matcher(key);
                 matcher.find();
                 int day = NumberUtils.toInt(matcher.group("day"), 0);
                 return DateFormatUtils.format(DateUtils.addDays(new Date(), day), "yyyyMMdd");

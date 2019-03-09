@@ -18,8 +18,8 @@ public class ZkRegisterMaster {
     private SchedulerContext context;
     private ZkClient zkClient;
 
-    public ZkRegisterMaster(SchedulerContext context) {
-        this.context = context;
+    public ZkRegisterMaster() {
+        context = SchedulerContext.getInstance();
         this.zkClient = new ZkClient(context.getConfig().getZkServer());
     }
 
@@ -39,9 +39,9 @@ public class ZkRegisterMaster {
                 if (masterIp.equals(context.getMyIp().toString())) {
                     if (!context.isMaster()) {
                         //slave -> master
-                        SlaveSwitchAction slave = new SlaveSwitchAction(context);
+                        SlaveSwitchAction slave = new SlaveSwitchAction();
                         slave.stop();
-                        MasterSwitchAction master = new MasterSwitchAction(context);
+                        MasterSwitchAction master = new MasterSwitchAction();
                         master.start();
                     }
                     context.setMaster(true);
@@ -49,9 +49,9 @@ public class ZkRegisterMaster {
                 } else {
                     if (context.isMaster()) {
                         //master->slave
-                        MasterSwitchAction master = new MasterSwitchAction(context);
+                        MasterSwitchAction master = new MasterSwitchAction();
                         master.stop();
-                        SlaveSwitchAction slave = new SlaveSwitchAction(context);
+                        SlaveSwitchAction slave = new SlaveSwitchAction();
                         slave.start();
                     }
                     context.setMaster(false);
@@ -67,9 +67,9 @@ public class ZkRegisterMaster {
     }
 
     public static void main(String[] args) throws IOException {
-        SchedulerContext context = new SchedulerContext();
+        SchedulerContext context = SchedulerContext.getInstance();
         context.init();
-        ZkRegisterMaster zkRegisterMaster = new ZkRegisterMaster(context);
+        ZkRegisterMaster zkRegisterMaster = new ZkRegisterMaster();
         zkRegisterMaster.registerMaster();
         zkRegisterMaster.subscribe();
         System.in.read();

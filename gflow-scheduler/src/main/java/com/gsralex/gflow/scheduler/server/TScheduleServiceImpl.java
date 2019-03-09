@@ -14,8 +14,10 @@ import com.gsralex.gflow.scheduler.client.action.scheduler.NodeResp;
 import com.gsralex.gflow.scheduler.hb.HbService;
 import com.gsralex.gflow.scheduler.schedule.ActionResult;
 import com.gsralex.gflow.scheduler.schedule.FlowResult;
-import com.gsralex.gflow.scheduler.schedule.SchedulerService;
+import com.gsralex.gflow.scheduler.service.SchedulerService;
 import org.apache.thrift.TException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,20 +26,16 @@ import java.util.List;
  * @author gsralex
  * @version 2018/3/18
  */
+@Component
 public class TScheduleServiceImpl implements TScheduleService.Iface {
 
 
-    private SchedulerContext context;
+    private SchedulerContext context = SchedulerContext.getInstance();
+    @Autowired
     private SchedulerService schedulerService;
+    @Autowired
     private HbService hbService;
     private String accessKey;
-
-    public TScheduleServiceImpl(SchedulerContext context) {
-        this.context = context;
-        accessKey = context.getConfig().getAccessKey();
-        schedulerService = new SchedulerService(context);
-        hbService = new HbService(context);
-    }
 
 
     private boolean getRetry() {
@@ -57,6 +55,13 @@ public class TScheduleServiceImpl implements TScheduleService.Iface {
         resp.setMsg(ErrConstants.MSG_OK);
         resp.setJobId(result.getJobId());
         return resp;
+    }
+
+    public static class Flow{
+
+    }
+
+    public void d(){
     }
 
     @Override

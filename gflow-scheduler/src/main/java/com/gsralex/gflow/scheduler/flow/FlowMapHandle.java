@@ -1,17 +1,16 @@
 package com.gsralex.gflow.scheduler.flow;
 
-import com.gsralex.gflow.scheduler.domain.Flow;
-import com.gsralex.gflow.scheduler.domain.FlowDirect;
-import com.gsralex.gflow.scheduler.domain.Job;
-import com.gsralex.gflow.scheduler.domain.JobGroup;
-import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
+import com.gsralex.gflow.pub.domain.Flow;
+import com.gsralex.gflow.pub.domain.FlowDirect;
+import com.gsralex.gflow.pub.domain.Job;
+import com.gsralex.gflow.pub.domain.JobGroup;
+import com.gsralex.gflow.pub.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.dao.ActionDao;
 import com.gsralex.gflow.scheduler.dao.FlowDao;
 import com.gsralex.gflow.scheduler.dao.JobDao;
-import com.gsralex.gflow.scheduler.dao.impl.ActionDaoImpl;
-import com.gsralex.gflow.scheduler.dao.impl.FlowDaoImpl;
-import com.gsralex.gflow.scheduler.dao.impl.JobDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -20,20 +19,18 @@ import java.util.List;
  * @version 2018/8/19
  */
 
+@Service
 public class FlowMapHandle {
 
+
+    @Autowired
     private ActionDao actionDao;
+    @Autowired
     private JobDao jobDao;
+    @Autowired
     private FlowDao flowDao;
 
     private SchedulerContext context;
-
-    public FlowMapHandle(SchedulerContext context) {
-        actionDao = new ActionDaoImpl(context.getJdbcUtils());
-        jobDao = new JobDaoImpl(context.getJdbcUtils());
-        flowDao = new FlowDaoImpl(context.getJdbcUtils());
-        this.context = context;
-    }
 
 
     public FlowGuide initGroup(long jobGroupId, long flowGroupId) {

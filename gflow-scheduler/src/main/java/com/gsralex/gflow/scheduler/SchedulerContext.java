@@ -1,28 +1,38 @@
 package com.gsralex.gflow.scheduler;
 
-import com.gsralex.gdata.bean.jdbc.JdbcUtils;
 import com.gsralex.gflow.pub.context.IpAddr;
 import com.gsralex.gflow.pub.util.PropertiesUtils;
 import com.gsralex.gflow.pub.util.SecurityUtils;
-import com.gsralex.gflow.scheduler.config.SchedulerConfig;
+import com.gsralex.gflow.scheduler.configuration.SchedulerConfig;
+import com.gsralex.gflow.scheduler.configuration.SpringConfiguration;
 import com.gsralex.gflow.scheduler.flow.FlowGuideMap;
 import com.gsralex.gflow.scheduler.parameter.DynamicParam;
 import com.gsralex.gflow.scheduler.parameter.DynamicParamContext;
 import com.gsralex.gflow.scheduler.timer.TimerProcess;
-import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author gsralex
  * @version 2018/9/21
  */
 public class SchedulerContext {
+
+    private static final SchedulerContext CURRENT = new SchedulerContext();
+
+    private SchedulerContext() {
+
+    }
+
+    public static SchedulerContext getInstance() {
+        return CURRENT;
+    }
+
     private static final String CONFIG_FILEPATH = "/gflow.properties";
     private SchedulerConfig config;
     /**
@@ -34,8 +44,8 @@ public class SchedulerContext {
      */
     private DynamicParamContext paramContext = DynamicParamContext.getContext();
 
-    private JdbcUtils jdbcUtils;
 
+    //ha
     /**
      * 服务当前状态
      */
@@ -54,25 +64,31 @@ public class SchedulerContext {
 
     private TimerProcess timerProcess;
 
+    /**
+     * spring
+     */
+    private static ApplicationContext context;
+
     public void init() throws IOException {
         InputStream is = PropertiesUtils.class.getResourceAsStream(CONFIG_FILEPATH);
         config = PropertiesUtils.getConfig(is, SchedulerConfig.class);
-        initJdbc();
         //主ip
         masterIp = new IpAddr(config.getSchedulerMaster());
 
         InetAddress addr = InetAddress.getLocalHost();
         myIp = new IpAddr(addr.getHostAddress(), config.getPort());
+        initSpring();
     }
 
-    private void initJdbc() {
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setUrl(config.getDbUrl());
-        dataSource.setUsername(config.getDbUsername());
-        dataSource.setPassword(config.getDbPassword());
-        dataSource.setDriverClassName(config.getDbDriver());
-        jdbcUtils = new JdbcUtils(dataSource);
+
+    private void initSpring() {
+        context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
     }
+
+    public <T> T getBean(Class<T> type, Object... objects) {
+        return context.getBean(type, objects);
+    }
+
 
     public FlowGuideMap getFlowGuideMap() {
         return flowGuideMap;
@@ -89,10 +105,6 @@ public class SchedulerContext {
      */
     public void addParam(DynamicParam param) {
         this.paramContext.addParam(param);
-    }
-
-    public JdbcUtils getJdbcUtils() {
-        return jdbcUtils;
     }
 
     public boolean isMaster() {

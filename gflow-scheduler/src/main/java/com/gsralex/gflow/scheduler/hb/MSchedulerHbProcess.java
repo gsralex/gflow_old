@@ -117,8 +117,8 @@ public class MSchedulerHbProcess {
     }
 
     public static void main(String[] args) {
-        SchedulerContext context = new SchedulerContext();
-        MSchedulerHbProcess process = new MSchedulerHbProcess(context);
+
+        MSchedulerHbProcess process = new MSchedulerHbProcess(SchedulerContext.getInstance());
         process.start();
         process.heartBeat(new IpAddr("123", 123));
         process.heartBeat(new IpAddr("124", 123));

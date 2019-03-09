@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.timer;
 
 
-import com.gsralex.gflow.scheduler.domain.TimerConfig;
+import com.gsralex.gflow.pub.domain.TimerConfig;
 
 /**
  * @author gsralex

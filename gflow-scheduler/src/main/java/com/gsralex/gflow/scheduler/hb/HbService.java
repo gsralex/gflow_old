@@ -1,25 +1,23 @@
 package com.gsralex.gflow.scheduler.hb;
 
 import com.gsralex.gflow.pub.action.Resp;
-import com.gsralex.gflow.pub.util.SecurityUtils;
 import com.gsralex.gflow.pub.constants.ErrConstants;
 import com.gsralex.gflow.pub.context.IpAddr;
+import com.gsralex.gflow.pub.util.SecurityUtils;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
 import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
 import com.gsralex.gflow.scheduler.client.action.scheduler.ExecutorHbReq;
+import org.springframework.stereotype.Service;
 
 /**
  * @author gsralex
  * @version 2019/2/13
  */
+@Service
 public class HbService {
 
-    private SchedulerContext context;
-
-    public HbService(SchedulerContext context) {
-        this.context = context;
-    }
+    private SchedulerContext context = SchedulerContext.getInstance();
 
     /**
      * executor-> scheduler

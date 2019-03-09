@@ -1,15 +1,12 @@
 package com.gsralex.gflow.scheduler.flow;
-
-import com.gsralex.gflow.scheduler.domain.Flow;
-import com.gsralex.gflow.scheduler.domain.FlowDirect;
-import com.gsralex.gflow.scheduler.enums.JobGroupStatusEnum;
+import com.gsralex.gflow.pub.domain.Flow;
+import com.gsralex.gflow.pub.domain.FlowDirect;
+import com.gsralex.gflow.pub.enums.JobGroupStatusEnum;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * @author gsralex

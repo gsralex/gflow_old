@@ -38,7 +38,7 @@ public class IpSeqSelector {
             }
         }
         if (needUpdate) {
-            synchronized (this.ipList) {
+            synchronized (ipList) {
                 this.ipList = ipList;
                 this.ipSet = getSet(ipList);
             }

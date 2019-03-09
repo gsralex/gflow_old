@@ -10,20 +10,9 @@ struct TTimeReq{
     5:string accessToken
 }
 
-struct TDelTimerReq{
-    1:i64 id,
-    2:string accessToken
-}
 
-struct TSettingsReq{
-    1:string key
-    2:string value
-    3:string accessToken
-}
-
-service TConfigService{
-    gflow.TResp setSettings(1:TSettingsReq req);
-    gflow.TResp addTimer(1:TTimeReq req);
+service TTimerService{
+    gflow.TResp saveTimer(1:TTimeReq req);
     gflow.TResp updateTimer(1:TTimeReq req);
-    gflow.TResp delTimer(1:TDelTimerReq req);
+    gflow.TResp removeTimer(1:gflow.TIdReq req);
 }
