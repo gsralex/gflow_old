@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.flow;
 
-import com.gsralex.gflow.pub.domain.Flow;
 import com.gsralex.gflow.pub.domain.FlowDirect;
+import com.gsralex.gflow.pub.domain.FlowItem;
 import com.gsralex.gflow.pub.domain.Job;
 import com.gsralex.gflow.pub.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.pub.enums.JobStatusEnum;
@@ -24,36 +24,35 @@ public class FlowGuide {
     private long groupId;
     private JobGroupStatusEnum status;
 
-    public FlowGuide(long groupId, List<Flow> flows, List<FlowDirect> directs,
+    public FlowGuide(long groupId, List<FlowItem> flowItems, List<FlowDirect> directs,
                      JobGroupStatusEnum status) {
-        this(groupId, flows, directs, null, status);
+        this(groupId, flowItems, directs, null, status);
     }
 
     /**
      * 初始化流程向导
      *
-     * @param groupId 流程组id
-     * @param flows   流程配置
-     * @param directs 流程流转配置
-     * @param jobs    所有流程组的执行的任务
+     * @param groupId   流程组id
+     * @param flowItems 流程配置
+     * @param directs   流程流转配置
+     * @param jobs      所有流程组的执行的任务
      */
-    public FlowGuide(long groupId, List<Flow> flows, List<FlowDirect> directs,
+    public FlowGuide(long groupId, List<FlowItem> flowItems, List<FlowDirect> directs,
                      List<Job> jobs, JobGroupStatusEnum status) {
         this.groupId = groupId;
         this.status = status;
 
-        Map<Integer, List<Integer>> directMap = new HashMap<>();
-        for (FlowDirect item : directs) {
-            if (directMap.containsKey(item.getIndex())) {
-                directMap.get(item.getIndex()).add(item.getPreIndex());
-            } else {
-                List<Integer> preList = new ArrayList<>();
-                preList.add(item.getPreIndex());
-                directMap.put(item.getIndex(), preList);
-            }
-        }
+//        Map<Integer, List<Integer>> directMap = new HashMap<>();
+//        for (FlowDirect item : directs) {
+//            List<Integer> preList = new ArrayList<>();
+//            String[] indexStrArr = item.getNextIndex().split(",");
+//            for (String indexStr : indexStrArr) {
+//                preList.add(Integer.parseInt(indexStr));
+//            }
+//            directMap.put(item.getIndex(), preList);
+//        }
 
-        for (Flow trigger : flows) {
+        for (FlowItem trigger : flowItems) {
             FlowNode current = new FlowNode();
             current.setActionId(trigger.getActionId());
             current.setIndex(trigger.getIndex());
@@ -64,10 +63,14 @@ public class FlowGuide {
             FlowNode node = posMap.get(direct.getIndex());
             //0 1
             //1 2
-            if (direct.getPreIndex() != ROOT_INDEX) {
-                FlowNode preNode = posMap.get(direct.getPreIndex());
-                preNode.getNext().add(node);
-                node.getPre().add(preNode);
+            if (direct.getIndex() != ROOT_INDEX) {
+                String[] indexStrArr = direct.getNextIndex().split(",");
+                for (String indexStr : indexStrArr) {
+                    int index = Integer.parseInt(indexStr);
+                    FlowNode nextNode = posMap.get(index);
+                    nextNode.getPre().add(node);
+                    node.getNext().add(nextNode);
+                }
             }
         }
 

@@ -15,6 +15,7 @@ public class FlowGroup {
 
     private long id;
     private String name;
+    private String description;
 
     public long getId() {
         return id;
@@ -30,6 +31,14 @@ public class FlowGroup {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public FlowItem action(long actionId) {

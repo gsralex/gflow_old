@@ -1,17 +1,21 @@
 package com.gsralex.gflow.pub.domain;
 
 import com.gsralex.gdata.bean.annotation.Column;
+import com.gsralex.gdata.bean.annotation.Id;
+import com.gsralex.gdata.bean.annotation.Table;
 
 /**
  * @author gsralex
  * @version 2018/12/7
  */
+@Table("gflow_flowdirect")
 public class FlowDirect {
 
+    @Id
     private Long id;
-    @Column("pre_index")
-    private Integer preIndex;
     private Integer index;
+    @Column("next_index")
+    private String nextIndex;
     @Column("group_id")
     private Long groupId;
 
@@ -23,12 +27,12 @@ public class FlowDirect {
         this.id = id;
     }
 
-    public Integer getPreIndex() {
-        return preIndex;
+    public String getNextIndex() {
+        return nextIndex;
     }
 
-    public void setPreIndex(Integer preIndex) {
-        this.preIndex = preIndex;
+    public void setNextIndex(String nextIndex) {
+        this.nextIndex = nextIndex;
     }
 
     public Integer getIndex() {

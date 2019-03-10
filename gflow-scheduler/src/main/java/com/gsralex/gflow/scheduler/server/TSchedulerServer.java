@@ -1,11 +1,11 @@
 package com.gsralex.gflow.scheduler.server;
 
+import com.gsralex.gflow.pub.thriftgen.flow.TFlowService;
 import com.gsralex.gflow.pub.thriftgen.scheduler.TScheduleService;
 import com.gsralex.gflow.pub.thriftgen.timer.TTimerService;
 import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.server.TServer;
-import org.apache.thrift.server.TServerEventHandler;
 import org.apache.thrift.server.TThreadPoolServer;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TServerTransport;
@@ -28,6 +28,8 @@ public class TSchedulerServer {
     private TScheduleServiceImpl scheduleService;
     @Autowired
     private TTimerServiceImpl timerService;
+    @Autowired
+    private TFlowServiceImpl flowService;
 
     public void start(int port) throws ScheduleTransportException {
         TServerTransport tServerSocket;
@@ -39,6 +41,8 @@ public class TSchedulerServer {
             processor.registerProcessor("scheduler", schedule);
             TTimerService.Processor<TTimerServiceImpl> timer = new TTimerService.Processor<>(timerService);
             processor.registerProcessor("timer", timer);
+            TFlowService.Processor<TFlowServiceImpl> flow = new TFlowService.Processor<>(flowService);
+            processor.registerProcessor("flow", flow);
             TThreadPoolServer.Args args = new TThreadPoolServer.Args(tServerSocket);
             args.processor(processor);
             args.protocolFactory(new TBinaryProtocol.Factory());

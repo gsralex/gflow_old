@@ -8,5 +8,5 @@ import com.gsralex.gflow.web.resp.ResultResp;
  */
 public interface FlowService {
 
-    ResultResp listFlow();
+    ResultResp listFlowGroup();
 }

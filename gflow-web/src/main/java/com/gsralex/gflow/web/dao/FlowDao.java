@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface FlowDao {
 
-    List<FlowGroup> listFlow();
+    List<FlowGroup> listFlowGroup();
 }

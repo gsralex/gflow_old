@@ -30,4 +30,20 @@ public class FlowItem {
         this.index = index;
         return this;
     }
+
+    public String getParameter() {
+        return parameter;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public long getActionId() {
+        return actionId;
+    }
 }

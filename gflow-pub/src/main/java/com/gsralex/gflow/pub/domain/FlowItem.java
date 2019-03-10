@@ -1,13 +1,17 @@
 package com.gsralex.gflow.pub.domain;
 
 import com.gsralex.gdata.bean.annotation.Column;
+import com.gsralex.gdata.bean.annotation.Id;
+import com.gsralex.gdata.bean.annotation.Table;
 
 /**
  * @author gsralex
  * @date 2017/12/25
  */
-public class Flow {
+@Table("gflow_flowitem")
+public class FlowItem {
 
+    @Id
     private long id;
     @Column("action_group_id")
     private long actionGroupId;
@@ -18,6 +22,7 @@ public class Flow {
     @Column("create_time")
     private Long createTime;
     private String parameter;
+    private String label;
 
     public long getId() {
         return id;
@@ -65,5 +70,13 @@ public class Flow {
 
     public void setParameter(String parameter) {
         this.parameter = parameter;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

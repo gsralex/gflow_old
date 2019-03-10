@@ -95,7 +95,7 @@ public class TimerClientImpl implements TimerClient {
         T doAction(TTimerService.Client client) throws TException;
     }
 
-    public static <T> T execute(TimerClientImpl.ClientCallback<T> callback, IpAddr ip) {
+    public static <T> T execute(ClientCallback<T> callback, IpAddr ip) {
         TTransport transport = new TSocket(ip.getIp(), ip.getPort());
         try {
             transport.open();

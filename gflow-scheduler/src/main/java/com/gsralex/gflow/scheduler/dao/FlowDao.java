@@ -1,7 +1,8 @@
 package com.gsralex.gflow.scheduler.dao;
 
-import com.gsralex.gflow.pub.domain.Flow;
 import com.gsralex.gflow.pub.domain.FlowDirect;
+import com.gsralex.gflow.pub.domain.FlowGroup;
+import com.gsralex.gflow.pub.domain.FlowItem;
 
 import java.util.List;
 
@@ -11,7 +12,27 @@ import java.util.List;
  */
 public interface FlowDao {
 
-    List<Flow> listFlow(long groupId);
+    boolean saveFlowGroup(FlowGroup flowGroup);
+
+    boolean updateFlowGroup(FlowGroup flowGroup);
+
+    FlowGroup getFlowGroup(long id);
+
+    boolean removeFlowGroup(long id);
+
+    int batchSaveFlowItem(List<FlowItem> list);
+
+    int batchUpdateFlowItem(List<FlowItem> list);
+
+    int batchRemoveFlowItem(List<FlowItem> list);
+
+    List<FlowItem> listFlowItem(long groupId);
+
+    int batchSaveFlowDirect(List<FlowDirect> list);
+
+    int batchUpdateFlowDirect(List<FlowDirect> list);
+
+    int batchRemoveFlowDirect(List<FlowDirect> list);
 
     List<FlowDirect> listFlowDirect(long groupId);
 }

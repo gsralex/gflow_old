@@ -1,5 +1,6 @@
 package com.gsralex.gflow.scheduler;
 
+import com.gsralex.gflow.pub.context.IpAddr;
 import com.gsralex.gflow.scheduler.ha.MasterSwitchAction;
 import com.gsralex.gflow.scheduler.ha.SlaveSwitchAction;
 import com.gsralex.gflow.scheduler.ha.ZkRegisterMaster;
@@ -51,7 +52,13 @@ public class SchedulerServer {
                 context.setMaster(false);
                 context.setMasterIp(zkRegisterMaster.getMasterIp());
             }
+        } else {
+            context.setMasterIp(new IpAddr(context.getConfig().getSchedulerMaster()));
+            if (context.getMasterIp().equals(context.getMyIp())) {
+                context.setMaster(true);
+            }
         }
+
         if (context.isMaster()) {
             //定时任务
             MasterSwitchAction master = new MasterSwitchAction();

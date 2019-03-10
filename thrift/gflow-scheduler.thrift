@@ -5,48 +5,48 @@ include "gflow.thrift"
 
 //任务组描述
 struct TGroupJobReq{
-    1:i64 groupId,
+    1:i64 groupId
     2:string parameter
     3:string accessToken
 }
 
 struct TScheduleGroupResp{
-    1:i64 jobGroupId;
-    2:i32 code,
+    1:i64 jobGroupId
+    2:i32 code
     3:string msg
 }
 
 
 //任务描述
 struct TJobReq{
-    1:i64 id,
-    2:i64 actionId,
-    3:i64 jobGroupId,
-    4:string className,
-    5:string parameter,
-    6:i32 index,
-    7:i64 retryJobId, //重试任务Id，如果不是重试任务，此值为0
+    1:i64 id
+    2:i64 actionId
+    3:i64 jobGroupId
+    4:string className
+    5:string parameter
+    6:i32 index
+    7:i64 retryJobId //重试任务Id，如果不是重试任务，此值为0
     8:string accessToken
 }
 
 struct TJobResp{
-    1:i64 jobId,
+    1:i64 jobId
     2:i32 code
     3:string msg
 }
 
 struct TAckReq{
-    1:i64 jobId,
-    2:i32 code,
-    3:string msg,
+    1:i64 jobId
+    2:i32 code
+    3:string msg
     4:string accessToken
 }
 
 
 enum GroupStatus{
-    EXECUTING=1,
-    PAUSE=2,
-    STOP=3,
+    EXECUTING=1
+    PAUSE=2
+    STOP=3
     FINISH=4
 }
 
@@ -74,18 +74,18 @@ enum JobStatus{
 }
 
 struct TJob{
-    1:i64 id,
+    1:i64 id
     2:JobStatus status
 }
 
 struct TGetJobReq{
-    1:i64 id,
+    1:i64 id
     2:string accessToken
 }
 
 struct TGetJobResp{
     1:i32 code
-    2:TJob job,
+    2:TJob job
     3:string msg
 }
 
@@ -106,15 +106,17 @@ struct TScheduleHbReq{
 }
 
 struct TNode{
-    1:string ip;
-    2:i32 port;
+    1:string ip
+    2:i32 port
 }
 
 struct TNodeResp{
-    1:i32 code;
-    2:string msg;
-    3:list<TNode> nodeList;
+    1:i32 code
+    2:string msg
+    3:list<TNode> nodeList
 }
+
+
 
 
 service TScheduleService{
@@ -140,6 +142,9 @@ service TScheduleService{
     TNodeResp listSchedulerNode(1:gflow.TReq req);
 
     string serverStatus();
+
+
+
 
 //    //获取任务组
 //    TGetJobGroupResp getGroup(1:TGetJobGroupReq req);

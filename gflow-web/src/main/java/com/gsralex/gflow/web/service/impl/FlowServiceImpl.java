@@ -17,7 +17,7 @@ public class FlowServiceImpl implements FlowService {
     private FlowDao flowDao;
 
     @Override
-    public ResultResp listFlow() {
-        return ResultResp.wrapData(flowDao.listFlow());
+    public ResultResp listFlowGroup() {
+        return ResultResp.wrapData(flowDao.listFlowGroup());
     }
 }

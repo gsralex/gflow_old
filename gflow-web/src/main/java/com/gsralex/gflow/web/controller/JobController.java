@@ -4,6 +4,7 @@ import com.gsralex.gflow.web.resp.PageResp;
 import com.gsralex.gflow.web.resp.ResultResp;
 import com.gsralex.gflow.web.service.JobService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @version 2019/3/9
  */
 @RestController
+@CrossOrigin
 public class JobController {
 
     @Autowired

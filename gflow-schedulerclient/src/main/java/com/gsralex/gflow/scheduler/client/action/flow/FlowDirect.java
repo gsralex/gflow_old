@@ -23,4 +23,12 @@ public class FlowDirect {
         }
         return this;
     }
+
+    public List<Integer> getNextIndex() {
+        return nextIndex;
+    }
+
+    public int getIndex() {
+        return index;
+    }
 }

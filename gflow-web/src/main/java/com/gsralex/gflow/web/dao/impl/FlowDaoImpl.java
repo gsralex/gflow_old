@@ -19,7 +19,7 @@ public class FlowDaoImpl implements FlowDao {
     private JdbcUtils jdbcUtils;
 
     @Override
-    public List<FlowGroup> listFlow() {
+    public List<FlowGroup> listFlowGroup() {
         String sql = "select * from gflow_flowgroup where del=0";
         return jdbcUtils.queryForList(sql, null, FlowGroup.class);
     }

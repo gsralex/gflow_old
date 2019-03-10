@@ -19,8 +19,8 @@ public class FlowController {
     @Autowired
     private FlowService flowService;
 
-    @RequestMapping(value = "/flow/list", method = RequestMethod.GET)
-    public ResultResp listFlow() {
-        return flowService.listFlow();
+    @RequestMapping(value = "/flowgroup/list", method = RequestMethod.GET)
+    public ResultResp listFlowGroup() {
+        return flowService.listFlowGroup();
     }
 }
