@@ -5,9 +5,16 @@ import com.gsralex.gflow.pub.context.IpAddr;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
 import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
+import com.gsralex.gflow.scheduler.client.action.scheduler.ExecutorNodeResp;
+import com.gsralex.gflow.scheduler.client.action.scheduler.Node;
 import com.gsralex.gflow.scheduler.client.action.scheduler.ScheduleHbReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * slave scheduler 心跳处理
@@ -16,13 +23,13 @@ import org.slf4j.LoggerFactory;
  * @author gsralex
  * @version 2019/2/14
  */
-public class SSchedulerHbProcess {
+public class SlaveSchedulerHb {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SSchedulerHbProcess.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SlaveSchedulerHb.class);
     private SchedulerContext context;
     private boolean interrupt;
 
-    public SSchedulerHbProcess(SchedulerContext context) {
+    public SlaveSchedulerHb(SchedulerContext context) {
         this.context = context;
     }
 
@@ -48,14 +55,31 @@ public class SSchedulerHbProcess {
                 IpAddr myIp = context.getMyIp();
                 req.setIp(myIp.getIp());
                 req.setPort(myIp.getPort());
-                client.schedulerHb(req);
+                ExecutorNodeResp resp = client.schedulerHb(req);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Salve Scheduler Heartbeat masterIp:{},myIp:{}", masterIp.toString(), myIp.toString());
                 }
+                setIps(resp.getNodeList());
                 Thread.sleep(TimeConstants.HEARTBEAT_INTERVEL);
             } catch (Exception e) {
-                LOG.error("SSchedulerHbProcess.mainLoop", e);
+                LOG.error("SlaveSchedulerHb.mainLoop", e);
             }
+        }
+    }
+
+    private void setIps(List<Node> nodeList) {
+        Map<String, List<IpAddr>> ipMap = new HashMap<>();
+        for (Node node : nodeList) {
+            if (ipMap.containsKey(node.getTag())) {
+                ipMap.get(node.getTag()).add(node.getIp());
+            } else {
+                List<IpAddr> list = new ArrayList<>();
+                list.add(node.getIp());
+                ipMap.put(node.getTag(), list);
+            }
+        }
+        for (Map.Entry<String, List<IpAddr>> tagIp : ipMap.entrySet()) {
+            context.setTagExecutorIp(tagIp.getKey(), tagIp.getValue());
         }
     }
 }

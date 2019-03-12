@@ -30,7 +30,7 @@ public class FlowMapHandle {
     @Autowired
     private FlowDao flowDao;
 
-    private SchedulerContext context;
+    private SchedulerContext context=SchedulerContext.getInstance();
 
 
     public FlowGuide initGroup(long jobGroupId, long flowGroupId) {

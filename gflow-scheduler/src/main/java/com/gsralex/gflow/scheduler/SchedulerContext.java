@@ -1,6 +1,7 @@
 package com.gsralex.gflow.scheduler;
 
 import com.gsralex.gflow.pub.context.IpAddr;
+import com.gsralex.gflow.pub.util.IpManager;
 import com.gsralex.gflow.pub.util.PropertiesUtils;
 import com.gsralex.gflow.pub.util.SecurityUtils;
 import com.gsralex.gflow.scheduler.configuration.SchedulerConfig;
@@ -16,6 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author gsralex
@@ -26,7 +30,6 @@ public class SchedulerContext {
     private static final SchedulerContext CURRENT = new SchedulerContext();
 
     private SchedulerContext() {
-
     }
 
     public static SchedulerContext getInstance() {
@@ -69,6 +72,10 @@ public class SchedulerContext {
      */
     private static ApplicationContext context;
 
+    private Map<String, IpManager> executorIpManager = new ConcurrentHashMap<>();
+
+    private IpManager schedulerIpManager;
+
     public void init() throws IOException {
         InputStream is = PropertiesUtils.class.getResourceAsStream(CONFIG_FILEPATH);
         config = PropertiesUtils.getConfig(is, SchedulerConfig.class);
@@ -78,6 +85,8 @@ public class SchedulerContext {
         InetAddress addr = InetAddress.getLocalHost();
         myIp = new IpAddr(addr.getHostAddress(), config.getPort());
         initSpring();
+
+        schedulerIpManager = new IpManager(config.getSchedulerIps());
     }
 
 
@@ -109,6 +118,7 @@ public class SchedulerContext {
 
     public boolean isMaster() {
         return master;
+
     }
 
     public void setMaster(boolean master) {
@@ -140,20 +150,6 @@ public class SchedulerContext {
         this.timerProcess = timerProcess;
     }
 
-    /**
-     * 获取executor ip
-     *
-     * @param tag
-     * @return
-     */
-    public IpAddr getExecutorIp(String tag) {
-        if (master) {
-            return hbContext.getmExecutorHbProcess().getOnlineIpSeq(tag);
-        } else {
-            return hbContext.getsExecutorHbProcess().getOnlineIpSeq(tag);
-        }
-    }
-
 
     public IpAddr getMasterIp() {
         return masterIp;
@@ -161,6 +157,28 @@ public class SchedulerContext {
 
     public void setMasterIp(IpAddr masterIp) {
         this.masterIp = masterIp;
+    }
+
+
+    public void setTagExecutorIp(String tag, List<IpAddr> ipList) {
+        if (executorIpManager.containsKey(tag)) {
+            executorIpManager.put(tag, new IpManager(ipList));
+        } else {
+            executorIpManager.get(tag).setIp(ipList);
+        }
+    }
+
+    public IpManager getExecutorIpManager(String tag) {
+        return executorIpManager.get(tag);
+    }
+
+    public Map<String, IpManager> getExecutorIpManager() {
+        return executorIpManager;
+
+    }
+
+    public IpManager getSchedulerIpManager() {
+        return schedulerIpManager;
     }
 
 

@@ -12,6 +12,8 @@ public class ExecutorConfig {
     private String accessKey;
     @PropertyName(name = "gflow.executor.tag")
     private String tag;
+    @PropertyName(name = "gflow.executor.threads")
+    private int threads;
 
     public int getPort() {
         return port;
@@ -43,5 +45,13 @@ public class ExecutorConfig {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    public int getThreads() {
+        return threads;
+    }
+
+    public void setThreads(int threads) {
+        this.threads = threads;
     }
 }

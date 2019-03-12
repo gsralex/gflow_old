@@ -13,11 +13,7 @@ public interface SchedulerClient {
 
     Resp ackMaster(AckReq req);
 
-    Resp executorHb(ExecutorHbReq req);
+    SchedulerNodeResp executorHb(ExecutorHbReq req);
 
-    Resp schedulerHb(ScheduleHbReq req);
-
-    Resp updateExecutorNode(ExecutorHbReq req);
-
-    NodeResp listSchedulerNode();
+    ExecutorNodeResp schedulerHb(ScheduleHbReq req);
 }

@@ -4,7 +4,7 @@ package com.gsralex.gflow.executor;
  * @author gsralex
  * @version 2018/8/30
  */
-public interface AsyncExecuteProcess {
+public interface AckExecuteProcess {
 
-    void process(JobReq desc);
+    void process(JobReq req) throws Exception;
 }

@@ -1,9 +1,8 @@
 package com.gsralex.gflow.scheduler;
 
-import com.gsralex.gflow.scheduler.hb.MExecutorHbProcess;
-import com.gsralex.gflow.scheduler.hb.MSchedulerHbProcess;
-import com.gsralex.gflow.scheduler.hb.SExecutorHbProcess;
-import com.gsralex.gflow.scheduler.hb.SSchedulerHbProcess;
+import com.gsralex.gflow.scheduler.hb.MasterReceiveExecutorHb;
+import com.gsralex.gflow.scheduler.hb.MasterReceiveSchedulerHb;
+import com.gsralex.gflow.scheduler.hb.SlaveSchedulerHb;
 
 /**
  * @author gsralex
@@ -11,40 +10,31 @@ import com.gsralex.gflow.scheduler.hb.SSchedulerHbProcess;
  */
 public class HbContext {
 
-    private MSchedulerHbProcess mSchedulerHbProcess;
-    private SSchedulerHbProcess sSchedulerHbProcess;
-    private MExecutorHbProcess mExecutorHbProcess;
-    private SExecutorHbProcess sExecutorHbProcess;
+    private MasterReceiveSchedulerHb masterReceiveSchedulerHb;
+    private SlaveSchedulerHb slaveSchedulerHb;
+    private MasterReceiveExecutorHb masterReceiveExecutorHb;
 
-    public MSchedulerHbProcess getmSchedulerHbProcess() {
-        return mSchedulerHbProcess;
+    public MasterReceiveSchedulerHb getMasterReceiveSchedulerHb() {
+        return masterReceiveSchedulerHb;
     }
 
-    public void setmSchedulerHbProcess(MSchedulerHbProcess mSchedulerHbProcess) {
-        this.mSchedulerHbProcess = mSchedulerHbProcess;
+    public void setMasterReceiveSchedulerHb(MasterReceiveSchedulerHb masterReceiveSchedulerHb) {
+        this.masterReceiveSchedulerHb = masterReceiveSchedulerHb;
     }
 
-    public SSchedulerHbProcess getsSchedulerHbProcess() {
-        return sSchedulerHbProcess;
+    public SlaveSchedulerHb getSlaveSchedulerHb() {
+        return slaveSchedulerHb;
     }
 
-    public void setsSchedulerHbProcess(SSchedulerHbProcess sSchedulerHbProcess) {
-        this.sSchedulerHbProcess = sSchedulerHbProcess;
+    public void setSlaveSchedulerHb(SlaveSchedulerHb slaveSchedulerHb) {
+        this.slaveSchedulerHb = slaveSchedulerHb;
     }
 
-    public MExecutorHbProcess getmExecutorHbProcess() {
-        return mExecutorHbProcess;
+    public MasterReceiveExecutorHb getMasterReceiveExecutorHb() {
+        return masterReceiveExecutorHb;
     }
 
-    public void setmExecutorHbProcess(MExecutorHbProcess mExecutorHbProcess) {
-        this.mExecutorHbProcess = mExecutorHbProcess;
-    }
-
-    public SExecutorHbProcess getsExecutorHbProcess() {
-        return sExecutorHbProcess;
-    }
-
-    public void setsExecutorHbProcess(SExecutorHbProcess sExecutorHbProcess) {
-        this.sExecutorHbProcess = sExecutorHbProcess;
+    public void setMasterReceiveExecutorHb(MasterReceiveExecutorHb masterReceiveExecutorHb) {
+        this.masterReceiveExecutorHb = masterReceiveExecutorHb;
     }
 }

@@ -2,8 +2,7 @@ package com.gsralex.gflow.scheduler.ha;
 
 import com.gsralex.gflow.scheduler.HbContext;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.hb.SExecutorHbProcess;
-import com.gsralex.gflow.scheduler.hb.SSchedulerHbProcess;
+import com.gsralex.gflow.scheduler.hb.SlaveSchedulerHb;
 
 /**
  * @author gsralex
@@ -18,20 +17,17 @@ public class SlaveSwitchAction implements SwitchAction {
         if (context.getHbContext() == null) {
             context.setHbContext(new HbContext());
             //从调度
-            SSchedulerHbProcess sSchedulerHbProcess = new SSchedulerHbProcess(context);
-            sSchedulerHbProcess.start();
-            context.getHbContext().setsSchedulerHbProcess(sSchedulerHbProcess);
-            //主调度
-            SExecutorHbProcess sExecutorHbProcess = new SExecutorHbProcess();
-            context.getHbContext().setsExecutorHbProcess(sExecutorHbProcess);
+            SlaveSchedulerHb slaveSchedulerHb = new SlaveSchedulerHb(context);
+            slaveSchedulerHb.start();
+            context.getHbContext().setSlaveSchedulerHb(slaveSchedulerHb);
         } else {
-            context.getHbContext().getsSchedulerHbProcess().start();
+            context.getHbContext().getSlaveSchedulerHb().start();
         }
     }
 
     @Override
     public void stop() {
-        SSchedulerHbProcess sSchedulerHbProcess = context.getHbContext().getsSchedulerHbProcess();
-        sSchedulerHbProcess.stop();
+        SlaveSchedulerHb slaveSchedulerHb = context.getHbContext().getSlaveSchedulerHb();
+        slaveSchedulerHb.stop();
     }
 }

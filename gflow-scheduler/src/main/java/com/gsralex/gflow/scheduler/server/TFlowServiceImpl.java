@@ -42,6 +42,7 @@ public class TFlowServiceImpl implements TFlowService.Iface {
             item.setActionId(tItem.getActionId());
             item.setIndex(tItem.getIndex());
             item.setParameter(tItem.getParameter());
+            item.setLabel(tItem.getLabel());
             itemList.add(item);
         }
         List<FlowDirect> directList = new ArrayList<>();

@@ -1,6 +1,5 @@
 package com.gsralex.gflow.scheduler.hb;
 
-import com.gsralex.gflow.pub.action.Resp;
 import com.gsralex.gflow.pub.constants.ErrConstants;
 import com.gsralex.gflow.pub.context.IpAddr;
 import com.gsralex.gflow.pub.util.SecurityUtils;
@@ -8,7 +7,11 @@ import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
 import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
 import com.gsralex.gflow.scheduler.client.action.scheduler.ExecutorHbReq;
+import com.gsralex.gflow.scheduler.client.action.scheduler.SchedulerNodeResp;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author gsralex
@@ -26,10 +29,10 @@ public class HbService {
      * @param tag 标签
      * @return
      */
-    public boolean executorHb(IpAddr ip, String tag) {
+    public List<IpAddr> executorHb(IpAddr ip, String tag) {
         if (context.isMaster()) {
-            context.getHbContext().getmExecutorHbProcess().heartBeat(ip, tag);
-            return true;
+            context.getHbContext().getMasterReceiveExecutorHb().heartBeat(ip, tag);
+            return context.getSchedulerIpManager().listIp();
         } else {
             //转发master
             IpAddr masterIp = context.getMasterIp();
@@ -39,11 +42,11 @@ public class HbService {
             req.setPort(ip.getPort());
             req.setAccessToken(SecurityUtils.encrypt(context.getConfig().getAccessKey()));
             req.setTag(tag);
-            Resp resp = client.executorHb(req);
+            SchedulerNodeResp resp = client.executorHb(req);
             if (resp.getCode() == ErrConstants.OK) {
-                return true;
+                return resp.getNodeList();
             } else {
-                return false;
+                return null;
             }
         }
     }
@@ -53,21 +56,10 @@ public class HbService {
      * scheduler slave -> master
      *
      * @param ip
-     * @return
+     * @return 返回从节点
      */
-    public boolean schedulerHb(IpAddr ip) {
-        context.getHbContext().getmSchedulerHbProcess().heartBeat(ip);
-        return true;
-    }
-
-    /**
-     * scheduler master-> slave 更新executor(仅slave scheduler需要)
-     *
-     * @param ip
-     * @param tag
-     */
-    public boolean updateExecutorNode(IpAddr ip, String tag, boolean online) {
-        context.getHbContext().getsExecutorHbProcess().update(ip, tag, online);
-        return true;
+    public List<ExecutorNode> schedulerHb(IpAddr ip) {
+        context.getHbContext().getMasterReceiveSchedulerHb().heartBeat(ip);
+        return new ArrayList<>();
     }
 }

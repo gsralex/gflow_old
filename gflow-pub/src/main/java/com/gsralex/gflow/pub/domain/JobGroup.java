@@ -30,7 +30,7 @@ public class JobGroup {
     @Column("timer_config_id")
     private Long timerConfigId;
     private String parameter;
-
+    @Column("start_server")
     private String startServer;
 
     public Long getId() {

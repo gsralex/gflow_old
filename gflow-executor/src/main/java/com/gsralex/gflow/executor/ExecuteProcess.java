@@ -6,5 +6,5 @@ package com.gsralex.gflow.executor;
  */
 public interface ExecuteProcess {
 
-    boolean process(JobReq desc);
+    boolean process(JobReq req) throws Exception;
 }

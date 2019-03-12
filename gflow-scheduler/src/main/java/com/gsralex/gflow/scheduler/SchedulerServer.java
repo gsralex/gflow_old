@@ -54,9 +54,7 @@ public class SchedulerServer {
             }
         } else {
             context.setMasterIp(new IpAddr(context.getConfig().getSchedulerMaster()));
-            if (context.getMasterIp().equals(context.getMyIp())) {
-                context.setMaster(true);
-            }
+            context.setMaster(context.getConfig().getMaster());
         }
 
         if (context.isMaster()) {

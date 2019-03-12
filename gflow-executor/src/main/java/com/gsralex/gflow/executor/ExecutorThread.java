@@ -1,12 +1,8 @@
 package com.gsralex.gflow.executor;
 
-import com.gsralex.gflow.pub.constants.ErrConstants;
 import com.gsralex.gflow.pub.context.IpAddr;
 import com.gsralex.gflow.pub.context.Parameter;
 import com.gsralex.gflow.pub.thriftgen.scheduler.TJobReq;
-import com.gsralex.gflow.scheduler.client.SchedulerClient;
-import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
-import com.gsralex.gflow.scheduler.client.action.scheduler.AckReq;
 import org.apache.log4j.Logger;
 
 /**
@@ -28,7 +24,6 @@ public class ExecutorThread implements Runnable {
         this.ip = ip;
     }
 
-
     public void setParameter(Parameter parameter) {
         this.parameter = parameter;
     }
@@ -42,17 +37,18 @@ public class ExecutorThread implements Runnable {
         JobReq jobReq = new JobReq(req.getId(), parameter);
         if (process != null) {
             boolean ok = false;
+            boolean ackOk = false;
             try {
                 ok = process.process(jobReq);
             } catch (Exception e) {
-                LOG.error(process.getClass().getName() + ":" + e);
-                throw e;
+                LOG.error("ExecutorThread.run jobid:" + req.getId() + "," +
+                        " parameter:" + req.getParameter(), e);
             }
-            SchedulerClient client = SchedulerClientFactory.createScheduler(ip, context.getAccessToken());
-            AckReq req = new AckReq();
-            req.setJobId(req.getJobId());
-            req.setCode(ok ? ErrConstants.OK : ErrConstants.ERR_INTERNAL);
-            client.ack(req);
+            try {
+                ackOk = ExecutorContext.getInstance().ack(req.getId(), ok);
+            } catch (Exception e) {
+                LOG.error("Executor ack error jobid:" + req.getId(), e);
+            }
         }
     }
 }

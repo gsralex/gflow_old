@@ -75,6 +75,7 @@ public class FlowServiceImpl implements FlowService {
                 if (changed) {
                     dataItem.setActionId(flowItem.getActionId());
                     dataItem.setParameter(flowItem.getParameter());
+                    dataItem.setLabel(flowItem.getLabel());
                     updateList.add(dataItem);
                 }
             } else {

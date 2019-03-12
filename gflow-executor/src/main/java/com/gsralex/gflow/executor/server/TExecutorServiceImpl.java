@@ -1,15 +1,11 @@
 package com.gsralex.gflow.executor.server;
 
 import com.gsralex.gflow.executor.*;
-import com.gsralex.gflow.executor.hb.HbService;
 import com.gsralex.gflow.pub.constants.ErrConstants;
-import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.pub.context.IpSeqSelector;
 import com.gsralex.gflow.pub.context.Parameter;
 import com.gsralex.gflow.pub.thriftgen.TResp;
 import com.gsralex.gflow.pub.thriftgen.scheduler.TExecutorService;
 import com.gsralex.gflow.pub.thriftgen.scheduler.TJobReq;
-import com.gsralex.gflow.pub.thriftgen.scheduler.TScheduleHbReq;
 import org.apache.log4j.Logger;
 import org.apache.thrift.TException;
 
@@ -25,17 +21,12 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
 
     private static final Logger LOG = Logger.getLogger(TExecutorServiceImpl.class);
     private ExecutorService executorService;
-    private HbService hbService;
 
     private ExecutorContext context;
-    private IpSeqSelector ipSeqSelector;
 
     public TExecutorServiceImpl(ExecutorContext context) {
         this.context = context;
-        int threads = 10;
-        this.executorService = Executors.newFixedThreadPool(threads);
-        this.hbService = new HbService(context);
-        this.ipSeqSelector = new IpSeqSelector(context.getSchedulerHbProcess().listOnlineIp());
+        this.executorService = Executors.newFixedThreadPool(context.getConfig().getThreads());
     }
 
     @Override
@@ -47,15 +38,14 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
             Class type = Class.forName(req.getClassName());
             if (ExecuteProcess.class.isAssignableFrom(type)) {
                 ExecuteProcess process = (ExecuteProcess) getInstance(type);
-                this.ipSeqSelector.setIpList(context.getSchedulerHbProcess().listOnlineIp());
-                ExecutorThread thread = new ExecutorThread(process, this.context, this.ipSeqSelector.getIp());
+                ExecutorThread thread = new ExecutorThread(process, this.context, context.getSchedulerIpManager().getIp());
                 thread.setReq(req);
                 thread.setParameter(parameter);
                 executorService.execute(thread);
                 code = ErrConstants.OK;
-            } else if (AsyncExecuteProcess.class.isAssignableFrom(type)) {
-                AsyncExecuteProcess process = (AsyncExecuteProcess) getInstance(type);
-                AsyncExecutorThread thread = new AsyncExecutorThread(process, context);
+            } else if (AckExecuteProcess.class.isAssignableFrom(type)) {
+                AckExecuteProcess process = (AckExecuteProcess) getInstance(type);
+                AckExecutorThread thread = new AckExecutorThread(process, context);
                 thread.setReq(req);
                 thread.setParameter(parameter);
                 executorService.execute(thread);
@@ -68,7 +58,8 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
         } catch (Exception e) {
             errMsg = e.getMessage();
             code = ErrConstants.ERR_INTERNAL;
-            LOG.error("TExecutorServiceImpl.schedule", e);
+            LOG.error("TExecutorServiceImpl.schedule jobid:" + req.getId() + "," +
+                    " parameter:" + req.getParameter(), e);
         }
         TResp resp = new TResp();
         resp.setCode(code);
@@ -84,15 +75,5 @@ public class TExecutorServiceImpl implements TExecutorService.Iface {
             instance = type.newInstance();
         }
         return instance;
-    }
-
-
-    @Override
-    public TResp updateSchedulerNode(TScheduleHbReq req) throws TException {
-        IpAddr ip = new IpAddr(req.getIp(), req.getPort());
-        hbService.updateSchedulerNode(ip, true);
-        TResp resp = new TResp();
-        resp.setCode(ErrConstants.OK);
-        return resp;
     }
 }

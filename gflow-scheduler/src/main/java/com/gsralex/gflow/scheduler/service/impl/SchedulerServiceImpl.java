@@ -203,7 +203,7 @@ public class SchedulerServiceImpl implements SchedulerService {
         req.setClassName(action.getClassName());
         boolean sendOk = false;
         try {
-            IpAddr ip = context.getExecutorIp(action.getTag());
+            IpAddr ip = context.getExecutorIpManager(action.getTag()).getIp();
             String accessToken = SecurityUtils.encrypt(context.getConfig().getAccessKey());
             ExecutorClient client = ExecutorClientFactory.create(ip, accessToken);
             Resp resp = client.schedule(req);

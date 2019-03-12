@@ -24,11 +24,13 @@ public class SchedulerConfig {
     private String executorIps;
     @PropertyName(name = "gflow.scheduler.ips")
     private String schedulerIps;
-    @PropertyName(name = "gflow.scheduler.master")
+    @PropertyName(name = "gflow.scheduler.masterip")
     private String schedulerMaster;
+    @PropertyName(name = "gflow.scheduler.master")
+    private Boolean master;
+
     @PropertyName(name = "gflow.accesskey")
     private String accessKey;
-
 
     public String getDbDriver() {
         return dbDriver;
@@ -102,14 +104,6 @@ public class SchedulerConfig {
         this.executorIps = executorIps;
     }
 
-    public String getAccessKey() {
-        return accessKey;
-    }
-
-    public void setAccessKey(String accessKey) {
-        this.accessKey = accessKey;
-    }
-
     public String getSchedulerIps() {
         return schedulerIps;
     }
@@ -124,5 +118,21 @@ public class SchedulerConfig {
 
     public void setSchedulerMaster(String schedulerMaster) {
         this.schedulerMaster = schedulerMaster;
+    }
+
+    public Boolean getMaster() {
+        return master;
+    }
+
+    public void setMaster(Boolean master) {
+        this.master = master;
+    }
+
+    public String getAccessKey() {
+        return accessKey;
+    }
+
+    public void setAccessKey(String accessKey) {
+        this.accessKey = accessKey;
     }
 }

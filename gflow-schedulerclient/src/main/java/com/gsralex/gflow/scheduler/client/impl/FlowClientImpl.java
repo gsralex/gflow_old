@@ -101,17 +101,18 @@ public class FlowClientImpl implements FlowClient {
     public static void main(String[] args) {
         FlowClient flowClient = SchedulerClientFactory.createFlow(new IpAddr("localhost:20091"), "");
         FlowGroup flowGroup = new FlowGroup();
-        flowGroup.setId(6);
-        flowGroup.setName("asdasd");
-        flowGroup.setDescription("asdasdasd");
-        flowGroup.action(1).parameter("bizdate=${bizdate}").index(1);
-        flowGroup.action(2).parameter("bizdate=${bizdate}").index(2);
-        flowGroup.action(4).parameter("bizdate=${bizdate}").index(4);
-        flowGroup.action(5).parameter("bizdate=${bizdate}").index(5);
+        flowGroup.setId(1);
+        flowGroup.setName("test flow");
+        flowGroup.setDescription("test flow");
+        flowGroup.action(1).parameter("bizdate=${bizdate}").index(1).label("example1");
+        flowGroup.action(2).parameter("bizdate=${bizdate}").index(2).label("example2");
+        flowGroup.action(3).parameter("bizdate=${bizdate}").index(3).label("ackexample");
+        flowGroup.action(4).parameter("bizdate=${bizdate}").index(4).label("error");
 
         flowGroup.direct(0).next(1);
-        flowGroup.direct(1).next(2, 4);
-        flowGroup.direct(2).next(5);
+        flowGroup.direct(1).next(2, 3);
+        flowGroup.direct(2).next(4);
+        flowGroup.direct(3).next(4);
         flowClient.setFlowGroup(flowGroup);
     }
 }

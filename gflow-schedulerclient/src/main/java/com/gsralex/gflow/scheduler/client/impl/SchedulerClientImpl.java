@@ -2,11 +2,11 @@ package com.gsralex.gflow.scheduler.client.impl;
 
 import com.gsralex.gflow.pub.action.Resp;
 import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.pub.thriftgen.TReq;
 import com.gsralex.gflow.pub.thriftgen.TResp;
 import com.gsralex.gflow.pub.thriftgen.scheduler.*;
 import com.gsralex.gflow.scheduler.client.ClientTransportException;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
+import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
 import com.gsralex.gflow.scheduler.client.action.scheduler.*;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
@@ -123,86 +123,68 @@ public class SchedulerClientImpl implements SchedulerClient {
     }
 
     @Override
-    public Resp executorHb(ExecutorHbReq req) {
-        class Callback implements ClientCallback<Resp> {
+    public SchedulerNodeResp executorHb(ExecutorHbReq req) {
+        class Callback implements ClientCallback<SchedulerNodeResp> {
             @Override
-            public Resp doAction(TScheduleService.Client client) throws TException {
+            public SchedulerNodeResp doAction(TScheduleService.Client client) throws TException {
                 TExecutorHbReq tReq = new TExecutorHbReq();
                 tReq.setIp(req.getIp());
                 tReq.setPort(req.getPort());
                 tReq.setTag(req.getTag());
-                TResp tResp = client.executorHb(tReq);
-                Resp resp = new Resp();
-                resp.setCode(tResp.getCode());
-                resp.setMsg(tResp.getMsg());
-                return resp;
-            }
-        }
-        return execute(new Callback(), this.ip);
-    }
-
-    @Override
-    public Resp schedulerHb(ScheduleHbReq req) {
-        class Callback implements ClientCallback<Resp> {
-            @Override
-            public Resp doAction(TScheduleService.Client client) throws TException {
-                TScheduleHbReq tReq = new TScheduleHbReq();
-                tReq.setIp(req.getIp());
-                tReq.setPort(req.getPort());
-                TResp tResp = client.schedulerHb(tReq);
-                Resp resp = new Resp();
-                resp.setCode(tResp.getCode());
-                resp.setMsg(tResp.getMsg());
-                return resp;
-            }
-        }
-        return execute(new Callback(), this.ip);
-    }
-
-    @Override
-    public Resp updateExecutorNode(ExecutorHbReq req) {
-        class Callback implements ClientCallback<Resp> {
-            @Override
-            public Resp doAction(TScheduleService.Client client) throws TException {
-                TExecutorHbReq tReq = new TExecutorHbReq();
-                tReq.setIp(req.getIp());
-                tReq.setPort(req.getPort());
-                TResp tResp = client.updateExecutorNode(tReq);
-                Resp resp = new Resp();
-                resp.setCode(tResp.getCode());
-                resp.setMsg(tResp.getMsg());
-                return resp;
-            }
-        }
-        return execute(new Callback(), this.ip);
-    }
-
-    @Override
-    public NodeResp listSchedulerNode() {
-        class Callback implements ClientCallback<NodeResp> {
-            @Override
-            public NodeResp doAction(TScheduleService.Client client) throws TException {
-                TReq tReq = new TReq();
-                tReq.setAccessToken(accessToken);
-                TNodeResp tResp = client.listSchedulerNode(tReq);
-                NodeResp resp = new NodeResp();
-                resp.setCode(tResp.getCode());
-                resp.setMsg(tResp.getMsg());
-                List<TNode> tNodeList = tResp.getNodeList();
+                TNodeResp tResp = client.executorHb(tReq);
+                SchedulerNodeResp resp = new SchedulerNodeResp();
                 List<IpAddr> nodeList = new ArrayList<>();
-                for (TNode tNode : tNodeList) {
+                for (TNode tNode : tResp.getNodeList()) {
                     nodeList.add(new IpAddr(tNode.getIp(), tNode.getPort()));
                 }
                 resp.setNodeList(nodeList);
+                resp.setCode(tResp.getCode());
+                resp.setMsg(tResp.getMsg());
                 return resp;
             }
         }
         return execute(new Callback(), this.ip);
     }
+
+    @Override
+    public ExecutorNodeResp schedulerHb(ScheduleHbReq req) {
+        class Callback implements ClientCallback<ExecutorNodeResp> {
+            @Override
+            public ExecutorNodeResp doAction(TScheduleService.Client client) throws TException {
+                TScheduleHbReq tReq = new TScheduleHbReq();
+                tReq.setIp(req.getIp());
+                tReq.setPort(req.getPort());
+                TNodeResp tResp = client.schedulerHb(tReq);
+                ExecutorNodeResp resp=new ExecutorNodeResp();
+                List<Node> nodeList = new ArrayList<>();
+                for (TNode tNode : tResp.getNodeList()) {
+                    IpAddr ip=new IpAddr(tNode.getIp(), tNode.getPort());
+                    Node node=new Node();
+                    node.setIp(ip);
+                    node.setTag(tNode.getTag());
+                    nodeList.add(node);
+                }
+                resp.setNodeList(nodeList);
+                resp.setCode(tResp.getCode());
+                resp.setMsg(tResp.getMsg());
+                return resp;
+            }
+        }
+        return execute(new Callback(), this.ip);
+    }
+
 
     public interface ClientCallback<T> {
         T doAction(TScheduleService.Client client) throws TException;
     }
 
+
+    public static void main(String[] args) {
+        SchedulerClient client = SchedulerClientFactory.createScheduler(new IpAddr("127.0.0.1:20091"), "");
+        ScheduleGroupReq req = new ScheduleGroupReq();
+        req.setFlowGroupId(1);
+        req.setParameter("bizdate=20190310");
+        client.scheduleGroup(req);
+    }
 
 }

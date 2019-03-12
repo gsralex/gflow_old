@@ -14,6 +14,7 @@
         <module>gflow-executor</module>
         <module>gflow-schedulerclient</module>
         <module>gflow-web</module>
+        <module>gflow-example</module>
     </modules>
     <properties>
         <junit.version>4.12</junit.version>
