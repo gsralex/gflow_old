@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,20 +28,37 @@ public class SchedulerServer {
 
     private static final Logger LOG = LoggerFactory.getLogger(SchedulerServer.class);
 
+    private SchedulerContext context;
+
+    public SchedulerServer(boolean master) throws IOException {
+        context = SchedulerContext.getInstance();
+        context.init();
+        context.setMaster(master);
+    }
 
     public void addParameter(DynamicParam parameter) {
         SchedulerContext.getInstance().addParam(parameter);
     }
 
-    public void serve() throws ScheduleTransportException, IOException {
-        SchedulerContext context = SchedulerContext.getInstance();
-        context.init();
+    public void serve() throws ScheduleTransportException, UnknownHostException {
 
         LOG.info("====== SchedulerServer STARTING ======");
         TSchedulerServer server = context.getBean(TSchedulerServer.class);
         server.start(context.getConfig().getPort());
         LOG.info("====== SchedulerServer STARTED ======");
 
+        selectMaster(context);
+        if (context.isMaster()) {
+            MasterSwitchAction master = new MasterSwitchAction();
+            master.start();
+        } else {
+            SlaveSwitchAction slave = new SlaveSwitchAction();
+            slave.start();
+        }
+    }
+
+
+    private void selectMaster(SchedulerContext context) throws UnknownHostException {
         //如果有zk，则用zk注册master
         if (context.getConfig().getZkActive() != null
                 && context.getConfig().getZkActive()) {
@@ -53,23 +72,18 @@ public class SchedulerServer {
                 context.setMasterIp(zkRegisterMaster.getMasterIp());
             }
         } else {
-            context.setMasterIp(new IpAddr(context.getConfig().getSchedulerMaster()));
-            context.setMaster(context.getConfig().getMaster());
-        }
-
-        if (context.isMaster()) {
-            //定时任务
-            MasterSwitchAction master = new MasterSwitchAction();
-            master.start();
-        } else {
-            SlaveSwitchAction slave = new SlaveSwitchAction();
-            slave.start();
+            IpAddr masterIp = new IpAddr(context.getConfig().getSchedulerMaster());
+            InetAddress masterAddr = InetAddress.getByName(masterIp.getIp());
+            masterIp.setIp(masterAddr.getHostAddress());
+            context.setMasterIp(masterIp);
         }
     }
 
 
     public static void main(String[] args) throws ScheduleTransportException, IOException {
-        SchedulerServer server = new SchedulerServer();
+        ArgsData argsData = new ArgsData(args);
+        // SchedulerServer server = new SchedulerServer(argsData.isMaster());
+        SchedulerServer server = new SchedulerServer(true);
         server.addParameter(getBizdataParam());
         server.serve();
     }

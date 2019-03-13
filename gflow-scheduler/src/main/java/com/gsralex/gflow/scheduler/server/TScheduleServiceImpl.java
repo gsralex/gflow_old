@@ -3,18 +3,22 @@ package com.gsralex.gflow.scheduler.server;
 
 import com.gsralex.gflow.pub.constants.ErrConstants;
 import com.gsralex.gflow.pub.context.IpAddr;
+import com.gsralex.gflow.pub.thriftgen.TReq;
 import com.gsralex.gflow.pub.thriftgen.TResp;
 import com.gsralex.gflow.pub.thriftgen.scheduler.*;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.hb.ExecutorNode;
-import com.gsralex.gflow.scheduler.hb.HbService;
+import com.gsralex.gflow.scheduler.hb.SchedulerNode;
 import com.gsralex.gflow.scheduler.schedule.ActionResult;
 import com.gsralex.gflow.scheduler.schedule.FlowResult;
+import com.gsralex.gflow.scheduler.service.HbService;
 import com.gsralex.gflow.scheduler.service.SchedulerService;
+import com.gsralex.gflow.scheduler.service.impl.HbServiceImpl;
 import org.apache.thrift.TException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -123,16 +127,66 @@ public class TScheduleServiceImpl implements TScheduleService.Iface {
     }
 
     @Override
-    public TSchedulerNodeResp executorHb(TExecutorHbReq req) throws TException {
-        List<IpAddr> ipList = hbService.executorHb(new IpAddr(req.getIp(), req.getPort()), req.getTag());
-        TSchedulerNodeResp resp = new TSchedulerNodeResp();
+    public TNodeResp executorHb(TExecutorHbReq req) throws TException {
+        List<IpAddr> ipList = hbService.executorHb(new IpAddr(req.getIp(),req.getPort()), req.getTag());
+        TNodeResp resp = new TNodeResp();
+        List<TNode> tNodeList = new ArrayList<>();
+        for (IpAddr ip : ipList) {
+            TNode tNode = new TNode();
+            tNode.setIp(ip.toString());
+            tNode.setPort(ip.getPort());
+            tNodeList.add(tNode);
+        }
+        resp.setNodeList(tNodeList);
         return resp;
     }
 
     @Override
-    public TExecutorNodeResp schedulerHb(TScheduleHbReq req) throws TException {
-        List<ExecutorNode> list = hbService.schedulerHb(new IpAddr(req.getIp(), req.getPort()));
-        TExecutorNodeResp resp = new TExecutorNodeResp();
+    public TNodeResp schedulerHb(TScheduleHbReq req) throws TException {
+        List<ExecutorNode> ipList = hbService.schedulerHb(new IpAddr(req.getIp()));
+        TNodeResp resp = new TNodeResp();
+        List<TNode> tNodeList = new ArrayList<>();
+        for (ExecutorNode node : ipList) {
+            TNode tNode = new TNode();
+            tNode.setIp(node.getIp().getIp());
+            tNode.setPort(node.getIp().getPort());
+            tNode.setTag(node.getTag());
+            tNodeList.add(tNode);
+        }
+        resp.setNodeList(tNodeList);
+        return resp;
+    }
+
+    @Override
+    public TNodeStatusResp listScheduerNode(TReq req) throws TException {
+        List<SchedulerNode> scheNodeList = hbService.listSchedulerNode();
+        TNodeStatusResp resp = new TNodeStatusResp();
+        List<TNodeStatus> nodeList = new ArrayList<>();
+        for (SchedulerNode scheNode : scheNodeList) {
+            TNodeStatus node = new TNodeStatus();
+            node.setIp(scheNode.getIp().getIp());
+            node.setPort(scheNode.getIp().getPort());
+            node.setOnline(scheNode.isOnline());
+            nodeList.add(node);
+        }
+        resp.setNodeList(nodeList);
+        return resp;
+    }
+
+    @Override
+    public TNodeStatusResp listExecutorNode(TReq req) throws TException {
+        List<ExecutorNode> execNodeList = hbService.listExecutorNode();
+        TNodeStatusResp resp = new TNodeStatusResp();
+        List<TNodeStatus> nodeList = new ArrayList<>();
+        for (ExecutorNode execNode : execNodeList) {
+            TNodeStatus node = new TNodeStatus();
+            node.setIp(execNode.getIp().getIp());
+            node.setPort(execNode.getIp().getPort());
+            node.setOnline(execNode.isOnline());
+            node.setTag(execNode.getTag());
+            nodeList.add(node);
+        }
+        resp.setNodeList(nodeList);
         return resp;
     }
 
@@ -145,5 +199,4 @@ public class TScheduleServiceImpl implements TScheduleService.Iface {
             return "slave";
         }
     }
-
 }

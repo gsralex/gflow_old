@@ -2,7 +2,6 @@ package com.gsralex.gflow.web.service.impl;
 
 import com.gsralex.gflow.pub.action.IdReq;
 import com.gsralex.gflow.pub.action.Resp;
-import com.gsralex.gflow.pub.context.IpSeqSelector;
 import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
 import com.gsralex.gflow.scheduler.client.TimerClient;
 import com.gsralex.gflow.scheduler.client.action.timer.TimerReq;
@@ -27,15 +26,11 @@ public class TimerServiceImpl implements TimerService {
     @Autowired
     private TimerDao timerDao;
 
-    private IpSeqSelector ipSelector;
-
-    public TimerServiceImpl() {
-        ipSelector = new IpSeqSelector(WebContext.getInstance().getSchedulerIps());
-    }
+    private WebContext context = WebContext.getInstance();
 
     @Override
     public Resp saveTimer(TimerReq req) {
-        TimerClient client = SchedulerClientFactory.createTimer(ipSelector.getIp(), "");
+        TimerClient client = SchedulerClientFactory.createTimer(context.getSchedulerIpManager().getIp(), "");
         return client.saveTimer(req);
 
     }
@@ -44,13 +39,13 @@ public class TimerServiceImpl implements TimerService {
     public Resp updateTimer(TimerReq req) {
 //        SchedulerClient schedulerClient= SchedulerClientFactory.createScheduler(ipSelector.getIp(), "");
 //        schedulerClient.scheduleAction(new JobReq());
-        TimerClient client = SchedulerClientFactory.createTimer(ipSelector.getIp(), "");
+        TimerClient client = SchedulerClientFactory.createTimer(context.getSchedulerIpManager().getIp(), "");
         return client.updateTimer(req);
     }
 
     @Override
     public Resp removeTimer(long id) {
-        TimerClient client = SchedulerClientFactory.createTimer(ipSelector.getIp(), "");
+        TimerClient client = SchedulerClientFactory.createTimer(context.getSchedulerIpManager().getIp(), "");
         IdReq idReq = new IdReq();
         idReq.setId(id);
         return client.removeTimer(idReq);

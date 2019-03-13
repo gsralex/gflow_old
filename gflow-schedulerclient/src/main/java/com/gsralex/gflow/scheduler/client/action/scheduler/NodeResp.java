@@ -6,9 +6,9 @@ import java.util.List;
 
 /**
  * @author gsralex
- * @version 2019/3/12
+ * @version 2019/3/13
  */
-public class ExecutorNodeResp extends Resp {
+public class NodeResp extends Resp {
 
     private List<Node> nodeList;
 

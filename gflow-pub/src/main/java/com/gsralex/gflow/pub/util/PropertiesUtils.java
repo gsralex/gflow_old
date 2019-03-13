@@ -1,7 +1,6 @@
 package com.gsralex.gflow.pub.util;
 
 
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -17,6 +16,12 @@ import java.util.Properties;
  */
 public class PropertiesUtils {
 
+    public static Properties getProperties(String path) throws IOException {
+        InputStream is = PropertiesUtils.class.getResourceAsStream(path);
+        Properties properties = new Properties();
+        properties.load(is);
+        return properties;
+    }
 
     public static <T> T getConfig(String path, Class<T> type) throws IOException {
         InputStream is = PropertiesUtils.class.getResourceAsStream(path);
@@ -24,24 +29,25 @@ public class PropertiesUtils {
     }
 
     public static <T> T getConfig(InputStream is, Class<T> type) throws IOException {
-        Properties prop = new Properties();
-        prop.load(is);
-        T instance = null;
+        Properties props = new Properties();
+        props.load(is);
+        return getConfig(props, type);
+    }
+
+    public static <T> T getConfig(Properties props, Class<T> type) throws IOException {
+        T instance=null;
         try {
             instance = type.newInstance();
         } catch (InstantiationException e) {
-            e.printStackTrace();
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
         }
-
         Map<String, Field> annotationMap = getAnnotaionMap(type);
-        for (Map.Entry<Object, Object> entry : prop.entrySet()) {
+        for (Map.Entry<Object, Object> entry : props.entrySet()) {
             String key = (String) entry.getKey();
             String value = (String) entry.getValue();
             if (annotationMap.containsKey(key)) {
                 Field field = annotationMap.get(key);
-                Object typeValue= convertValue(field,value);
+                Object typeValue = convertValue(field, value);
                 try {
                     Method method = type.getMethod(getSetMethodName(field.getName()), field.getType());
                     method.invoke(instance, typeValue);

@@ -24,11 +24,15 @@ public class TScheduleService {
 
     public com.gsralex.gflow.pub.thriftgen.TResp ackMaster(TAckReq req) throws org.apache.thrift.TException;
 
-    public TSchedulerNodeResp executorHb(TExecutorHbReq req) throws org.apache.thrift.TException;
+    public TNodeResp executorHb(TExecutorHbReq req) throws org.apache.thrift.TException;
 
-    public TExecutorNodeResp schedulerHb(TScheduleHbReq req) throws org.apache.thrift.TException;
+    public TNodeResp schedulerHb(TScheduleHbReq req) throws org.apache.thrift.TException;
 
     public java.lang.String serverStatus() throws org.apache.thrift.TException;
+
+    public TNodeStatusResp listScheduerNode(com.gsralex.gflow.pub.thriftgen.TReq req) throws org.apache.thrift.TException;
+
+    public TNodeStatusResp listExecutorNode(com.gsralex.gflow.pub.thriftgen.TReq req) throws org.apache.thrift.TException;
 
   }
 
@@ -46,11 +50,15 @@ public class TScheduleService {
 
     public void ackMaster(TAckReq req, org.apache.thrift.async.AsyncMethodCallback<com.gsralex.gflow.pub.thriftgen.TResp> resultHandler) throws org.apache.thrift.TException;
 
-    public void executorHb(TExecutorHbReq req, org.apache.thrift.async.AsyncMethodCallback<TSchedulerNodeResp> resultHandler) throws org.apache.thrift.TException;
+    public void executorHb(TExecutorHbReq req, org.apache.thrift.async.AsyncMethodCallback<TNodeResp> resultHandler) throws org.apache.thrift.TException;
 
-    public void schedulerHb(TScheduleHbReq req, org.apache.thrift.async.AsyncMethodCallback<TExecutorNodeResp> resultHandler) throws org.apache.thrift.TException;
+    public void schedulerHb(TScheduleHbReq req, org.apache.thrift.async.AsyncMethodCallback<TNodeResp> resultHandler) throws org.apache.thrift.TException;
 
     public void serverStatus(org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException;
+
+    public void listScheduerNode(com.gsralex.gflow.pub.thriftgen.TReq req, org.apache.thrift.async.AsyncMethodCallback<TNodeStatusResp> resultHandler) throws org.apache.thrift.TException;
+
+    public void listExecutorNode(com.gsralex.gflow.pub.thriftgen.TReq req, org.apache.thrift.async.AsyncMethodCallback<TNodeStatusResp> resultHandler) throws org.apache.thrift.TException;
 
   }
 
@@ -212,9 +220,9 @@ public class TScheduleService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "ackMaster failed: unknown result");
     }
 
-    public TSchedulerNodeResp executorHb(TExecutorHbReq req) throws org.apache.thrift.TException
+    public TNodeResp executorHb(TExecutorHbReq req) throws org.apache.thrift.TException
     {
-      send_executorHb(req);
+        send_executorHb(req);
       return recv_executorHb();
     }
 
@@ -225,7 +233,7 @@ public class TScheduleService {
       sendBase("executorHb", args);
     }
 
-    public TSchedulerNodeResp recv_executorHb() throws org.apache.thrift.TException
+    public TNodeResp recv_executorHb() throws org.apache.thrift.TException
     {
       executorHb_result result = new executorHb_result();
       receiveBase(result, "executorHb");
@@ -235,7 +243,7 @@ public class TScheduleService {
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "executorHb failed: unknown result");
     }
 
-    public TExecutorNodeResp schedulerHb(TScheduleHbReq req) throws org.apache.thrift.TException
+    public TNodeResp schedulerHb(TScheduleHbReq req) throws org.apache.thrift.TException
     {
       send_schedulerHb(req);
       return recv_schedulerHb();
@@ -248,7 +256,7 @@ public class TScheduleService {
       sendBase("schedulerHb", args);
     }
 
-    public TExecutorNodeResp recv_schedulerHb() throws org.apache.thrift.TException
+    public TNodeResp recv_schedulerHb() throws org.apache.thrift.TException
     {
       schedulerHb_result result = new schedulerHb_result();
       receiveBase(result, "schedulerHb");
@@ -278,6 +286,52 @@ public class TScheduleService {
         return result.success;
       }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "serverStatus failed: unknown result");
+    }
+
+    public TNodeStatusResp listScheduerNode(com.gsralex.gflow.pub.thriftgen.TReq req) throws org.apache.thrift.TException
+    {
+      send_listScheduerNode(req);
+      return recv_listScheduerNode();
+    }
+
+    public void send_listScheduerNode(com.gsralex.gflow.pub.thriftgen.TReq req) throws org.apache.thrift.TException
+    {
+      listScheduerNode_args args = new listScheduerNode_args();
+      args.setReq(req);
+      sendBase("listScheduerNode", args);
+    }
+
+    public TNodeStatusResp recv_listScheduerNode() throws org.apache.thrift.TException
+    {
+      listScheduerNode_result result = new listScheduerNode_result();
+      receiveBase(result, "listScheduerNode");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "listScheduerNode failed: unknown result");
+    }
+
+    public TNodeStatusResp listExecutorNode(com.gsralex.gflow.pub.thriftgen.TReq req) throws org.apache.thrift.TException
+    {
+      send_listExecutorNode(req);
+      return recv_listExecutorNode();
+    }
+
+    public void send_listExecutorNode(com.gsralex.gflow.pub.thriftgen.TReq req) throws org.apache.thrift.TException
+    {
+      listExecutorNode_args args = new listExecutorNode_args();
+      args.setReq(req);
+      sendBase("listExecutorNode", args);
+    }
+
+    public TNodeStatusResp recv_listExecutorNode() throws org.apache.thrift.TException
+    {
+      listExecutorNode_result result = new listExecutorNode_result();
+      receiveBase(result, "listExecutorNode");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "listExecutorNode failed: unknown result");
     }
 
   }
@@ -490,16 +544,16 @@ public class TScheduleService {
       }
     }
 
-    public void executorHb(TExecutorHbReq req, org.apache.thrift.async.AsyncMethodCallback<TSchedulerNodeResp> resultHandler) throws org.apache.thrift.TException {
+    public void executorHb(TExecutorHbReq req, org.apache.thrift.async.AsyncMethodCallback<TNodeResp> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       executorHb_call method_call = new executorHb_call(req, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class executorHb_call extends org.apache.thrift.async.TAsyncMethodCall<TSchedulerNodeResp> {
+    public static class executorHb_call extends org.apache.thrift.async.TAsyncMethodCall<TNodeResp> {
       private TExecutorHbReq req;
-      public executorHb_call(TExecutorHbReq req, org.apache.thrift.async.AsyncMethodCallback<TSchedulerNodeResp> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public executorHb_call(TExecutorHbReq req, org.apache.thrift.async.AsyncMethodCallback<TNodeResp> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.req = req;
       }
@@ -512,7 +566,7 @@ public class TScheduleService {
         prot.writeMessageEnd();
       }
 
-      public TSchedulerNodeResp getResult() throws org.apache.thrift.TException {
+      public TNodeResp getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -522,16 +576,16 @@ public class TScheduleService {
       }
     }
 
-    public void schedulerHb(TScheduleHbReq req, org.apache.thrift.async.AsyncMethodCallback<TExecutorNodeResp> resultHandler) throws org.apache.thrift.TException {
+    public void schedulerHb(TScheduleHbReq req, org.apache.thrift.async.AsyncMethodCallback<TNodeResp> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       schedulerHb_call method_call = new schedulerHb_call(req, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class schedulerHb_call extends org.apache.thrift.async.TAsyncMethodCall<TExecutorNodeResp> {
+    public static class schedulerHb_call extends org.apache.thrift.async.TAsyncMethodCall<TNodeResp> {
       private TScheduleHbReq req;
-      public schedulerHb_call(TScheduleHbReq req, org.apache.thrift.async.AsyncMethodCallback<TExecutorNodeResp> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      public schedulerHb_call(TScheduleHbReq req, org.apache.thrift.async.AsyncMethodCallback<TNodeResp> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
         this.req = req;
       }
@@ -544,7 +598,7 @@ public class TScheduleService {
         prot.writeMessageEnd();
       }
 
-      public TExecutorNodeResp getResult() throws org.apache.thrift.TException {
+      public TNodeResp getResult() throws org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new java.lang.IllegalStateException("Method call not finished!");
         }
@@ -583,6 +637,70 @@ public class TScheduleService {
       }
     }
 
+    public void listScheduerNode(com.gsralex.gflow.pub.thriftgen.TReq req, org.apache.thrift.async.AsyncMethodCallback<TNodeStatusResp> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      listScheduerNode_call method_call = new listScheduerNode_call(req, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class listScheduerNode_call extends org.apache.thrift.async.TAsyncMethodCall<TNodeStatusResp> {
+      private com.gsralex.gflow.pub.thriftgen.TReq req;
+      public listScheduerNode_call(com.gsralex.gflow.pub.thriftgen.TReq req, org.apache.thrift.async.AsyncMethodCallback<TNodeStatusResp> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.req = req;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("listScheduerNode", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        listScheduerNode_args args = new listScheduerNode_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public TNodeStatusResp getResult() throws org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_listScheduerNode();
+      }
+    }
+
+    public void listExecutorNode(com.gsralex.gflow.pub.thriftgen.TReq req, org.apache.thrift.async.AsyncMethodCallback<TNodeStatusResp> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      listExecutorNode_call method_call = new listExecutorNode_call(req, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    public static class listExecutorNode_call extends org.apache.thrift.async.TAsyncMethodCall<TNodeStatusResp> {
+      private com.gsralex.gflow.pub.thriftgen.TReq req;
+      public listExecutorNode_call(com.gsralex.gflow.pub.thriftgen.TReq req, org.apache.thrift.async.AsyncMethodCallback<TNodeStatusResp> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.req = req;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("listExecutorNode", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        listExecutorNode_args args = new listExecutorNode_args();
+        args.setReq(req);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public TNodeStatusResp getResult() throws org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_listExecutorNode();
+      }
+    }
+
   }
 
   public static class Processor<I extends Iface> extends org.apache.thrift.TBaseProcessor<I> implements org.apache.thrift.TProcessor {
@@ -605,6 +723,8 @@ public class TScheduleService {
       processMap.put("executorHb", new executorHb());
       processMap.put("schedulerHb", new schedulerHb());
       processMap.put("serverStatus", new serverStatus());
+      processMap.put("listScheduerNode", new listScheduerNode());
+      processMap.put("listExecutorNode", new listExecutorNode());
       return processMap;
     }
 
@@ -833,6 +953,56 @@ public class TScheduleService {
       }
     }
 
+    public static class listScheduerNode<I extends Iface> extends org.apache.thrift.ProcessFunction<I, listScheduerNode_args> {
+      public listScheduerNode() {
+        super("listScheduerNode");
+      }
+
+      public listScheduerNode_args getEmptyArgsInstance() {
+        return new listScheduerNode_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      @Override
+      protected boolean handleRuntimeExceptions() {
+        return false;
+      }
+
+      public listScheduerNode_result getResult(I iface, listScheduerNode_args args) throws org.apache.thrift.TException {
+        listScheduerNode_result result = new listScheduerNode_result();
+        result.success = iface.listScheduerNode(args.req);
+        return result;
+      }
+    }
+
+    public static class listExecutorNode<I extends Iface> extends org.apache.thrift.ProcessFunction<I, listExecutorNode_args> {
+      public listExecutorNode() {
+        super("listExecutorNode");
+      }
+
+      public listExecutorNode_args getEmptyArgsInstance() {
+        return new listExecutorNode_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      @Override
+      protected boolean handleRuntimeExceptions() {
+        return false;
+      }
+
+      public listExecutorNode_result getResult(I iface, listExecutorNode_args args) throws org.apache.thrift.TException {
+        listExecutorNode_result result = new listExecutorNode_result();
+        result.success = iface.listExecutorNode(args.req);
+        return result;
+      }
+    }
+
   }
 
   public static class AsyncProcessor<I extends AsyncIface> extends org.apache.thrift.TBaseAsyncProcessor<I> {
@@ -855,6 +1025,8 @@ public class TScheduleService {
       processMap.put("executorHb", new executorHb());
       processMap.put("schedulerHb", new schedulerHb());
       processMap.put("serverStatus", new serverStatus());
+      processMap.put("listScheduerNode", new listScheduerNode());
+      processMap.put("listExecutorNode", new listExecutorNode());
       return processMap;
     }
 
@@ -1224,7 +1396,7 @@ public class TScheduleService {
       }
     }
 
-    public static class executorHb<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, executorHb_args, TSchedulerNodeResp> {
+    public static class executorHb<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, executorHb_args, TNodeResp> {
       public executorHb() {
         super("executorHb");
       }
@@ -1233,10 +1405,10 @@ public class TScheduleService {
         return new executorHb_args();
       }
 
-      public org.apache.thrift.async.AsyncMethodCallback<TSchedulerNodeResp> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+      public org.apache.thrift.async.AsyncMethodCallback<TNodeResp> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<TSchedulerNodeResp>() { 
-          public void onComplete(TSchedulerNodeResp o) {
+        return new org.apache.thrift.async.AsyncMethodCallback<TNodeResp>() { 
+          public void onComplete(TNodeResp o) {
             executorHb_result result = new executorHb_result();
             result.success = o;
             try {
@@ -1280,12 +1452,12 @@ public class TScheduleService {
         return false;
       }
 
-      public void start(I iface, executorHb_args args, org.apache.thrift.async.AsyncMethodCallback<TSchedulerNodeResp> resultHandler) throws org.apache.thrift.TException {
+      public void start(I iface, executorHb_args args, org.apache.thrift.async.AsyncMethodCallback<TNodeResp> resultHandler) throws org.apache.thrift.TException {
         iface.executorHb(args.req,resultHandler);
       }
     }
 
-    public static class schedulerHb<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, schedulerHb_args, TExecutorNodeResp> {
+    public static class schedulerHb<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, schedulerHb_args, TNodeResp> {
       public schedulerHb() {
         super("schedulerHb");
       }
@@ -1294,10 +1466,10 @@ public class TScheduleService {
         return new schedulerHb_args();
       }
 
-      public org.apache.thrift.async.AsyncMethodCallback<TExecutorNodeResp> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+      public org.apache.thrift.async.AsyncMethodCallback<TNodeResp> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
         final org.apache.thrift.AsyncProcessFunction fcall = this;
-        return new org.apache.thrift.async.AsyncMethodCallback<TExecutorNodeResp>() { 
-          public void onComplete(TExecutorNodeResp o) {
+        return new org.apache.thrift.async.AsyncMethodCallback<TNodeResp>() { 
+          public void onComplete(TNodeResp o) {
             schedulerHb_result result = new schedulerHb_result();
             result.success = o;
             try {
@@ -1341,7 +1513,7 @@ public class TScheduleService {
         return false;
       }
 
-      public void start(I iface, schedulerHb_args args, org.apache.thrift.async.AsyncMethodCallback<TExecutorNodeResp> resultHandler) throws org.apache.thrift.TException {
+      public void start(I iface, schedulerHb_args args, org.apache.thrift.async.AsyncMethodCallback<TNodeResp> resultHandler) throws org.apache.thrift.TException {
         iface.schedulerHb(args.req,resultHandler);
       }
     }
@@ -1404,6 +1576,128 @@ public class TScheduleService {
 
       public void start(I iface, serverStatus_args args, org.apache.thrift.async.AsyncMethodCallback<java.lang.String> resultHandler) throws org.apache.thrift.TException {
         iface.serverStatus(resultHandler);
+      }
+    }
+
+    public static class listScheduerNode<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, listScheduerNode_args, TNodeStatusResp> {
+      public listScheduerNode() {
+        super("listScheduerNode");
+      }
+
+      public listScheduerNode_args getEmptyArgsInstance() {
+        return new listScheduerNode_args();
+      }
+
+      public org.apache.thrift.async.AsyncMethodCallback<TNodeStatusResp> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new org.apache.thrift.async.AsyncMethodCallback<TNodeStatusResp>() { 
+          public void onComplete(TNodeStatusResp o) {
+            listScheduerNode_result result = new listScheduerNode_result();
+            result.success = o;
+            try {
+              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+            } catch (org.apache.thrift.transport.TTransportException e) {
+              _LOGGER.error("TTransportException writing to internal frame buffer", e);
+              fb.close();
+            } catch (java.lang.Exception e) {
+              _LOGGER.error("Exception writing to internal frame buffer", e);
+              onError(e);
+            }
+          }
+          public void onError(java.lang.Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TSerializable msg;
+            listScheduerNode_result result = new listScheduerNode_result();
+            if (e instanceof org.apache.thrift.transport.TTransportException) {
+              _LOGGER.error("TTransportException inside handler", e);
+              fb.close();
+              return;
+            } else if (e instanceof org.apache.thrift.TApplicationException) {
+              _LOGGER.error("TApplicationException inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TApplicationException)e;
+            } else {
+              _LOGGER.error("Exception inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+            } catch (java.lang.Exception ex) {
+              _LOGGER.error("Exception writing to internal frame buffer", ex);
+              fb.close();
+            }
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, listScheduerNode_args args, org.apache.thrift.async.AsyncMethodCallback<TNodeStatusResp> resultHandler) throws org.apache.thrift.TException {
+        iface.listScheduerNode(args.req,resultHandler);
+      }
+    }
+
+    public static class listExecutorNode<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, listExecutorNode_args, TNodeStatusResp> {
+      public listExecutorNode() {
+        super("listExecutorNode");
+      }
+
+      public listExecutorNode_args getEmptyArgsInstance() {
+        return new listExecutorNode_args();
+      }
+
+      public org.apache.thrift.async.AsyncMethodCallback<TNodeStatusResp> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new org.apache.thrift.async.AsyncMethodCallback<TNodeStatusResp>() { 
+          public void onComplete(TNodeStatusResp o) {
+            listExecutorNode_result result = new listExecutorNode_result();
+            result.success = o;
+            try {
+              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+            } catch (org.apache.thrift.transport.TTransportException e) {
+              _LOGGER.error("TTransportException writing to internal frame buffer", e);
+              fb.close();
+            } catch (java.lang.Exception e) {
+              _LOGGER.error("Exception writing to internal frame buffer", e);
+              onError(e);
+            }
+          }
+          public void onError(java.lang.Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TSerializable msg;
+            listExecutorNode_result result = new listExecutorNode_result();
+            if (e instanceof org.apache.thrift.transport.TTransportException) {
+              _LOGGER.error("TTransportException inside handler", e);
+              fb.close();
+              return;
+            } else if (e instanceof org.apache.thrift.TApplicationException) {
+              _LOGGER.error("TApplicationException inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TApplicationException)e;
+            } else {
+              _LOGGER.error("Exception inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+            } catch (java.lang.Exception ex) {
+              _LOGGER.error("Exception writing to internal frame buffer", ex);
+              fb.close();
+            }
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, listExecutorNode_args args, org.apache.thrift.async.AsyncMethodCallback<TNodeStatusResp> resultHandler) throws org.apache.thrift.TException {
+        iface.listExecutorNode(args.req,resultHandler);
       }
     }
 
@@ -6188,7 +6482,7 @@ public class TScheduleService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new executorHb_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new executorHb_resultTupleSchemeFactory();
 
-    public TSchedulerNodeResp success; // required
+    public TNodeResp success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -6253,7 +6547,7 @@ public class TScheduleService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TSchedulerNodeResp.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TNodeResp.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(executorHb_result.class, metaDataMap);
     }
@@ -6262,7 +6556,7 @@ public class TScheduleService {
     }
 
     public executorHb_result(
-      TSchedulerNodeResp success)
+      TNodeResp success)
     {
       this();
       this.success = success;
@@ -6273,7 +6567,7 @@ public class TScheduleService {
      */
     public executorHb_result(executorHb_result other) {
       if (other.isSetSuccess()) {
-        this.success = new TSchedulerNodeResp(other.success);
+        this.success = new TNodeResp(other.success);
       }
     }
 
@@ -6286,11 +6580,11 @@ public class TScheduleService {
       this.success = null;
     }
 
-    public TSchedulerNodeResp getSuccess() {
+    public TNodeResp getSuccess() {
       return this.success;
     }
 
-    public executorHb_result setSuccess(TSchedulerNodeResp success) {
+    public executorHb_result setSuccess(TNodeResp success) {
       this.success = success;
       return this;
     }
@@ -6316,7 +6610,7 @@ public class TScheduleService {
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((TSchedulerNodeResp)value);
+          setSuccess((TNodeResp)value);
         }
         break;
 
@@ -6476,7 +6770,7 @@ public class TScheduleService {
           switch (schemeField.id) {
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.success = new TSchedulerNodeResp();
+                struct.success = new TNodeResp();
                 struct.success.read(iprot);
                 struct.setSuccessIsSet(true);
               } else { 
@@ -6535,7 +6829,7 @@ public class TScheduleService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.success = new TSchedulerNodeResp();
+          struct.success = new TNodeResp();
           struct.success.read(iprot);
           struct.setSuccessIsSet(true);
         }
@@ -6922,7 +7216,7 @@ public class TScheduleService {
     private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new schedulerHb_resultStandardSchemeFactory();
     private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new schedulerHb_resultTupleSchemeFactory();
 
-    public TExecutorNodeResp success; // required
+    public TNodeResp success; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -6987,7 +7281,7 @@ public class TScheduleService {
     static {
       java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TExecutorNodeResp.class)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TNodeResp.class)));
       metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(schedulerHb_result.class, metaDataMap);
     }
@@ -6996,7 +7290,7 @@ public class TScheduleService {
     }
 
     public schedulerHb_result(
-      TExecutorNodeResp success)
+      TNodeResp success)
     {
       this();
       this.success = success;
@@ -7007,7 +7301,7 @@ public class TScheduleService {
      */
     public schedulerHb_result(schedulerHb_result other) {
       if (other.isSetSuccess()) {
-        this.success = new TExecutorNodeResp(other.success);
+        this.success = new TNodeResp(other.success);
       }
     }
 
@@ -7020,11 +7314,11 @@ public class TScheduleService {
       this.success = null;
     }
 
-    public TExecutorNodeResp getSuccess() {
+    public TNodeResp getSuccess() {
       return this.success;
     }
 
-    public schedulerHb_result setSuccess(TExecutorNodeResp success) {
+    public schedulerHb_result setSuccess(TNodeResp success) {
       this.success = success;
       return this;
     }
@@ -7050,7 +7344,7 @@ public class TScheduleService {
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((TExecutorNodeResp)value);
+          setSuccess((TNodeResp)value);
         }
         break;
 
@@ -7210,7 +7504,7 @@ public class TScheduleService {
           switch (schemeField.id) {
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
-                struct.success = new TExecutorNodeResp();
+                struct.success = new TNodeResp();
                 struct.success.read(iprot);
                 struct.setSuccessIsSet(true);
               } else { 
@@ -7269,7 +7563,7 @@ public class TScheduleService {
         org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.success = new TExecutorNodeResp();
+          struct.success = new TNodeResp();
           struct.success.read(iprot);
           struct.setSuccessIsSet(true);
         }
@@ -7883,6 +8177,1474 @@ public class TScheduleService {
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           struct.success = iprot.readString();
+          struct.setSuccessIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class listScheduerNode_args implements org.apache.thrift.TBase<listScheduerNode_args, listScheduerNode_args._Fields>, java.io.Serializable, Cloneable, Comparable<listScheduerNode_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("listScheduerNode_args");
+
+    private static final org.apache.thrift.protocol.TField REQ_FIELD_DESC = new org.apache.thrift.protocol.TField("req", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new listScheduerNode_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new listScheduerNode_argsTupleSchemeFactory();
+
+    public com.gsralex.gflow.pub.thriftgen.TReq req; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      REQ((short)1, "req");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // REQ
+            return REQ;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.REQ, new org.apache.thrift.meta_data.FieldMetaData("req", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, com.gsralex.gflow.pub.thriftgen.TReq.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(listScheduerNode_args.class, metaDataMap);
+    }
+
+    public listScheduerNode_args() {
+    }
+
+    public listScheduerNode_args(
+      com.gsralex.gflow.pub.thriftgen.TReq req)
+    {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public listScheduerNode_args(listScheduerNode_args other) {
+      if (other.isSetReq()) {
+        this.req = new com.gsralex.gflow.pub.thriftgen.TReq(other.req);
+      }
+    }
+
+    public listScheduerNode_args deepCopy() {
+      return new listScheduerNode_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.req = null;
+    }
+
+    public com.gsralex.gflow.pub.thriftgen.TReq getReq() {
+      return this.req;
+    }
+
+    public listScheduerNode_args setReq(com.gsralex.gflow.pub.thriftgen.TReq req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    /** Returns true if field req is set (has been assigned a value) and false otherwise */
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean value) {
+      if (!value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, java.lang.Object value) {
+      switch (field) {
+      case REQ:
+        if (value == null) {
+          unsetReq();
+        } else {
+          setReq((com.gsralex.gflow.pub.thriftgen.TReq)value);
+        }
+        break;
+
+      }
+    }
+
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case REQ:
+        return getReq();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case REQ:
+        return isSetReq();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof listScheduerNode_args)
+        return this.equals((listScheduerNode_args)that);
+      return false;
+    }
+
+    public boolean equals(listScheduerNode_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_req = true && this.isSetReq();
+      boolean that_present_req = true && that.isSetReq();
+      if (this_present_req || that_present_req) {
+        if (!(this_present_req && that_present_req))
+          return false;
+        if (!this.req.equals(that.req))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetReq()) ? 131071 : 524287);
+      if (isSetReq())
+        hashCode = hashCode * 8191 + req.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(listScheduerNode_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetReq()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.req, other.req);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("listScheduerNode_args(");
+      boolean first = true;
+
+      sb.append("req:");
+      if (this.req == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.req);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (req != null) {
+        req.validate();
+      }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class listScheduerNode_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public listScheduerNode_argsStandardScheme getScheme() {
+        return new listScheduerNode_argsStandardScheme();
+      }
+    }
+
+    private static class listScheduerNode_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<listScheduerNode_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, listScheduerNode_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // REQ
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.req = new com.gsralex.gflow.pub.thriftgen.TReq();
+                struct.req.read(iprot);
+                struct.setReqIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, listScheduerNode_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.req != null) {
+          oprot.writeFieldBegin(REQ_FIELD_DESC);
+          struct.req.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class listScheduerNode_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public listScheduerNode_argsTupleScheme getScheme() {
+        return new listScheduerNode_argsTupleScheme();
+      }
+    }
+
+    private static class listScheduerNode_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<listScheduerNode_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, listScheduerNode_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetReq()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetReq()) {
+          struct.req.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, listScheduerNode_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.req = new com.gsralex.gflow.pub.thriftgen.TReq();
+          struct.req.read(iprot);
+          struct.setReqIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class listScheduerNode_result implements org.apache.thrift.TBase<listScheduerNode_result, listScheduerNode_result._Fields>, java.io.Serializable, Cloneable, Comparable<listScheduerNode_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("listScheduerNode_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new listScheduerNode_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new listScheduerNode_resultTupleSchemeFactory();
+
+    public TNodeStatusResp success; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TNodeStatusResp.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(listScheduerNode_result.class, metaDataMap);
+    }
+
+    public listScheduerNode_result() {
+    }
+
+    public listScheduerNode_result(
+      TNodeStatusResp success)
+    {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public listScheduerNode_result(listScheduerNode_result other) {
+      if (other.isSetSuccess()) {
+        this.success = new TNodeStatusResp(other.success);
+      }
+    }
+
+    public listScheduerNode_result deepCopy() {
+      return new listScheduerNode_result(this);
+    }
+
+    @Override
+    public void clear() {
+      this.success = null;
+    }
+
+    public TNodeStatusResp getSuccess() {
+      return this.success;
+    }
+
+    public listScheduerNode_result setSuccess(TNodeStatusResp success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, java.lang.Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((TNodeStatusResp)value);
+        }
+        break;
+
+      }
+    }
+
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof listScheduerNode_result)
+        return this.equals((listScheduerNode_result)that);
+      return false;
+    }
+
+    public boolean equals(listScheduerNode_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
+      if (isSetSuccess())
+        hashCode = hashCode * 8191 + success.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(listScheduerNode_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+      }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("listScheduerNode_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (success != null) {
+        success.validate();
+      }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class listScheduerNode_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public listScheduerNode_resultStandardScheme getScheme() {
+        return new listScheduerNode_resultStandardScheme();
+      }
+    }
+
+    private static class listScheduerNode_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<listScheduerNode_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, listScheduerNode_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.success = new TNodeStatusResp();
+                struct.success.read(iprot);
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, listScheduerNode_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          struct.success.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class listScheduerNode_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public listScheduerNode_resultTupleScheme getScheme() {
+        return new listScheduerNode_resultTupleScheme();
+      }
+    }
+
+    private static class listScheduerNode_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<listScheduerNode_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, listScheduerNode_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          struct.success.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, listScheduerNode_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = new TNodeStatusResp();
+          struct.success.read(iprot);
+          struct.setSuccessIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class listExecutorNode_args implements org.apache.thrift.TBase<listExecutorNode_args, listExecutorNode_args._Fields>, java.io.Serializable, Cloneable, Comparable<listExecutorNode_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("listExecutorNode_args");
+
+    private static final org.apache.thrift.protocol.TField REQ_FIELD_DESC = new org.apache.thrift.protocol.TField("req", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new listExecutorNode_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new listExecutorNode_argsTupleSchemeFactory();
+
+    public com.gsralex.gflow.pub.thriftgen.TReq req; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      REQ((short)1, "req");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // REQ
+            return REQ;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.REQ, new org.apache.thrift.meta_data.FieldMetaData("req", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, com.gsralex.gflow.pub.thriftgen.TReq.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(listExecutorNode_args.class, metaDataMap);
+    }
+
+    public listExecutorNode_args() {
+    }
+
+    public listExecutorNode_args(
+      com.gsralex.gflow.pub.thriftgen.TReq req)
+    {
+      this();
+      this.req = req;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public listExecutorNode_args(listExecutorNode_args other) {
+      if (other.isSetReq()) {
+        this.req = new com.gsralex.gflow.pub.thriftgen.TReq(other.req);
+      }
+    }
+
+    public listExecutorNode_args deepCopy() {
+      return new listExecutorNode_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.req = null;
+    }
+
+    public com.gsralex.gflow.pub.thriftgen.TReq getReq() {
+      return this.req;
+    }
+
+    public listExecutorNode_args setReq(com.gsralex.gflow.pub.thriftgen.TReq req) {
+      this.req = req;
+      return this;
+    }
+
+    public void unsetReq() {
+      this.req = null;
+    }
+
+    /** Returns true if field req is set (has been assigned a value) and false otherwise */
+    public boolean isSetReq() {
+      return this.req != null;
+    }
+
+    public void setReqIsSet(boolean value) {
+      if (!value) {
+        this.req = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, java.lang.Object value) {
+      switch (field) {
+      case REQ:
+        if (value == null) {
+          unsetReq();
+        } else {
+          setReq((com.gsralex.gflow.pub.thriftgen.TReq)value);
+        }
+        break;
+
+      }
+    }
+
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case REQ:
+        return getReq();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case REQ:
+        return isSetReq();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof listExecutorNode_args)
+        return this.equals((listExecutorNode_args)that);
+      return false;
+    }
+
+    public boolean equals(listExecutorNode_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_req = true && this.isSetReq();
+      boolean that_present_req = true && that.isSetReq();
+      if (this_present_req || that_present_req) {
+        if (!(this_present_req && that_present_req))
+          return false;
+        if (!this.req.equals(that.req))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetReq()) ? 131071 : 524287);
+      if (isSetReq())
+        hashCode = hashCode * 8191 + req.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(listExecutorNode_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetReq()).compareTo(other.isSetReq());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetReq()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.req, other.req);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("listExecutorNode_args(");
+      boolean first = true;
+
+      sb.append("req:");
+      if (this.req == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.req);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (req != null) {
+        req.validate();
+      }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class listExecutorNode_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public listExecutorNode_argsStandardScheme getScheme() {
+        return new listExecutorNode_argsStandardScheme();
+      }
+    }
+
+    private static class listExecutorNode_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<listExecutorNode_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, listExecutorNode_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // REQ
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.req = new com.gsralex.gflow.pub.thriftgen.TReq();
+                struct.req.read(iprot);
+                struct.setReqIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, listExecutorNode_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.req != null) {
+          oprot.writeFieldBegin(REQ_FIELD_DESC);
+          struct.req.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class listExecutorNode_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public listExecutorNode_argsTupleScheme getScheme() {
+        return new listExecutorNode_argsTupleScheme();
+      }
+    }
+
+    private static class listExecutorNode_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<listExecutorNode_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, listExecutorNode_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetReq()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetReq()) {
+          struct.req.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, listExecutorNode_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.req = new com.gsralex.gflow.pub.thriftgen.TReq();
+          struct.req.read(iprot);
+          struct.setReqIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  public static class listExecutorNode_result implements org.apache.thrift.TBase<listExecutorNode_result, listExecutorNode_result._Fields>, java.io.Serializable, Cloneable, Comparable<listExecutorNode_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("listExecutorNode_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new listExecutorNode_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new listExecutorNode_resultTupleSchemeFactory();
+
+    public TNodeStatusResp success; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, TNodeStatusResp.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(listExecutorNode_result.class, metaDataMap);
+    }
+
+    public listExecutorNode_result() {
+    }
+
+    public listExecutorNode_result(
+      TNodeStatusResp success)
+    {
+      this();
+      this.success = success;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public listExecutorNode_result(listExecutorNode_result other) {
+      if (other.isSetSuccess()) {
+        this.success = new TNodeStatusResp(other.success);
+      }
+    }
+
+    public listExecutorNode_result deepCopy() {
+      return new listExecutorNode_result(this);
+    }
+
+    @Override
+    public void clear() {
+      this.success = null;
+    }
+
+    public TNodeStatusResp getSuccess() {
+      return this.success;
+    }
+
+    public listExecutorNode_result setSuccess(TNodeStatusResp success) {
+      this.success = success;
+      return this;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, java.lang.Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((TNodeStatusResp)value);
+        }
+        break;
+
+      }
+    }
+
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that == null)
+        return false;
+      if (that instanceof listExecutorNode_result)
+        return this.equals((listExecutorNode_result)that);
+      return false;
+    }
+
+    public boolean equals(listExecutorNode_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
+      if (isSetSuccess())
+        hashCode = hashCode * 8191 + success.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(listExecutorNode_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.valueOf(isSetSuccess()).compareTo(other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+      }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("listExecutorNode_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (success != null) {
+        success.validate();
+      }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class listExecutorNode_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public listExecutorNode_resultStandardScheme getScheme() {
+        return new listExecutorNode_resultStandardScheme();
+      }
+    }
+
+    private static class listExecutorNode_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<listExecutorNode_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, listExecutorNode_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.success = new TNodeStatusResp();
+                struct.success.read(iprot);
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+
+        // check for required fields of primitive type, which can't be checked in the validate method
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, listExecutorNode_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          struct.success.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class listExecutorNode_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public listExecutorNode_resultTupleScheme getScheme() {
+        return new listExecutorNode_resultTupleScheme();
+      }
+    }
+
+    private static class listExecutorNode_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<listExecutorNode_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, listExecutorNode_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetSuccess()) {
+          struct.success.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, listExecutorNode_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(1);
+        if (incoming.get(0)) {
+          struct.success = new TNodeStatusResp();
+          struct.success.read(iprot);
           struct.setSuccessIsSet(true);
         }
       }

@@ -1,8 +1,43 @@
 package com.gsralex.gflow.scheduler.configuration;
 
+import com.gsralex.gflow.pub.context.IpAddr;
+import com.gsralex.gflow.pub.util.PropertiesUtils;
 import com.gsralex.gflow.pub.util.PropertyName;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+
 public class SchedulerConfig {
+
+    private static final String CONFIG_FILEPATH = "/gflow.properties";
+    private static final String TAG_EXECUTORIP = "gflow.executor.tag";
+
+    public static SchedulerConfig load() throws IOException {
+        InputStream is = PropertiesUtils.class.getResourceAsStream(CONFIG_FILEPATH);
+        Properties props = PropertiesUtils.getProperties(CONFIG_FILEPATH);
+        SchedulerConfig config = PropertiesUtils.getConfig(props, SchedulerConfig.class);
+
+        Map<String, List<IpAddr>> execIpMap = new HashMap<>();
+        for (Map.Entry<Object, Object> propItem : props.entrySet()) {
+            String key = propItem.getKey().toString();
+            String value = propItem.getValue().toString();
+            if (key.startsWith(TAG_EXECUTORIP)) {
+                int index = key.lastIndexOf(".");
+                String tag = key.substring(index + 1);
+
+                String[] ips = value.split(",");
+                List<IpAddr> ipList = new ArrayList<>();
+                for (String ip : ips) {
+                    ipList.add(new IpAddr(ip));
+                }
+                execIpMap.put(tag, ipList);
+            }
+        }
+        config.setExecutorIpMap(execIpMap);
+        return config;
+    }
+
 
     @PropertyName(name = "gflow.db.driver")
     private String dbDriver;
@@ -20,17 +55,14 @@ public class SchedulerConfig {
     private Boolean zkActive;
     @PropertyName(name = "gflow.port")
     private Integer port;
-    @PropertyName(name = "gflow.executer.ips")
-    private String executorIps;
     @PropertyName(name = "gflow.scheduler.ips")
     private String schedulerIps;
     @PropertyName(name = "gflow.scheduler.masterip")
     private String schedulerMaster;
-    @PropertyName(name = "gflow.scheduler.master")
-    private Boolean master;
-
     @PropertyName(name = "gflow.accesskey")
     private String accessKey;
+
+    private Map<String, List<IpAddr>> executorIpMap = new HashMap<>();
 
     public String getDbDriver() {
         return dbDriver;
@@ -96,13 +128,6 @@ public class SchedulerConfig {
         this.port = port;
     }
 
-    public String getExecutorIps() {
-        return executorIps;
-    }
-
-    public void setExecutorIps(String executorIps) {
-        this.executorIps = executorIps;
-    }
 
     public String getSchedulerIps() {
         return schedulerIps;
@@ -120,13 +145,6 @@ public class SchedulerConfig {
         this.schedulerMaster = schedulerMaster;
     }
 
-    public Boolean getMaster() {
-        return master;
-    }
-
-    public void setMaster(Boolean master) {
-        this.master = master;
-    }
 
     public String getAccessKey() {
         return accessKey;
@@ -134,5 +152,13 @@ public class SchedulerConfig {
 
     public void setAccessKey(String accessKey) {
         this.accessKey = accessKey;
+    }
+
+    public Map<String, List<IpAddr>> getExecutorIpMap() {
+        return executorIpMap;
+    }
+
+    public void setExecutorIpMap(Map<String, List<IpAddr>> executorIpMap) {
+        this.executorIpMap = executorIpMap;
     }
 }

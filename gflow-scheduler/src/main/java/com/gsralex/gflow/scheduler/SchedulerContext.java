@@ -1,8 +1,7 @@
 package com.gsralex.gflow.scheduler;
 
 import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.pub.util.IpManager;
-import com.gsralex.gflow.pub.util.PropertiesUtils;
+import com.gsralex.gflow.pub.context.IpManager;
 import com.gsralex.gflow.pub.util.SecurityUtils;
 import com.gsralex.gflow.scheduler.configuration.SchedulerConfig;
 import com.gsralex.gflow.scheduler.configuration.SpringConfiguration;
@@ -14,7 +13,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -77,16 +75,23 @@ public class SchedulerContext {
     private IpManager schedulerIpManager;
 
     public void init() throws IOException {
-        InputStream is = PropertiesUtils.class.getResourceAsStream(CONFIG_FILEPATH);
-        config = PropertiesUtils.getConfig(is, SchedulerConfig.class);
+        this.config = SchedulerConfig.load();
+
         //主ip
         masterIp = new IpAddr(config.getSchedulerMaster());
 
         InetAddress addr = InetAddress.getLocalHost();
         myIp = new IpAddr(addr.getHostAddress(), config.getPort());
-        initSpring();
 
         schedulerIpManager = new IpManager(config.getSchedulerIps());
+
+        for (Map.Entry<String, List<IpAddr>> ipEntry : config.getExecutorIpMap().entrySet()) {
+            IpManager ipManager = new IpManager(ipEntry.getValue());
+            executorIpManager.put(ipEntry.getKey(), ipManager);
+        }
+
+        initSpring();
+
     }
 
 

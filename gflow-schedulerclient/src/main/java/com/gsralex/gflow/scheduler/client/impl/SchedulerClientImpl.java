@@ -2,6 +2,7 @@ package com.gsralex.gflow.scheduler.client.impl;
 
 import com.gsralex.gflow.pub.action.Resp;
 import com.gsralex.gflow.pub.context.IpAddr;
+import com.gsralex.gflow.pub.thriftgen.TReq;
 import com.gsralex.gflow.pub.thriftgen.TResp;
 import com.gsralex.gflow.pub.thriftgen.scheduler.*;
 import com.gsralex.gflow.scheduler.client.ClientTransportException;
@@ -123,19 +124,46 @@ public class SchedulerClientImpl implements SchedulerClient {
     }
 
     @Override
-    public SchedulerNodeResp executorHb(ExecutorHbReq req) {
-        class Callback implements ClientCallback<SchedulerNodeResp> {
+    public NodeResp executorHb(ExecutorHbReq req) {
+        class Callback implements ClientCallback<NodeResp> {
             @Override
-            public SchedulerNodeResp doAction(TScheduleService.Client client) throws TException {
+            public NodeResp doAction(TScheduleService.Client client) throws TException {
                 TExecutorHbReq tReq = new TExecutorHbReq();
                 tReq.setIp(req.getIp());
                 tReq.setPort(req.getPort());
                 tReq.setTag(req.getTag());
                 TNodeResp tResp = client.executorHb(tReq);
-                SchedulerNodeResp resp = new SchedulerNodeResp();
-                List<IpAddr> nodeList = new ArrayList<>();
-                for (TNode tNode : tResp.getNodeList()) {
-                    nodeList.add(new IpAddr(tNode.getIp(), tNode.getPort()));
+
+                NodeResp resp = new NodeResp();
+                List<TNode> tNodeList = tResp.getNodeList();
+                List<Node> nodeList = new ArrayList<>();
+                for (TNode tNode : tNodeList) {
+                    Node node = new Node();
+                    node.setIp(new IpAddr(tNode.getIp()));
+                    nodeList.add(node);
+                }
+                return resp;
+            }
+        }
+        return execute(new Callback(), this.ip);
+    }
+
+    @Override
+    public NodeResp schedulerHb(ScheduleHbReq req) {
+        class Callback implements ClientCallback<NodeResp> {
+            @Override
+            public NodeResp doAction(TScheduleService.Client client) throws TException {
+                TScheduleHbReq tReq = new TScheduleHbReq();
+                tReq.setIp(req.getIp());
+                tReq.setPort(req.getPort());
+                TNodeResp tResp = client.schedulerHb(tReq);
+                NodeResp resp = new NodeResp();
+                List<TNode> tNodeList = tResp.getNodeList();
+                List<Node> nodeList = new ArrayList<>();
+                for (TNode tNode : tNodeList) {
+                    Node node = new Node();
+                    node.setIp(new IpAddr(tNode.getIp()));
+                    nodeList.add(node);
                 }
                 resp.setNodeList(nodeList);
                 resp.setCode(tResp.getCode());
@@ -147,21 +175,44 @@ public class SchedulerClientImpl implements SchedulerClient {
     }
 
     @Override
-    public ExecutorNodeResp schedulerHb(ScheduleHbReq req) {
-        class Callback implements ClientCallback<ExecutorNodeResp> {
+    public NodeStatusResp listExecutorNode() {
+        class Callback implements ClientCallback<NodeStatusResp> {
             @Override
-            public ExecutorNodeResp doAction(TScheduleService.Client client) throws TException {
-                TScheduleHbReq tReq = new TScheduleHbReq();
-                tReq.setIp(req.getIp());
-                tReq.setPort(req.getPort());
-                TNodeResp tResp = client.schedulerHb(tReq);
-                ExecutorNodeResp resp=new ExecutorNodeResp();
-                List<Node> nodeList = new ArrayList<>();
-                for (TNode tNode : tResp.getNodeList()) {
-                    IpAddr ip=new IpAddr(tNode.getIp(), tNode.getPort());
-                    Node node=new Node();
-                    node.setIp(ip);
-                    node.setTag(tNode.getTag());
+            public NodeStatusResp doAction(TScheduleService.Client client) throws TException {
+                TReq tReq=new TReq();
+                TNodeStatusResp tResp = client.listExecutorNode(tReq);
+                NodeStatusResp resp = new NodeStatusResp();
+                List<TNodeStatus> tNodeList = tResp.getNodeList();
+                List<NodeStatus> nodeList = new ArrayList<>();
+                for (TNodeStatus tNode : tNodeList) {
+                    NodeStatus node = new NodeStatus();
+                    node.setIp(new IpAddr(tNode.getIp()));
+                    node.setOnline(tNode.isOnline());
+                    nodeList.add(node);
+                }
+                resp.setNodeList(nodeList);
+                resp.setCode(tResp.getCode());
+                resp.setMsg(tResp.getMsg());
+                return resp;
+            }
+        }
+        return execute(new Callback(), this.ip);
+    }
+
+    @Override
+    public NodeStatusResp listSchedulerNode() {
+        class Callback implements ClientCallback<NodeStatusResp> {
+            @Override
+            public NodeStatusResp doAction(TScheduleService.Client client) throws TException {
+                TReq tReq=new TReq();
+                TNodeStatusResp tResp = client.listScheduerNode(tReq);
+                NodeStatusResp resp = new NodeStatusResp();
+                List<TNodeStatus> tNodeList = tResp.getNodeList();
+                List<NodeStatus> nodeList = new ArrayList<>();
+                for (TNodeStatus tNode : tNodeList) {
+                    NodeStatus node = new NodeStatus();
+                    node.setIp(new IpAddr(tNode.getIp()));
+                    node.setOnline(tNode.isOnline());
                     nodeList.add(node);
                 }
                 resp.setNodeList(nodeList);

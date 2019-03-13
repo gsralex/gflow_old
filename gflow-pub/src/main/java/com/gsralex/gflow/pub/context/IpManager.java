@@ -1,7 +1,7 @@
-package com.gsralex.gflow.pub.util;
+package com.gsralex.gflow.pub.context;
 
-import com.gsralex.gflow.pub.context.IpAddr;
-
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -15,10 +15,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class IpManager {
 
     public IpManager(String ips) {
-        list = new ArrayList<>();
-        String[] ipArr = ips.split(",");
-        for (String ip : ipArr) {
-            list.add(new IpAddr(ip));
+        if (ips != null) {
+            list = new ArrayList<>();
+            String[] ipArr = ips.split(",");
+            for (String ip : ipArr) {
+                list.add(new IpAddr(ip));
+            }
         }
     }
 
@@ -43,7 +45,7 @@ public class IpManager {
         }
     }
 
-    public void setIp(List<IpAddr> ipList) {
+    public void setIp(final List<IpAddr> ipList) {
         if (!ipEquals(list, ipList)) {
             synchronized (list) {
                 list = ipList;
@@ -51,13 +53,13 @@ public class IpManager {
         }
     }
 
-    public void removeIp(IpAddr ip) {
+    public void removeIp(final IpAddr ip) {
         synchronized (list) {
             list.remove(ip);
         }
     }
 
-    public void addIp(IpAddr ip) {
+    public void addIp(final IpAddr ip) {
         synchronized (list) {
             list.add(ip);
         }
@@ -93,7 +95,11 @@ public class IpManager {
         return true;
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, UnknownHostException {
+
+        InetAddress ips = InetAddress.getByName("dev.gsralex.com");
+
+        System.out.println(ips);
         long begin = System.currentTimeMillis();
         List<IpAddr> list = new ArrayList<>();
         list.add(new IpAddr("192.168.1.1", 2001));
@@ -130,7 +136,6 @@ public class IpManager {
             });
             thread.start();
             threads[i] = thread;
-
         }
         for (Thread thread : threads) {
             thread.join();

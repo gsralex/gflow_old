@@ -1,6 +1,7 @@
 package com.gsralex.gflow.web;
 
 import com.gsralex.gflow.pub.context.IpAddr;
+import com.gsralex.gflow.pub.context.IpManager;
 import com.gsralex.gflow.pub.util.PropertiesUtils;
 import com.gsralex.gflow.web.configuration.WebConfig;
 
@@ -31,18 +32,19 @@ public class WebContext {
         return webConfig;
     }
 
+    private IpManager schedulerIpManager;
+
     public void init() throws IOException {
         webConfig = PropertiesUtils.getConfig(CONFIG_FILEPATH, WebConfig.class);
         String[] ipArr = webConfig.getSchedulerIps().split(",");
+        List<IpAddr> schedulerIps = new ArrayList<>();
         for (String ip : ipArr) {
             schedulerIps.add(new IpAddr(ip));
         }
+        schedulerIpManager = new IpManager(schedulerIps);
     }
 
-
-    private List<IpAddr> schedulerIps = new ArrayList<>();
-
-    public List<IpAddr> getSchedulerIps() {
-        return schedulerIps;
+    public IpManager getSchedulerIpManager() {
+        return schedulerIpManager;
     }
 }

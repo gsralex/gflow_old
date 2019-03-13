@@ -2,12 +2,13 @@ package com.gsralex.gflow.scheduler.hb;
 
 import com.gsralex.gflow.pub.constants.TimeConstants;
 import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.pub.util.IpManager;
+import com.gsralex.gflow.pub.context.IpManager;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -116,5 +117,9 @@ public class MasterReceiveExecutorHb {
             }
         }
         return cnt;
+    }
+
+    public List<ExecutorNode> listExecutorNode() {
+        return (List<ExecutorNode>) nodeMap.values();
     }
 }

@@ -5,8 +5,8 @@ import com.gsralex.gflow.pub.context.IpAddr;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
 import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
-import com.gsralex.gflow.scheduler.client.action.scheduler.ExecutorNodeResp;
 import com.gsralex.gflow.scheduler.client.action.scheduler.Node;
+import com.gsralex.gflow.scheduler.client.action.scheduler.NodeResp;
 import com.gsralex.gflow.scheduler.client.action.scheduler.ScheduleHbReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +55,7 @@ public class SlaveSchedulerHb {
                 IpAddr myIp = context.getMyIp();
                 req.setIp(myIp.getIp());
                 req.setPort(myIp.getPort());
-                ExecutorNodeResp resp = client.schedulerHb(req);
+                NodeResp resp = client.schedulerHb(req);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Salve Scheduler Heartbeat masterIp:{},myIp:{}", masterIp.toString(), myIp.toString());
                 }

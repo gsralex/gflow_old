@@ -1,6 +1,7 @@
 package com.gsralex.gflow.pub.util;
 
 import com.gsralex.gflow.pub.context.IpAddr;
+import com.gsralex.gflow.pub.context.IpManager;
 import org.junit.Assert;
 import org.junit.Test;
 

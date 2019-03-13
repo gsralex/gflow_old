@@ -5,7 +5,7 @@ import com.gsralex.gflow.executor.spring.SpringContextHolder;
 import com.gsralex.gflow.pub.action.Resp;
 import com.gsralex.gflow.pub.constants.ErrConstants;
 import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.pub.util.IpManager;
+import com.gsralex.gflow.pub.context.IpManager;
 import com.gsralex.gflow.pub.util.PropertiesUtils;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
 import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;

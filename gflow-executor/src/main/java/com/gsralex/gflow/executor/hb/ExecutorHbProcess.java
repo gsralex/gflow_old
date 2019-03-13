@@ -6,9 +6,13 @@ import com.gsralex.gflow.pub.context.IpAddr;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
 import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
 import com.gsralex.gflow.scheduler.client.action.scheduler.ExecutorHbReq;
-import com.gsralex.gflow.scheduler.client.action.scheduler.SchedulerNodeResp;
+import com.gsralex.gflow.scheduler.client.action.scheduler.Node;
+import com.gsralex.gflow.scheduler.client.action.scheduler.NodeResp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author gsralex
@@ -42,14 +46,23 @@ public class ExecutorHbProcess {
                 req.setIp(myIp.getIp());
                 req.setPort(myIp.getPort());
                 req.setTag(context.getConfig().getTag());
-                SchedulerNodeResp resp = client.executorHb(req);
+                NodeResp resp = client.executorHb(req);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Executor heartbeat ip:{},myIp:{}", ip, myIp.toString());
                 }
-                context.getSchedulerIpManager().setIp(resp.getNodeList());
+
+                List<IpAddr> ipList = new ArrayList<>();
+                for (Node node : resp.getNodeList()) {
+                    ipList.add(node.getIp());
+                }
+                context.getSchedulerIpManager().setIp(ipList);
                 Thread.sleep(TimeConstants.HEARTBEAT_INTERVEL);
             } catch (Exception e) {
                 LOG.error("SSchedulerHbProcess.mainLoop", e);
+                try {
+                    Thread.sleep(TimeConstants.HEARTBEAT_INTERVEL);
+                } catch (InterruptedException e1) {
+                }
             }
         }
     }
