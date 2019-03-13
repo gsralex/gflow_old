@@ -6,6 +6,7 @@ import com.gsralex.gflow.scheduler.dao.JobDao;
 import com.gsralex.gflow.scheduler.dao.TimerDao;
 import com.gsralex.gflow.scheduler.dao.TimerExecuteRecord;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
  * @author gsralex
  * @version 2018/12/18
  */
+@Service
 public class TimerRecovery {
 
     @Autowired
@@ -25,7 +27,9 @@ public class TimerRecovery {
     @Autowired
     private TimerDao timerDao;
 
-    public void recovery() {
+    private SchedulerContext context=SchedulerContext.getInstance();
+
+    public void recover() {
         List<TimerConfig> timerList = timerDao.listTimer();
         List<Long> timerIdList = timerList.stream().map(x -> x.getId()).collect(Collectors.toList());
         List<TimerExecuteRecord> execList = jobDao.listJobGroupExec(timerIdList);
@@ -39,7 +43,7 @@ public class TimerRecovery {
                 execTime = 0L;
             }
             TimerTask timerTask = new TimerTask(timer, execTime);
-            SchedulerContext.getInstance().getTimerProcess().setTimer(timerTask);
+            context.getTimerProcess().setTimer(timerTask);
         }
     }
 }

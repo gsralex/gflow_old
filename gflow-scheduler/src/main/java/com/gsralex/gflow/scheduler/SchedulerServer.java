@@ -49,14 +49,13 @@ public class SchedulerServer {
 
         selectMaster(context);
         if (context.isMaster()) {
-            MasterSwitchAction master = new MasterSwitchAction();
+            MasterSwitchAction master = context.getBean(MasterSwitchAction.class);
             master.start();
         } else {
-            SlaveSwitchAction slave = new SlaveSwitchAction();
+            SlaveSwitchAction slave = context.getBean(SlaveSwitchAction.class);
             slave.start();
         }
     }
-
 
     private void selectMaster(SchedulerContext context) throws UnknownHostException {
         //如果有zk，则用zk注册master

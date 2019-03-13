@@ -2,7 +2,7 @@ package com.gsralex.gflow.scheduler.ha;
 
 import com.gsralex.gflow.scheduler.HbContext;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.hb.SlaveSchedulerHb;
+import com.gsralex.gflow.scheduler.hb.SlaveSchedulerHbProcess;
 
 /**
  * @author gsralex
@@ -17,7 +17,7 @@ public class SlaveSwitchAction implements SwitchAction {
         if (context.getHbContext() == null) {
             context.setHbContext(new HbContext());
             //从调度
-            SlaveSchedulerHb slaveSchedulerHb = new SlaveSchedulerHb(context);
+            SlaveSchedulerHbProcess slaveSchedulerHb = new SlaveSchedulerHbProcess(context);
             slaveSchedulerHb.start();
             context.getHbContext().setSlaveSchedulerHb(slaveSchedulerHb);
         } else {
@@ -27,7 +27,7 @@ public class SlaveSwitchAction implements SwitchAction {
 
     @Override
     public void stop() {
-        SlaveSchedulerHb slaveSchedulerHb = context.getHbContext().getSlaveSchedulerHb();
+        SlaveSchedulerHbProcess slaveSchedulerHb = context.getHbContext().getSlaveSchedulerHb();
         slaveSchedulerHb.stop();
     }
 }

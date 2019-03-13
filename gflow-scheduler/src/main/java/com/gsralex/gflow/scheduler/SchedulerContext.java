@@ -155,7 +155,6 @@ public class SchedulerContext {
         this.timerProcess = timerProcess;
     }
 
-
     public IpAddr getMasterIp() {
         return masterIp;
     }
