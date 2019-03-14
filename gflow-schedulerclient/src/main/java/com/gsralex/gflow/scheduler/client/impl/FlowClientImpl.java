@@ -108,11 +108,18 @@ public class FlowClientImpl implements FlowClient {
         flowGroup.action(2).parameter("bizdate=${bizdate}").index(2).label("example2");
         flowGroup.action(3).parameter("bizdate=${bizdate}").index(3).label("ackexample");
         flowGroup.action(4).parameter("bizdate=${bizdate}").index(4).label("error");
+        flowGroup.action(4).parameter("bizdate=${bizdate}").index(5).label("error1");
+        flowGroup.action(4).parameter("bizdate=${bizdate}").index(6).label("error2");
+        flowGroup.action(4).parameter("bizdate=${bizdate}").index(7).label("error3");
+        flowGroup.action(1).parameter("bizdate=${bizdate}").index(8).label("example1");
 
         flowGroup.direct(0).next(1);
         flowGroup.direct(1).next(2, 3);
         flowGroup.direct(2).next(4);
         flowGroup.direct(3).next(4);
+        flowGroup.direct(4).next(5, 6, 8);
+        flowGroup.direct(8).next(6);
+        //1,4,5 同时完成之后7才能继续
         flowClient.setFlowGroup(flowGroup);
     }
 }

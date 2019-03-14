@@ -3,10 +3,7 @@ package com.gsralex.gflow.pub.context;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author gsralex
@@ -24,11 +21,20 @@ public class IpManager {
         }
     }
 
-    public IpManager(List<IpAddr> ipList) {
-        this.list = ipList;
+    public IpManager(IpAddr ip) {
+        list = new ArrayList<>();
+        if (ip != null) {
+            list.add(ip);
+        }
     }
 
-    private List<IpAddr> list = new CopyOnWriteArrayList<>();
+    public IpManager(List<IpAddr> ipList) {
+        if (ipList != null) {
+            this.list = ipList;
+        }
+    }
+
+    private List<IpAddr> list = new ArrayList<>();
     private int index;
 
     public IpAddr getIp() {
@@ -46,7 +52,10 @@ public class IpManager {
     }
 
     public void setIp(final List<IpAddr> ipList) {
-        if (!ipEquals(list, ipList)) {
+        if (ipList == null) {
+            return;
+        }
+        if (!(list.size() == ipList.size() && list.containsAll(ipList))) {
             synchronized (list) {
                 list = ipList;
             }
@@ -61,38 +70,14 @@ public class IpManager {
 
     public void addIp(final IpAddr ip) {
         synchronized (list) {
-            list.add(ip);
+            if (!list.contains(ip)) {
+                list.add(ip);
+            }
         }
     }
 
     public List<IpAddr> listIp() {
-        return list;
-    }
-
-    public boolean ipEquals(List<IpAddr> ips1, List<IpAddr> ips2) {
-        if (ips1 == null && ips2 == null) {
-            return true;
-        }
-        if (ips1 == null) {
-            return false;
-        }
-        if (ips2 == null) {
-            return false;
-        }
-        if (ips1.size() != ips2.size()) {
-            return false;
-        }
-        //O(2n)
-        Set<IpAddr> ipSet = new HashSet<>();
-        for (IpAddr ip : ips1) {
-            ipSet.add(ip);
-        }
-        for (IpAddr ip : ips2) {
-            if (!ipSet.contains(ip)) {
-                return false;
-            }
-        }
-        return true;
+        return new ArrayList<>(list);
     }
 
     public static void main(String[] args) throws InterruptedException, UnknownHostException {

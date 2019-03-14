@@ -20,48 +20,55 @@ import java.util.List;
  */
 public class ExecutorHbProcess {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ExecutorHbProcess.class);
-    private ExecutorContext context;
+    private ExecutorHb hb;
 
     public ExecutorHbProcess(ExecutorContext context) {
-        this.context = context;
+        hb = new ExecutorHb(context);
     }
 
     public void start() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                mainLoop();
-            }
-        }).start();
+        Thread t = new Thread(hb);
+        t.start();
     }
 
-    private void mainLoop() {
-        while (true) {
-            try {
-                IpAddr ip = context.getSchedulerIpManager().getIp();
-                SchedulerClient client = SchedulerClientFactory.createScheduler(ip, context.getConfig().getAccessKey());
-                ExecutorHbReq req = new ExecutorHbReq();
-                IpAddr myIp = context.getMyIp();
-                req.setIp(myIp.getIp());
-                req.setPort(myIp.getPort());
-                req.setTag(context.getConfig().getTag());
-                NodeResp resp = client.executorHb(req);
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("Executor heartbeat ip:{},myIp:{}", ip, myIp.toString());
-                }
+    public static class ExecutorHb implements Runnable {
 
-                List<IpAddr> ipList = new ArrayList<>();
-                for (Node node : resp.getNodeList()) {
-                    ipList.add(node.getIp());
-                }
-                context.getSchedulerIpManager().setIp(ipList);
-                Thread.sleep(TimeConstants.HEARTBEAT_INTERVEL);
-            } catch (Exception e) {
-                LOG.error("SSchedulerHbProcess.mainLoop", e);
+        private static final Logger LOG = LoggerFactory.getLogger(ExecutorHbProcess.class);
+        private ExecutorContext context;
+
+        public ExecutorHb(ExecutorContext context) {
+            this.context = context;
+        }
+
+
+        @Override
+        public void run() {
+            while (true) {
                 try {
+                    IpAddr ip = context.getSchedulerIpManager().getIp();
+                    SchedulerClient client = SchedulerClientFactory.createScheduler(ip, context.getConfig().getAccessKey());
+                    ExecutorHbReq req = new ExecutorHbReq();
+                    IpAddr myIp = context.getMyIp();
+                    req.setIp(myIp.getIp());
+                    req.setPort(myIp.getPort());
+                    req.setTag(context.getConfig().getTag());
+                    NodeResp resp = client.executorHb(req);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("Executor heartbeat ip:{},myIp:{}", ip, myIp.toString());
+                    }
+
+                    List<IpAddr> ipList = new ArrayList<>();
+                    for (Node node : resp.getNodeList()) {
+                        ipList.add(node.getIp());
+                    }
+                    context.getSchedulerIpManager().setIp(ipList);
                     Thread.sleep(TimeConstants.HEARTBEAT_INTERVEL);
-                } catch (InterruptedException e1) {
+                } catch (Exception e) {
+                    LOG.error("SSchedulerHbProcess.mainLoop", e);
+                    try {
+                        Thread.sleep(TimeConstants.HEARTBEAT_INTERVEL);
+                    } catch (InterruptedException e1) {
+                    }
                 }
             }
         }

@@ -47,12 +47,7 @@ public class ExecutorContext {
         this.myIp = new IpAddr(addr.getHostAddress(), config.getPort());
 
         //初始化ip轮询
-        String[] ips = config.getSchedulerIps().split(",");
-        List<IpAddr> ipList = new ArrayList<>();
-        for (String ip : ips) {
-            ipList.add(new IpAddr(ip));
-        }
-        schedulerIpManager = new IpManager(ipList);
+        schedulerIpManager = new IpManager(config.getSchedulerIps());
     }
 
     public <T> T getSpringBean(Class<T> type) {

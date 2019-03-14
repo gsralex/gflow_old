@@ -2,7 +2,6 @@ package com.gsralex.gflow.scheduler.hb;
 
 import com.gsralex.gflow.pub.constants.TimeConstants;
 import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.pub.context.IpManager;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,22 +27,17 @@ public class MasterRecvExecutorHbProcess {
         t.start();
     }
 
+    public void stop() {
+        hb.stop();
+    }
+
     public void heartBeat(IpAddr ip, String tag) {
         hb.heartBeat(ip, tag);
-    }
-
-    public void addNode(final ExecutorNode node) {
-        hb.addNode(node);
-    }
-
-    public void removeNode(final ExecutorNode node) {
-        hb.removeNode(node);
     }
 
     public List<ExecutorNode> listExecutorNode() {
         return hb.listExecutorNode();
     }
-
 
     public static class MasterReceiveExecutorHb implements Runnable {
 
@@ -54,14 +48,8 @@ public class MasterRecvExecutorHbProcess {
 
         public MasterReceiveExecutorHb(SchedulerContext context) {
             this.context = context;
-            Map<String, IpManager> executorIp = context.getExecutorIpManager();
-            for (Map.Entry<String, IpManager> ipManager : executorIp.entrySet()) {
-                for (IpAddr ip : ipManager.getValue().listIp()) {
-                    ExecutorNode node = new ExecutorNode();
-                    node.setTag(ipManager.getKey());
-                    node.setOnline(true);
-                    nodeMap.put(ip, node);
-                }
+            for (ExecutorNode node : context.getExecutorIpManager().listNode()) {
+                nodeMap.put(node.getIp(), node);
             }
         }
 
@@ -75,9 +63,7 @@ public class MasterRecvExecutorHbProcess {
                     node.setTag(tag);
                     node.setLastHbTime(System.currentTimeMillis());
                     node.setOnline(true);
-                    if (!node.isOnline()) {
-                        addNode(node);
-                    }
+                    addContextNode(node);
                     nodeMap.notify();
                 } else {
                     //全新节点加入
@@ -86,7 +72,7 @@ public class MasterRecvExecutorHbProcess {
                     node.setOnline(true);
                     node.setLastHbTime(System.currentTimeMillis());
                     nodeMap.put(ip, node);
-                    addNode(node);
+                    addContextNode(node);
                     nodeMap.notify();
                 }
             }
@@ -97,12 +83,12 @@ public class MasterRecvExecutorHbProcess {
         }
 
 
-        private void removeNode(ExecutorNode node) {
-            context.getExecutorIpManager(node.getTag()).removeIp(node.getIp());
+        private void removeContextNode(ExecutorNode node) {
+            context.getExecutorIpManager().removeNode(node.getIp(), node.getTag());
         }
 
-        private void addNode(ExecutorNode node) {
-            context.getExecutorIpManager(node.getTag()).addIp(node.getIp());
+        private void addContextNode(ExecutorNode node) {
+            context.getExecutorIpManager().addNode(node.getIp(), node.getTag());
         }
 
         private int getOnlineNodeCnt() {
@@ -120,6 +106,7 @@ public class MasterRecvExecutorHbProcess {
             return (List<ExecutorNode>) nodeMap.values();
         }
 
+
         @Override
         public void run() {
             while (!interrupt) {
@@ -135,11 +122,14 @@ public class MasterRecvExecutorHbProcess {
                                 long timeSpan = System.currentTimeMillis() - node.getLastHbTime();
                                 if (timeSpan > TimeConstants.HEARTBEAT_INTERVEL * TimeConstants.LOSE_TIMES) {
                                     node.setOnline(false);
-                                    removeNode(node);
+                                    removeContextNode(node);
+                                    LOG.info("Loss ExecutorNode ip:{},tag:{},lastHeatbeatsTime:{}",
+                                            node.getIp(), node.getTag(), node.getLastHbTime());
                                 }
                             }
                         }
                     } catch (Exception e) {
+                        LOG.error("MasterRecvExecutorProcess", e);
                     }
                 }
                 try {

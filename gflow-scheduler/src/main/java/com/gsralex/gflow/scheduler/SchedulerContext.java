@@ -17,7 +17,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author gsralex
@@ -70,7 +69,7 @@ public class SchedulerContext {
      */
     private static ApplicationContext context;
 
-    private Map<String, IpManager> executorIpManager = new ConcurrentHashMap<>();
+    private ExecutorIpManager executorIpManager = new ExecutorIpManager();
 
     private IpManager schedulerIpManager;
 
@@ -85,9 +84,8 @@ public class SchedulerContext {
 
         schedulerIpManager = new IpManager(config.getSchedulerIps());
 
-        for (Map.Entry<String, List<IpAddr>> ipEntry : config.getExecutorIpMap().entrySet()) {
-            IpManager ipManager = new IpManager(ipEntry.getValue());
-            executorIpManager.put(ipEntry.getKey(), ipManager);
+        for (Map.Entry<String, List<IpAddr>> entry : config.getExecutorIpMap().entrySet()) {
+            executorIpManager.addNodeList(entry.getValue(), entry.getKey());
         }
 
         initSpring();
@@ -164,19 +162,7 @@ public class SchedulerContext {
     }
 
 
-    public void setTagExecutorIp(String tag, List<IpAddr> ipList) {
-        if (executorIpManager.containsKey(tag)) {
-            executorIpManager.put(tag, new IpManager(ipList));
-        } else {
-            executorIpManager.get(tag).setIp(ipList);
-        }
-    }
-
-    public IpManager getExecutorIpManager(String tag) {
-        return executorIpManager.get(tag);
-    }
-
-    public Map<String, IpManager> getExecutorIpManager() {
+    public ExecutorIpManager getExecutorIpManager() {
         return executorIpManager;
 
     }

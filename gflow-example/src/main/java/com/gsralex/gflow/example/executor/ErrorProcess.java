@@ -20,6 +20,6 @@ public class ErrorProcess implements ExecuteProcess {
         LOG.info("parameter:" + req.getParameter());
         //模拟流程
         Thread.sleep(1000 * 10);
-        return false;
+        return true;
     }
 }

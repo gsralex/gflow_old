@@ -12,6 +12,7 @@ import com.gsralex.gflow.pub.domain.Job;
 import com.gsralex.gflow.pub.domain.JobGroup;
 import com.gsralex.gflow.pub.enums.JobGroupStatusEnum;
 import com.gsralex.gflow.pub.enums.JobStatusEnum;
+import com.gsralex.gflow.pub.exception.GflowException;
 import com.gsralex.gflow.pub.util.DtUtils;
 import com.gsralex.gflow.pub.util.SecurityUtils;
 import com.gsralex.gflow.scheduler.SchedulerContext;
@@ -28,7 +29,8 @@ import com.gsralex.gflow.scheduler.schedule.ActionDesc;
 import com.gsralex.gflow.scheduler.schedule.ActionResult;
 import com.gsralex.gflow.scheduler.schedule.FlowResult;
 import com.gsralex.gflow.scheduler.service.SchedulerService;
-import org.apache.thrift.TException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +45,8 @@ import java.util.Set;
  */
 @Service
 public class SchedulerServiceImpl implements SchedulerService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SchedulerServiceImpl.class);
 
     @Autowired
     private ActionDao actionDao;
@@ -69,6 +73,7 @@ public class SchedulerServiceImpl implements SchedulerService {
         jobGroup.setDate(DtUtils.getBizDate());
         jobGroup.setTimerConfigId(timerConfigId);
         jobGroup.setParameter(param.toString());
+        jobGroup.setStartServer(context.getMyIp().toString());
         jobDao.saveJobGroup(jobGroup);
 
         FlowGuide flowGuide = flowMapHandle.initGroup(jobGroup.getId(), triggerGroupId);
@@ -183,6 +188,12 @@ public class SchedulerServiceImpl implements SchedulerService {
         job.setRetryJobId(desc.getRetryJobId());
         job.setStatus(JobStatusEnum.SendOk.getValue());
         job.setParameter(parameter);
+        job.setScheduleServer(context.getMyIp().toString());
+        IpAddr ip = context.getExecutorIpManager().getIp(action.getTag());
+        if (ip == null) {
+            throw new GflowException("没有对应tag的可用ExecutorNode");
+        }
+        job.setExecuterServer(ip.toString());
         jobDao.saveJob(job);
 
 //        if (retry) {
@@ -203,15 +214,14 @@ public class SchedulerServiceImpl implements SchedulerService {
         req.setClassName(action.getClassName());
         boolean sendOk = false;
         try {
-            IpAddr ip = context.getExecutorIpManager(action.getTag()).getIp();
             String accessToken = SecurityUtils.encrypt(context.getConfig().getAccessKey());
             ExecutorClient client = ExecutorClientFactory.create(ip, accessToken);
             Resp resp = client.schedule(req);
             if (resp.getCode() == ErrConstants.OK) {
                 sendOk = true;
             }
-        } catch (TException e) {
-            //连接失败
+        } catch (Exception e) {
+            LOG.error("SchedulerServiceImpl.scheduleAction,schedule", e);
         }
         if (!sendOk) {
             jobDao.updateJobStatus(job.getId(), JobStatusEnum.SendErr.getValue());
@@ -239,7 +249,7 @@ public class SchedulerServiceImpl implements SchedulerService {
             if (job.getJobGroupId() != 0) {
                 JobGroup jobGroup = jobDao.getJobGroup(job.getJobGroupId());
                 //如果ack回应的服务器恰好是任务发起的服务器则直接处理并返回
-                if (jobGroup.getStartServer().equals(context.getMyIp())) {
+                if (context.getMyIp().toString().equals(jobGroup.getStartServer())) {
                     result = ackActionActual(jobId, code, msg, retry);
                 } else {
                     //不是触发服务器，则发送给触发服务器

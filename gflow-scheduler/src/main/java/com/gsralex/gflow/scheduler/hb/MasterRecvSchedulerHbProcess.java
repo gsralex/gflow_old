@@ -36,14 +36,6 @@ public class MasterRecvSchedulerHbProcess {
         hb.stop();
     }
 
-    public void addNode(final SchedulerNode node) {
-        hb.addNode(node);
-    }
-
-    public void removeNode(final SchedulerNode node) {
-        hb.removeNode(node);
-    }
-
     public List<SchedulerNode> listNode() {
         return hb.listNode();
     }
@@ -140,6 +132,8 @@ public class MasterRecvSchedulerHbProcess {
                                 if (timeSpan > TimeConstants.HEARTBEAT_INTERVEL * TimeConstants.LOSE_TIMES) {
                                     node.setOnline(false);
                                     removeNode(node);
+                                    LOG.info("Loss SchedulerNode ip:{},lastHeatbeatsTime:{}",
+                                            node.getIp(), node.getLastHbTime());
                                 }
                             }
                         }

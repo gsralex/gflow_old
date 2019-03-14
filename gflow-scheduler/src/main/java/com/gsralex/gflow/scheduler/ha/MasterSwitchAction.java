@@ -47,6 +47,6 @@ public class MasterSwitchAction implements SwitchAction {
     @Override
     public void stop() {
         context.getHbContext().getMasterReceiveSchedulerHb().stop();
-        context.getHbContext().getSlaveSchedulerHb().stop();
+        context.getHbContext().getMasterReceiveExecutorHb().stop();
     }
 }

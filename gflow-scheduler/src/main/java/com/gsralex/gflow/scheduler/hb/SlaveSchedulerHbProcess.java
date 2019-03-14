@@ -64,7 +64,7 @@ public class SlaveSchedulerHbProcess {
                 }
             }
             for (Map.Entry<String, List<IpAddr>> tagIp : ipMap.entrySet()) {
-                context.setTagExecutorIp(tagIp.getKey(), tagIp.getValue());
+                context.getExecutorIpManager().addNodeList(tagIp.getValue(), tagIp.getKey());
             }
         }
 

@@ -2,7 +2,6 @@ package com.gsralex.gflow.scheduler.service.impl;
 
 import com.gsralex.gflow.pub.constants.ErrConstants;
 import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.pub.context.IpManager;
 import com.gsralex.gflow.pub.util.SecurityUtils;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.client.SchedulerClient;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author gsralex
@@ -37,7 +35,10 @@ public class HbServiceImpl implements HbService {
     public List<IpAddr> executorHb(IpAddr ip, String tag) {
         if (context.isMaster()) {
             context.getHbContext().getMasterReceiveExecutorHb().heartBeat(ip, tag);
-            return context.getSchedulerIpManager().listIp();
+            List<IpAddr> scheIpList = context.getSchedulerIpManager().listIp();
+            //加入masterip
+            scheIpList.add(context.getMyIp());
+            return scheIpList;
         } else {
             //转发master
             IpAddr masterIp = context.getMasterIp();
@@ -71,16 +72,7 @@ public class HbServiceImpl implements HbService {
     @Override
     public List<ExecutorNode> schedulerHb(IpAddr ip) {
         context.getHbContext().getMasterReceiveSchedulerHb().heartBeat(ip);
-        List<ExecutorNode> list = new ArrayList<>();
-        for (Map.Entry<String, IpManager> entry : context.getExecutorIpManager().entrySet()) {
-            ExecutorNode node = new ExecutorNode();
-            for (IpAddr executorIp : entry.getValue().listIp()) {
-                node.setIp(executorIp);
-                node.setTag(entry.getKey());
-                list.add(node);
-            }
-        }
-        return list;
+        return context.getExecutorIpManager().listNode();
     }
 
     @Override

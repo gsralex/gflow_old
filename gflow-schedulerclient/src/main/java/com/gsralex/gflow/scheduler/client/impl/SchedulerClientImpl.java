@@ -142,6 +142,7 @@ public class SchedulerClientImpl implements SchedulerClient {
                     node.setIp(new IpAddr(tNode.getIp()));
                     nodeList.add(node);
                 }
+                resp.setNodeList(nodeList);
                 return resp;
             }
         }
@@ -179,7 +180,7 @@ public class SchedulerClientImpl implements SchedulerClient {
         class Callback implements ClientCallback<NodeStatusResp> {
             @Override
             public NodeStatusResp doAction(TScheduleService.Client client) throws TException {
-                TReq tReq=new TReq();
+                TReq tReq = new TReq();
                 TNodeStatusResp tResp = client.listExecutorNode(tReq);
                 NodeStatusResp resp = new NodeStatusResp();
                 List<TNodeStatus> tNodeList = tResp.getNodeList();
@@ -204,7 +205,7 @@ public class SchedulerClientImpl implements SchedulerClient {
         class Callback implements ClientCallback<NodeStatusResp> {
             @Override
             public NodeStatusResp doAction(TScheduleService.Client client) throws TException {
-                TReq tReq=new TReq();
+                TReq tReq = new TReq();
                 TNodeStatusResp tResp = client.listScheduerNode(tReq);
                 NodeStatusResp resp = new NodeStatusResp();
                 List<TNodeStatus> tNodeList = tResp.getNodeList();
