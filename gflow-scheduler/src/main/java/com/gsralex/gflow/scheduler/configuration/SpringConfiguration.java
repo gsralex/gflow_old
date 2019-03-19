@@ -14,15 +14,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan(basePackages = {"com.gsralex.gflow.scheduler"})
 public class SpringConfiguration {
-
-    public SpringConfiguration(){
-
-
-    }
-
     @Bean
     public JdbcUtils jdbcUtils() {
-        SchedulerContext context= SchedulerContext.getInstance();
+        SchedulerContext context = SchedulerContext.getInstance();
         BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName(context.getConfig().getDbDriver());
         dataSource.setUrl(context.getConfig().getDbUrl());
@@ -31,6 +25,4 @@ public class SpringConfiguration {
         return new JdbcUtils(dataSource);
 
     }
-
-
 }

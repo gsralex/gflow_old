@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.parameter;
 
-import com.gsralex.gflow.pub.context.Parameter;
+import com.gsralex.gflow.core.context.Parameter;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Assert;

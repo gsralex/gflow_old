@@ -1,6 +1,5 @@
 package com.gsralex.gflow.web.resp;
 
-import com.gsralex.gflow.pub.constants.ErrConstants;
 
 /**
  * @author gsralex
@@ -28,7 +27,6 @@ public class ResultResp {
 
     public static ResultResp wrapOk(boolean ok) {
         ResultResp resp = new ResultResp();
-        resp.setCode(ok ? ErrConstants.OK : ErrConstants.ERR_INTERNAL);
         return resp;
     }
 

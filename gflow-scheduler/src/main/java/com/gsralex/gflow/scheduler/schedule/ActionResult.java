@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.schedule;
 
 
-import com.gsralex.gflow.pub.enums.JobStatusEnum;
+import com.gsralex.gflow.core.enums.JobStatus;
 
 /**
  * @author gsralex
@@ -9,15 +9,15 @@ import com.gsralex.gflow.pub.enums.JobStatusEnum;
  */
 public class ActionResult {
 
-    private JobStatusEnum status;
+    private JobStatus status;
     private ActionDesc actionDesc;
     private long jobId;
 
-    public JobStatusEnum getStatus() {
+    public JobStatus getStatus() {
         return status;
     }
 
-    public void setStatus(JobStatusEnum status) {
+    public void setStatus(JobStatus status) {
         this.status = status;
     }
 

@@ -1,6 +1,6 @@
 package com.gsralex.gflow.web.configuration;
 
-import com.gsralex.gflow.pub.util.PropertyName;
+import com.gsralex.gflow.core.util.PropertyName;
 
 /**
  * @author gsralex

@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.timer;
 
-import com.gsralex.gflow.pub.domain.TimerConfig;
+import com.gsralex.gflow.core.domain.TimerConfigPo;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,14 +24,14 @@ public class TimerProcessTest {
         now.set(2018, 11, 17, 3, 0, 0);
         Date date = now.getTime();
 
-        TimerConfig tc1 = new TimerConfig();
+        TimerConfigPo tc1 = new TimerConfigPo();
         tc1.setId(1L);
         tc1.setTime("06:00:00");
         tc1.setActive(true);
         TimerTask task1 = new TimerTask(tc1);
         handler.setTimer(task1);
 
-        TimerConfig tc2 = new TimerConfig();
+        TimerConfigPo tc2 = new TimerConfigPo();
         tc2.setId(2L);
         tc2.setTime("05:00:00");
         tc2.setActive(true);
@@ -44,7 +44,7 @@ public class TimerProcessTest {
 
 
         //早于当前时间
-        TimerConfig tc3 = new TimerConfig();
+        TimerConfigPo tc3 = new TimerConfigPo();
         tc3.setId(3L);
         tc3.setTime("02:30:00"); //早于现在时间
         tc3.setActive(true);

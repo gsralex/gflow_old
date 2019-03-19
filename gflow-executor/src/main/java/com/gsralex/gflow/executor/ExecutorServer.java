@@ -1,13 +1,15 @@
 package com.gsralex.gflow.executor;
 
-import com.gsralex.gflow.executor.hb.ExecutorHbProcess;
-import com.gsralex.gflow.executor.server.TExecutorServer;
-import org.apache.thrift.transport.TTransportException;
+import com.gsralex.gflow.core.context.IpAddr;
+import com.gsralex.gflow.core.rpc.server.RpcServer;
+import com.gsralex.gflow.executor.client.ExecutorService;
+import com.gsralex.gflow.executor.ha.ZkExecutorRegistry;
+import com.gsralex.gflow.executor.server.ExecutorServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-import java.io.IOException;
+import java.util.List;
 
 
 /**
@@ -24,20 +26,32 @@ public class ExecutorServer {
         this.context.setSpringContext(context);
     }
 
-    public void serve() throws TTransportException, IOException {
+    public void serve() throws Exception {
         context = ExecutorContext.getInstance();
         context.init();
         LOG.info("====== ExecutorServer STARTING ======");
         LOG.info("port:{}", context.getConfig().getPort());
-        TExecutorServer server = new TExecutorServer(context);
-        server.start();
+        RpcServer server = new RpcServer();
+        server.registerHandler(ExecutorService.class, context.getSpringBean(ExecutorServiceImpl.class));
+        server.serve(context.getConfig().getPort());
+        handleIps();
         LOG.info("====== ExecutorServer STARTED ======");
-
-        ExecutorHbProcess process = new ExecutorHbProcess(context);
-        process.start();
     }
 
-    public static void main(String[] args) throws IOException, TTransportException {
+    private void handleIps() {
+        if (context.getConfig().isZkActive()) {
+            ZkExecutorRegistry registry = new ZkExecutorRegistry();
+            context.getSchedulerIpManager().updateServerNodes(registry.listScheduler());
+            registry.register();
+            registry.subscribeScheduler();
+        } else {
+            String ips = context.getConfig().getSchedulerIps();
+            List<IpAddr> ipList = IpAddr.getIpsByConfig(ips);
+            context.getSchedulerIpManager().updateServerNodes(ipList);
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
         ExecutorServer server = new ExecutorServer();
         server.serve();
     }

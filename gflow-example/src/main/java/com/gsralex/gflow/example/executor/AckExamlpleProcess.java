@@ -21,6 +21,6 @@ public class AckExamlpleProcess implements AckExecuteProcess {
         LOG.info("parameter:" + req.getParameter());
         //模拟流程
         Thread.sleep(1000 * 10);
-        ExecutorContext.getInstance().ack(req.getJobId(), true);
+//        ExecutorContext.getInstance().ack(req.getJobId(), true);
     }
 }

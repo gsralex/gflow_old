@@ -11,7 +11,7 @@ import java.io.IOException;
  */
 public class Application {
 
-    public static void main(String[] args) throws IOException, TTransportException {
+    public static void main(String[] args) throws Exception {
         ExecutorServer server = new ExecutorServer();
         server.serve();
     }

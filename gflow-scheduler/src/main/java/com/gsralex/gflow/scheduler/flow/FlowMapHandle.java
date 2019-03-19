@@ -1,12 +1,11 @@
 package com.gsralex.gflow.scheduler.flow;
 
-import com.gsralex.gflow.pub.domain.FlowItem;
-import com.gsralex.gflow.pub.domain.FlowDirect;
-import com.gsralex.gflow.pub.domain.Job;
-import com.gsralex.gflow.pub.domain.JobGroup;
-import com.gsralex.gflow.pub.enums.JobGroupStatusEnum;
+import com.gsralex.gflow.core.domain.FlowDirectPo;
+import com.gsralex.gflow.core.domain.FlowItemPo;
+import com.gsralex.gflow.core.domain.JobPo;
+import com.gsralex.gflow.core.domain.JobGroupPo;
+import com.gsralex.gflow.core.enums.JobGroupStatus;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import com.gsralex.gflow.scheduler.dao.ActionDao;
 import com.gsralex.gflow.scheduler.dao.FlowDao;
 import com.gsralex.gflow.scheduler.dao.JobDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +20,6 @@ import java.util.List;
 
 @Service
 public class FlowMapHandle {
-
-
-    @Autowired
-    private ActionDao actionDao;
     @Autowired
     private JobDao jobDao;
     @Autowired
@@ -34,9 +29,9 @@ public class FlowMapHandle {
 
 
     public FlowGuide initGroup(long jobGroupId, long flowGroupId) {
-        List<FlowItem> flowItemList = flowDao.listFlowItem(flowGroupId);
-        List<FlowDirect> directList = flowDao.listFlowDirect(flowGroupId);
-        FlowGuide flowGuide = new FlowGuide(jobGroupId, flowItemList, directList, JobGroupStatusEnum.EXECUTING);
+        List<FlowItemPo> flowItemPoList = flowDao.listFlowItem(flowGroupId);
+        List<FlowDirectPo> directList = flowDao.listFlowDirect(flowGroupId);
+        FlowGuide flowGuide = new FlowGuide(jobGroupId, flowItemPoList, directList, JobGroupStatus.EXECUTING);
         FlowGuideMap flowGuideMap = context.getFlowGuideMap();
         flowGuideMap.putFlowMap(jobGroupId, flowGuide);
         return flowGuide;
@@ -46,14 +41,14 @@ public class FlowMapHandle {
         FlowGuideMap flowGuideMap = context.getFlowGuideMap();
         FlowGuide flowGuide = flowGuideMap.getFlowMap(jobGroupId);
         if (flowGuide == null) {
-            JobGroup jobGroup = jobDao.getJobGroup(jobGroupId);
-            if (jobGroup != null) {
-                List<Job> jobList = jobDao.listJob(jobGroupId);
-                List<FlowItem> flowItemList = flowDao.listFlowItem(jobGroupId);
-                List<FlowDirect> directList = flowDao.listFlowDirect(jobGroupId);
-                JobGroupStatusEnum status = JobGroupStatusEnum.valueOf(jobGroup.getStatus());
-                flowGuide = new FlowGuide(jobGroupId, flowItemList, directList, jobList, status);
-                flowGuideMap.putFlowMap(jobGroup.getId(), flowGuide);
+            JobGroupPo jobGroupPo = jobDao.getJobGroup(jobGroupId);
+            if (jobGroupPo != null) {
+                List<JobPo> jobPoList = jobDao.listJob(jobGroupId);
+                List<FlowItemPo> flowItemPoList = flowDao.listFlowItem(jobGroupId);
+                List<FlowDirectPo> directList = flowDao.listFlowDirect(jobGroupId);
+                JobGroupStatus status = JobGroupStatus.valueOf(jobGroupPo.getStatus());
+                flowGuide = new FlowGuide(jobGroupId, flowItemPoList, directList, jobPoList, status);
+                flowGuideMap.putFlowMap(jobGroupPo.getId(), flowGuide);
                 return flowGuide;
             } else {
                 return null;

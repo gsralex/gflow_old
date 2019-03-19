@@ -1,7 +1,7 @@
 package com.gsralex.gflow.web.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.pub.domain.FlowGroup;
+import com.gsralex.gflow.core.domain.FlowGroupPo;
 import com.gsralex.gflow.web.dao.FlowDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,8 +19,8 @@ public class FlowDaoImpl implements FlowDao {
     private JdbcUtils jdbcUtils;
 
     @Override
-    public List<FlowGroup> listFlowGroup() {
+    public List<FlowGroupPo> listFlowGroup() {
         String sql = "select * from gflow_flowgroup where del=0";
-        return jdbcUtils.queryForList(sql, null, FlowGroup.class);
+        return jdbcUtils.queryForList(sql, null, FlowGroupPo.class);
     }
 }

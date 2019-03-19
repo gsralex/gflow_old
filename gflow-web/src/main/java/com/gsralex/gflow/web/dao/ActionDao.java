@@ -1,6 +1,6 @@
 package com.gsralex.gflow.web.dao;
 
-import com.gsralex.gflow.pub.domain.Action;
+import com.gsralex.gflow.core.domain.ActionPo;
 
 import java.util.List;
 
@@ -10,15 +10,15 @@ import java.util.List;
  */
 public interface ActionDao {
 
-    boolean saveAction(Action action);
+    boolean saveAction(ActionPo actionPo);
 
-    boolean updateAction(Action action);
+    boolean updateAction(ActionPo actionPo);
 
     boolean removeAction(long id);
 
-    Action getAction(long id);
+    ActionPo getAction(long id);
 
-    List<Action> listAction(String tag, String name, String className, int pageSize, int pageIndex);
+    List<ActionPo> listAction(String tag, String name, String className, int pageSize, int pageIndex);
 
     int countAction(String tag, String name, String className);
 }

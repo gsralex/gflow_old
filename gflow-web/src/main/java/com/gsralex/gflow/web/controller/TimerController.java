@@ -1,9 +1,9 @@
 package com.gsralex.gflow.web.controller;
 
 
-import com.gsralex.gflow.pub.action.Resp;
-import com.gsralex.gflow.scheduler.client.action.timer.TimerReq;
+import com.gsralex.gflow.web.req.TimerReq;
 import com.gsralex.gflow.web.resp.PageResp;
+import com.gsralex.gflow.web.resp.Resp;
 import com.gsralex.gflow.web.resp.ResultResp;
 import com.gsralex.gflow.web.service.TimerService;
 import org.springframework.beans.factory.annotation.Autowired;

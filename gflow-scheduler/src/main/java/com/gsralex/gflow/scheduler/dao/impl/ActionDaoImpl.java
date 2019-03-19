@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.pub.domain.Action;
+import com.gsralex.gflow.core.domain.ActionPo;
 import com.gsralex.gflow.scheduler.dao.ActionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -17,8 +17,8 @@ public class ActionDaoImpl implements ActionDao {
     private JdbcUtils jdbcUtils;
 
     @Override
-    public Action getAction(long id) {
+    public ActionPo getAction(long id) {
         String sql = "select * from gflow_action where id=?";
-        return jdbcUtils.queryForObject(sql, new Object[]{id}, Action.class);
+        return jdbcUtils.queryForObject(sql, new Object[]{id}, ActionPo.class);
     }
 }

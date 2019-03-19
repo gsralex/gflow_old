@@ -1,9 +1,8 @@
 package com.gsralex.gflow.executor.config;
 
-import com.gsralex.gflow.pub.util.PropertyName;
+import com.gsralex.gflow.core.util.PropertyName;
 
 public class ExecutorConfig {
-
     @PropertyName(name = "gflow.port")
     private int port;
     @PropertyName(name = "gflow.scheduler.ips")
@@ -14,6 +13,10 @@ public class ExecutorConfig {
     private String tag;
     @PropertyName(name = "gflow.executor.threads")
     private int threads;
+    @PropertyName(name = "gflow.zk.server")
+    private String zkServer;
+    @PropertyName(name = "gflow.zk.active")
+    private boolean zkActive;
 
     public int getPort() {
         return port;
@@ -53,5 +56,21 @@ public class ExecutorConfig {
 
     public void setThreads(int threads) {
         this.threads = threads;
+    }
+
+    public String getZkServer() {
+        return zkServer;
+    }
+
+    public void setZkServer(String zkServer) {
+        this.zkServer = zkServer;
+    }
+
+    public boolean isZkActive() {
+        return zkActive;
+    }
+
+    public void setZkActive(boolean zkActive) {
+        this.zkActive = zkActive;
     }
 }

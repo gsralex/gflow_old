@@ -1,12 +1,16 @@
 package com.gsralex.gflow.scheduler;
 
-import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.scheduler.ha.MasterSwitchAction;
-import com.gsralex.gflow.scheduler.ha.SlaveSwitchAction;
-import com.gsralex.gflow.scheduler.ha.ZkRegisterMaster;
+import com.gsralex.gflow.core.context.IpAddr;
+import com.gsralex.gflow.core.rpc.server.RpcServer;
+import com.gsralex.gflow.scheduler.client.NFlowService;
+import com.gsralex.gflow.scheduler.client.NScheduleService;
+import com.gsralex.gflow.scheduler.client.NTimerService;
 import com.gsralex.gflow.scheduler.parameter.DynamicParam;
-import com.gsralex.gflow.scheduler.server.ScheduleTransportException;
-import com.gsralex.gflow.scheduler.server.TSchedulerServer;
+import com.gsralex.gflow.scheduler.registry.ZkMasterRegistry;
+import com.gsralex.gflow.scheduler.registry.ZkSchedulerRegistry;
+import com.gsralex.gflow.scheduler.server.FlowServiceImpl;
+import com.gsralex.gflow.scheduler.server.ScheduleServiceImpl;
+import com.gsralex.gflow.scheduler.server.TimerServiceImpl;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -40,36 +44,35 @@ public class SchedulerServer {
         SchedulerContext.getInstance().addParam(parameter);
     }
 
-    public void serve() throws ScheduleTransportException, UnknownHostException {
-
+    public void serve() throws UnknownHostException, InterruptedException {
         LOG.info("====== SchedulerServer STARTING ======");
-        TSchedulerServer server = context.getBean(TSchedulerServer.class);
-        server.start(context.getConfig().getPort());
-        LOG.info("====== SchedulerServer STARTED ======");
 
+        RpcServer rpcServer = new RpcServer();
+        rpcServer.registerHandler(NFlowService.class, context.getBean(FlowServiceImpl.class));
+        rpcServer.registerHandler(NTimerService.class, context.getBean(TimerServiceImpl.class));
+        rpcServer.registerHandler(NScheduleService.class, context.getBean(ScheduleServiceImpl.class));
+        rpcServer.serve(context.getConfig().getPort());
+        LOG.info("====== SchedulerServer STARTED ======");
         selectMaster(context);
-        if (context.isMaster()) {
-            MasterSwitchAction master = context.getBean(MasterSwitchAction.class);
-            master.start();
-        } else {
-            SlaveSwitchAction slave = context.getBean(SlaveSwitchAction.class);
-            slave.start();
-        }
     }
 
     private void selectMaster(SchedulerContext context) throws UnknownHostException {
         //如果有zk，则用zk注册master
         if (context.getConfig().getZkActive() != null
                 && context.getConfig().getZkActive()) {
-            ZkRegisterMaster zkRegisterMaster = new ZkRegisterMaster();
-            if (zkRegisterMaster.registerMaster()) {
+            ZkMasterRegistry zkMasterRegistry = new ZkMasterRegistry();
+            if (zkMasterRegistry.registerMaster()) {
                 context.setMaster(true);
                 context.setMasterIp(context.getMyIp());
             } else {
-                zkRegisterMaster.subscribe();
+                zkMasterRegistry.subscribe();
                 context.setMaster(false);
-                context.setMasterIp(zkRegisterMaster.getMasterIp());
+                context.setMasterIp(zkMasterRegistry.getMasterIp());
             }
+            ZkSchedulerRegistry zkSchedulerRegistry = new ZkSchedulerRegistry();
+            zkSchedulerRegistry.register();
+            zkSchedulerRegistry.subscribeScheduler();
+            zkSchedulerRegistry.subscribeExecutor();
         } else {
             IpAddr masterIp = new IpAddr(context.getConfig().getSchedulerMaster());
             InetAddress masterAddr = InetAddress.getByName(masterIp.getIp());
@@ -79,9 +82,9 @@ public class SchedulerServer {
     }
 
 
-    public static void main(String[] args) throws ScheduleTransportException, IOException {
-        ArgsData argsData = new ArgsData(args);
-        // SchedulerServer server = new SchedulerServer(argsData.isMaster());
+    public static void main(String[] args) throws IOException, InterruptedException {
+        MainArgs mainArgs = new MainArgs(args);
+        mainArgs.isMaster();
         SchedulerServer server = new SchedulerServer(true);
         server.addParameter(getBizdataParam());
         server.serve();

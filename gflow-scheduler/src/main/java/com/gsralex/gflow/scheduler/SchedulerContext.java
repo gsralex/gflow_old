@@ -1,8 +1,7 @@
 package com.gsralex.gflow.scheduler;
 
-import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.pub.context.IpManager;
-import com.gsralex.gflow.pub.util.SecurityUtils;
+import com.gsralex.gflow.core.context.IpAddr;
+import com.gsralex.gflow.core.rpc.client.RpcClientManager;
 import com.gsralex.gflow.scheduler.configuration.SchedulerConfig;
 import com.gsralex.gflow.scheduler.configuration.SpringConfiguration;
 import com.gsralex.gflow.scheduler.flow.FlowGuideMap;
@@ -14,9 +13,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author gsralex
@@ -45,7 +41,7 @@ public class SchedulerContext {
     private DynamicParamContext paramContext = DynamicParamContext.getContext();
 
 
-    //ha
+    //registry
     /**
      * 服务当前状态
      */
@@ -57,11 +53,6 @@ public class SchedulerContext {
      */
     private IpAddr myIp;
 
-
-    private String accessToken;
-
-    private HbContext hbContext;
-
     private TimerProcess timerProcess;
 
     /**
@@ -69,25 +60,17 @@ public class SchedulerContext {
      */
     private static ApplicationContext context;
 
-    private ExecutorIpManager executorIpManager = new ExecutorIpManager();
+    private ExecutorClientManager executorClientManager = new ExecutorClientManager();
 
-    private IpManager schedulerIpManager;
+    private RpcClientManager schedulerIpManager = new RpcClientManager();
 
     public void init() throws IOException {
         this.config = SchedulerConfig.load();
-
         //主ip
         masterIp = new IpAddr(config.getSchedulerMaster());
-
+        //myip
         InetAddress addr = InetAddress.getLocalHost();
         myIp = new IpAddr(addr.getHostAddress(), config.getPort());
-
-        schedulerIpManager = new IpManager(config.getSchedulerIps());
-
-        for (Map.Entry<String, List<IpAddr>> entry : config.getExecutorIpMap().entrySet()) {
-            executorIpManager.addNodeList(entry.getValue(), entry.getKey());
-        }
-
         initSpring();
 
     }
@@ -132,19 +115,6 @@ public class SchedulerContext {
         return myIp;
     }
 
-    public String getAccessToken() {
-        return SecurityUtils.encrypt(this.getConfig().getAccessKey());
-    }
-
-
-    public HbContext getHbContext() {
-        return hbContext;
-    }
-
-    public void setHbContext(HbContext hbContext) {
-        this.hbContext = hbContext;
-    }
-
     public TimerProcess getTimerProcess() {
         return timerProcess;
     }
@@ -162,18 +132,11 @@ public class SchedulerContext {
     }
 
 
-    public ExecutorIpManager getExecutorIpManager() {
-        return executorIpManager;
-
+    public ExecutorClientManager getExecutorClientManager() {
+        return executorClientManager;
     }
 
-    public IpManager getSchedulerIpManager() {
+    public RpcClientManager getSchedulerIpManager() {
         return schedulerIpManager;
-    }
-
-
-    public static void main(String[] args) throws UnknownHostException {
-        InetAddress addr = InetAddress.getLocalHost();
-        System.out.println(addr);
     }
 }

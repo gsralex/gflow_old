@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.dao;
 
-import com.gsralex.gflow.pub.domain.Job;
-import com.gsralex.gflow.pub.domain.JobGroup;
+import com.gsralex.gflow.core.domain.JobPo;
+import com.gsralex.gflow.core.domain.JobGroupPo;
 
 import java.util.List;
 
@@ -14,36 +14,36 @@ public interface JobDao {
     /**
      * 保存任务
      *
-     * @param jobGroup
+     * @param jobGroupPo
      * @return
      */
-    boolean saveJobGroup(JobGroup jobGroup);
+    boolean saveJobGroup(JobGroupPo jobGroupPo);
 
     /**
      * 更新任务
      *
-     * @param jobGroup
+     * @param jobGroupPo
      * @return
      */
-    boolean updateJobGroup(JobGroup jobGroup);
+    boolean updateJobGroup(JobGroupPo jobGroupPo);
 
-    JobGroup getJobGroup(long id);
+    JobGroupPo getJobGroup(long id);
 
-    boolean saveJob(Job job);
+    boolean saveJob(JobPo jobPo);
 
-    boolean updateJob(Job job);
+    boolean updateJob(JobPo jobPo);
 
     boolean updateJobStatus(long id, int status);
 
-    Job getJob(long id);
+    JobPo getJob(long id);
 
     boolean incrJobRetryCnt(long id);
 
-    List<JobGroup> listJobGroupExecuting();
+    List<JobGroupPo> listJobGroupExecuting();
 
-    List<Job> listJob(long jobGroupId);
+    List<JobPo> listJob(long jobGroupId);
 
-    List<Job> listJobNeedRetry(int maxRetryCnt);
+    List<JobPo> listJobNeedRetry(int maxRetryCnt);
 
     List<TimerExecuteRecord> listJobGroupExec(List<Long> timerIdList);
 }

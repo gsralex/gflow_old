@@ -1,10 +1,10 @@
 package com.gsralex.gflow.scheduler.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.pub.domain.Job;
-import com.gsralex.gflow.pub.domain.JobGroup;
-import com.gsralex.gflow.pub.enums.JobGroupStatusEnum;
-import com.gsralex.gflow.pub.enums.JobStatusEnum;
+import com.gsralex.gflow.core.domain.JobPo;
+import com.gsralex.gflow.core.domain.JobGroupPo;
+import com.gsralex.gflow.core.enums.JobGroupStatus;
+import com.gsralex.gflow.core.enums.JobStatus;
 import com.gsralex.gflow.scheduler.dao.IdUtils;
 import com.gsralex.gflow.scheduler.dao.JobDao;
 import com.gsralex.gflow.scheduler.dao.TimerExecuteRecord;
@@ -24,29 +24,29 @@ public class JobDaoImpl implements JobDao {
     private JdbcUtils jdbcUtils;
 
     @Override
-    public boolean saveJobGroup(JobGroup jobGroup) {
-        return jdbcUtils.insert(jobGroup, true);
+    public boolean saveJobGroup(JobGroupPo jobGroupPo) {
+        return jdbcUtils.insert(jobGroupPo, true);
     }
 
     @Override
-    public boolean updateJobGroup(JobGroup jobGroup) {
-        return jdbcUtils.update(jobGroup);
+    public boolean updateJobGroup(JobGroupPo jobGroupPo) {
+        return jdbcUtils.update(jobGroupPo);
     }
 
     @Override
-    public JobGroup getJobGroup(long id) {
+    public JobGroupPo getJobGroup(long id) {
         String sql = "select * from gflow_jobgroup where id=?";
-        return jdbcUtils.queryForObject(sql, new Object[]{id}, JobGroup.class);
+        return jdbcUtils.queryForObject(sql, new Object[]{id}, JobGroupPo.class);
     }
 
     @Override
-    public boolean saveJob(Job job) {
-        return jdbcUtils.insert(job, true);
+    public boolean saveJob(JobPo jobPo) {
+        return jdbcUtils.insert(jobPo, true);
     }
 
     @Override
-    public boolean updateJob(Job job) {
-        return jdbcUtils.update(job);
+    public boolean updateJob(JobPo jobPo) {
+        return jdbcUtils.update(jobPo);
     }
 
     @Override
@@ -56,9 +56,9 @@ public class JobDaoImpl implements JobDao {
     }
 
     @Override
-    public Job getJob(long id) {
+    public JobPo getJob(long id) {
         String sql = "select * from gflow_job where id=?";
-        return jdbcUtils.queryForObject(sql, new Object[]{id}, Job.class);
+        return jdbcUtils.queryForObject(sql, new Object[]{id}, JobPo.class);
     }
 
     @Override
@@ -68,20 +68,20 @@ public class JobDaoImpl implements JobDao {
     }
 
     @Override
-    public List<JobGroup> listJobGroupExecuting() {
+    public List<JobGroupPo> listJobGroupExecuting() {
         String sql = "select * from gflow_jobgroup where status=?";
-        return jdbcUtils.queryForList(sql, new Object[]{JobGroupStatusEnum.EXECUTING.getValue()}, JobGroup.class);
+        return jdbcUtils.queryForList(sql, new Object[]{JobGroupStatus.EXECUTING.getValue()}, JobGroupPo.class);
     }
 
     @Override
-    public List<Job> listJob(long jobGroupId) {
+    public List<JobPo> listJob(long jobGroupId) {
         return null;
     }
 
     @Override
-    public List<Job> listJobNeedRetry(int maxRetryCnt) {
+    public List<JobPo> listJobNeedRetry(int maxRetryCnt) {
         String sql = "select * from gflow_job where `status`<>? and retry_cnt<?";
-        return jdbcUtils.queryForList(sql, new Object[]{JobStatusEnum.ExecuteOk, maxRetryCnt}, Job.class);
+        return jdbcUtils.queryForList(sql, new Object[]{JobStatus.ExecuteOk, maxRetryCnt}, JobPo.class);
     }
 
     @Override

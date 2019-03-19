@@ -17,10 +17,7 @@ import java.io.IOException;
 @Configuration
 @ComponentScan(basePackages = "com.gsralex.gflow.web")
 public class SpringConfiguration implements WebMvcConfigurer {
-
-
     private static final String CONFIG_FILEPATH = "/gflow.properties";
-
     public SpringConfiguration() throws IOException {
         WebContext.getInstance().init();
     }
@@ -34,6 +31,5 @@ public class SpringConfiguration implements WebMvcConfigurer {
         dataSource.setUsername(config.getDbUsername());
         dataSource.setPassword(config.getDbPassword());
         return new JdbcUtils(dataSource);
-
     }
 }

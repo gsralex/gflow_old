@@ -1,8 +1,8 @@
 package com.gsralex.gflow.scheduler.configuration;
 
-import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.pub.util.PropertiesUtils;
-import com.gsralex.gflow.pub.util.PropertyName;
+import com.gsralex.gflow.core.context.IpAddr;
+import com.gsralex.gflow.core.util.PropertiesUtils;
+import com.gsralex.gflow.core.util.PropertyName;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,8 +1,8 @@
 package com.gsralex.gflow.scheduler.dao;
 
-import com.gsralex.gflow.pub.domain.FlowDirect;
-import com.gsralex.gflow.pub.domain.FlowGroup;
-import com.gsralex.gflow.pub.domain.FlowItem;
+import com.gsralex.gflow.core.domain.FlowDirectPo;
+import com.gsralex.gflow.core.domain.FlowGroupPo;
+import com.gsralex.gflow.core.domain.FlowItemPo;
 
 import java.util.List;
 
@@ -12,27 +12,27 @@ import java.util.List;
  */
 public interface FlowDao {
 
-    boolean saveFlowGroup(FlowGroup flowGroup);
+    boolean saveFlowGroup(FlowGroupPo flowGroupPo);
 
-    boolean updateFlowGroup(FlowGroup flowGroup);
+    boolean updateFlowGroup(FlowGroupPo flowGroupPo);
 
-    FlowGroup getFlowGroup(long id);
+    FlowGroupPo getFlowGroup(long id);
 
     boolean removeFlowGroup(long id);
 
-    int batchSaveFlowItem(List<FlowItem> list);
+    int batchSaveFlowItem(List<FlowItemPo> list);
 
-    int batchUpdateFlowItem(List<FlowItem> list);
+    int batchUpdateFlowItem(List<FlowItemPo> list);
 
-    int batchRemoveFlowItem(List<FlowItem> list);
+    int batchRemoveFlowItem(List<FlowItemPo> list);
 
-    List<FlowItem> listFlowItem(long groupId);
+    List<FlowItemPo> listFlowItem(long groupId);
 
-    int batchSaveFlowDirect(List<FlowDirect> list);
+    int batchSaveFlowDirect(List<FlowDirectPo> list);
 
-    int batchUpdateFlowDirect(List<FlowDirect> list);
+    int batchUpdateFlowDirect(List<FlowDirectPo> list);
 
-    int batchRemoveFlowDirect(List<FlowDirect> list);
+    int batchRemoveFlowDirect(List<FlowDirectPo> list);
 
-    List<FlowDirect> listFlowDirect(long groupId);
+    List<FlowDirectPo> listFlowDirect(long groupId);
 }

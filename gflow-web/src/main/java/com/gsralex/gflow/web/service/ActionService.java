@@ -1,6 +1,6 @@
 package com.gsralex.gflow.web.service;
 
-import com.gsralex.gflow.pub.domain.Action;
+import com.gsralex.gflow.core.domain.ActionPo;
 import com.gsralex.gflow.web.resp.PageResp;
 
 /**
@@ -16,7 +16,7 @@ public interface ActionService {
 
     boolean removeAction(long id);
 
-    Action getAction(long id);
+    ActionPo getAction(long id);
 
     PageResp listAction(String tag, String name, String className, int pageSize, int pageIndex);
 

@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.dao;
 
 
-import com.gsralex.gflow.pub.domain.TimerConfig;
+import com.gsralex.gflow.core.domain.TimerConfigPo;
 
 import java.util.List;
 
@@ -11,13 +11,13 @@ import java.util.List;
  */
 public interface TimerDao {
 
-    boolean saveTimer(TimerConfig config);
+    boolean saveTimer(TimerConfigPo config);
 
-    boolean updateTimer(TimerConfig config);
+    boolean updateTimer(TimerConfigPo config);
 
     boolean deleteTimer(long id);
 
-    TimerConfig getTimer(long id);
+    TimerConfigPo getTimer(long id);
 
-    List<TimerConfig> listTimer();
+    List<TimerConfigPo> listTimer();
 }

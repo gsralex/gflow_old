@@ -1,6 +1,6 @@
 package com.gsralex.gflow.web.controller;
 
-import com.gsralex.gflow.pub.domain.Action;
+import com.gsralex.gflow.core.domain.ActionPo;
 import com.gsralex.gflow.web.resp.PageResp;
 import com.gsralex.gflow.web.resp.ResultResp;
 import com.gsralex.gflow.web.service.ActionService;
@@ -34,8 +34,8 @@ public class ActionController {
 
     @RequestMapping(value = "/action/get", method = RequestMethod.GET)
     public ResultResp getAction(long id) {
-        Action action = service.getAction(id);
-        return ResultResp.wrapData(action);
+        ActionPo actionPo = service.getAction(id);
+        return ResultResp.wrapData(actionPo);
     }
 
     @RequestMapping(value = "/action/remove", method = RequestMethod.POST)

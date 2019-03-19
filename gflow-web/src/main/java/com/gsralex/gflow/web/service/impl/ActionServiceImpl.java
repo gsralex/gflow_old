@@ -1,6 +1,6 @@
 package com.gsralex.gflow.web.service.impl;
 
-import com.gsralex.gflow.pub.domain.Action;
+import com.gsralex.gflow.core.domain.ActionPo;
 import com.gsralex.gflow.web.dao.ActionDao;
 import com.gsralex.gflow.web.resp.PageResp;
 import com.gsralex.gflow.web.service.ActionService;
@@ -22,23 +22,23 @@ public class ActionServiceImpl implements ActionService {
 
     @Override
     public boolean saveAction(String name, String className, String tag) {
-        Action action = new Action();
-        action.setName(name);
-        action.setClassName(className);
-        action.setTag(tag);
-        action.setDel(false);
-        action.setCreateTime(System.currentTimeMillis());
-        return actionDao.saveAction(action);
+        ActionPo actionPo = new ActionPo();
+        actionPo.setName(name);
+        actionPo.setClassName(className);
+        actionPo.setTag(tag);
+        actionPo.setDel(false);
+        actionPo.setCreateTime(System.currentTimeMillis());
+        return actionDao.saveAction(actionPo);
     }
 
     @Override
     public boolean updateAction(long id, String name, String className, String tag) {
-        Action action = actionDao.getAction(id);
-        if (action != null) {
-            action.setName(name);
-            action.setClassName(className);
-            action.setTag(tag);
-            return actionDao.updateAction(action);
+        ActionPo actionPo = actionDao.getAction(id);
+        if (actionPo != null) {
+            actionPo.setName(name);
+            actionPo.setClassName(className);
+            actionPo.setTag(tag);
+            return actionDao.updateAction(actionPo);
         } else {
             return false;
         }
@@ -50,13 +50,13 @@ public class ActionServiceImpl implements ActionService {
     }
 
     @Override
-    public Action getAction(long id) {
+    public ActionPo getAction(long id) {
         return actionDao.getAction(id);
     }
 
     @Override
     public PageResp listAction(String tag, String name, String className, int pageSize, int pageIndex) {
-        List<Action> list = actionDao.listAction(tag, name, className, pageSize, pageIndex);
+        List<ActionPo> list = actionDao.listAction(tag, name, className, pageSize, pageIndex);
         int cnt = actionDao.countAction(tag, name, className);
         PageResp dto = new PageResp();
         dto.setData(list);

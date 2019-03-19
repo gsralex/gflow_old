@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.timer;
 
 
-import com.gsralex.gflow.pub.domain.TimerConfig;
+import com.gsralex.gflow.core.domain.TimerConfigPo;
 
 /**
  * @author gsralex
@@ -10,22 +10,22 @@ import com.gsralex.gflow.pub.domain.TimerConfig;
 public class TimerTask {
 
     private long lastExecutionTime;
-    private TimerConfig config;
+    private TimerConfigPo config;
 
-    public TimerTask(TimerConfig config) {
+    public TimerTask(TimerConfigPo config) {
         this(config, 0);
     }
 
-    public TimerTask(TimerConfig config, long lastExecutionTime) {
+    public TimerTask(TimerConfigPo config, long lastExecutionTime) {
         this.config = config;
         this.lastExecutionTime = lastExecutionTime;
     }
 
-    public void setTimerConfig(TimerConfig config) {
+    public void setTimerConfig(TimerConfigPo config) {
         this.config = config;
     }
 
-    public TimerConfig getTimerConfig() {
+    public TimerConfigPo getTimerConfig() {
         return config;
     }
 

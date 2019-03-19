@@ -1,7 +1,7 @@
 package com.gsralex.gflow.scheduler.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.pub.domain.TimerConfig;
+import com.gsralex.gflow.core.domain.TimerConfigPo;
 import com.gsralex.gflow.scheduler.dao.TimerDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -19,12 +19,12 @@ public class TimerDaoImpl implements TimerDao {
     private JdbcUtils jdbcUtils;
 
     @Override
-    public boolean saveTimer(TimerConfig config) {
+    public boolean saveTimer(TimerConfigPo config) {
         return jdbcUtils.insert(config,true);
     }
 
     @Override
-    public boolean updateTimer(TimerConfig config) {
+    public boolean updateTimer(TimerConfigPo config) {
         return jdbcUtils.update(config);
     }
 
@@ -35,15 +35,15 @@ public class TimerDaoImpl implements TimerDao {
     }
 
     @Override
-    public TimerConfig getTimer(long id) {
+    public TimerConfigPo getTimer(long id) {
         String sql="select * from gflow_timerconfig where id=? and del =0 ";
-        return jdbcUtils.queryForObject(sql,new Object[]{id},TimerConfig.class);
+        return jdbcUtils.queryForObject(sql,new Object[]{id}, TimerConfigPo.class);
     }
 
     @Override
-    public List<TimerConfig> listTimer() {
+    public List<TimerConfigPo> listTimer() {
         String sql = "select * from gflow_timerconfig where del=0";
-        return jdbcUtils.queryForList(sql, null, TimerConfig.class);
+        return jdbcUtils.queryForList(sql, null, TimerConfigPo.class);
     }
 
 }

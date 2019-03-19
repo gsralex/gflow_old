@@ -1,6 +1,6 @@
 package com.gsralex.gflow.web.dao;
 
-import com.gsralex.gflow.pub.domain.TimerConfig;
+import com.gsralex.gflow.core.domain.TimerConfigPo;
 import com.gsralex.gflow.web.model.TimerVo;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface TimerDao {
 
-    TimerConfig getTimer(long id);
+    TimerConfigPo getTimer(long id);
 
     List<TimerVo> listTimer(int pageSize, int pageIndex);
 

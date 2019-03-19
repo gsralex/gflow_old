@@ -1,10 +1,10 @@
 package com.gsralex.gflow.scheduler.flow;
 
-import com.gsralex.gflow.pub.domain.FlowDirect;
-import com.gsralex.gflow.pub.domain.FlowItem;
-import com.gsralex.gflow.pub.domain.Job;
-import com.gsralex.gflow.pub.enums.JobGroupStatusEnum;
-import com.gsralex.gflow.pub.enums.JobStatusEnum;
+import com.gsralex.gflow.core.domain.FlowDirectPo;
+import com.gsralex.gflow.core.domain.FlowItemPo;
+import com.gsralex.gflow.core.domain.JobPo;
+import com.gsralex.gflow.core.enums.JobGroupStatus;
+import com.gsralex.gflow.core.enums.JobStatus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,28 +22,28 @@ public class FlowGuide {
     //indexMap key->index,value->flownode
     private Map<Integer, FlowNode> posMap = new HashMap<>();
     private long groupId;
-    private JobGroupStatusEnum status;
+    private JobGroupStatus status;
 
-    public FlowGuide(long groupId, List<FlowItem> flowItems, List<FlowDirect> directs,
-                     JobGroupStatusEnum status) {
-        this(groupId, flowItems, directs, null, status);
+    public FlowGuide(long groupId, List<FlowItemPo> flowItemPos, List<FlowDirectPo> directs,
+                     JobGroupStatus status) {
+        this(groupId, flowItemPos, directs, null, status);
     }
 
     /**
      * 初始化流程向导
      *
      * @param groupId   流程组id
-     * @param flowItems 流程配置
+     * @param flowItemPos 流程配置
      * @param directs   流程流转配置
-     * @param jobs      所有流程组的执行的任务
+     * @param jobPos      所有流程组的执行的任务
      */
-    public FlowGuide(long groupId, List<FlowItem> flowItems, List<FlowDirect> directs,
-                     List<Job> jobs, JobGroupStatusEnum status) {
+    public FlowGuide(long groupId, List<FlowItemPo> flowItemPos, List<FlowDirectPo> directs,
+                     List<JobPo> jobPos, JobGroupStatus status) {
         this.groupId = groupId;
         this.status = status;
 
 //        Map<Integer, List<Integer>> directMap = new HashMap<>();
-//        for (FlowDirect item : directs) {
+//        for (FlowDirectPo item : directs) {
 //            List<Integer> preList = new ArrayList<>();
 //            String[] indexStrArr = item.getNextIndex().split(",");
 //            for (String indexStr : indexStrArr) {
@@ -52,14 +52,14 @@ public class FlowGuide {
 //            directMap.put(item.getIndex(), preList);
 //        }
 
-        for (FlowItem trigger : flowItems) {
+        for (FlowItemPo trigger : flowItemPos) {
             FlowNode current = new FlowNode();
             current.setActionId(trigger.getActionId());
             current.setIndex(trigger.getIndex());
             current.setParameter(trigger.getParameter());
             posMap.put(trigger.getIndex(), current);
         }
-        for (FlowDirect direct : directs) {
+        for (FlowDirectPo direct : directs) {
             FlowNode node = posMap.get(direct.getIndex());
             //0 1
             //1 2
@@ -74,9 +74,9 @@ public class FlowGuide {
             }
         }
 
-        if (jobs != null) {
-            for (Job job : jobs) {
-                this.updateNodeOk(job.getIndex(), job.getStatus() == JobStatusEnum.ExecuteOk.getValue());
+        if (jobPos != null) {
+            for (JobPo jobPo : jobPos) {
+                this.updateNodeOk(jobPo.getIndex(), jobPo.getStatus() == JobStatus.ExecuteOk.getValue());
             }
         }
     }
@@ -155,11 +155,11 @@ public class FlowGuide {
     }
 
 
-    public JobGroupStatusEnum getStatus() {
+    public JobGroupStatus getStatus() {
         return status;
     }
 
-    public void setStatus(JobGroupStatusEnum status) {
+    public void setStatus(JobGroupStatus status) {
         this.status = status;
     }
 }

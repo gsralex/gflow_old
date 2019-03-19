@@ -1,7 +1,7 @@
 package com.gsralex.gflow.web.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.pub.domain.Action;
+import com.gsralex.gflow.core.domain.ActionPo;
 import com.gsralex.gflow.web.dao.ActionDao;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +25,13 @@ public class ActionDaoImpl implements ActionDao {
     }
 
     @Override
-    public boolean saveAction(Action action) {
-        return jdbcUtils.insert(action);
+    public boolean saveAction(ActionPo actionPo) {
+        return jdbcUtils.insert(actionPo);
     }
 
     @Override
-    public boolean updateAction(Action action) {
-        return jdbcUtils.update(action);
+    public boolean updateAction(ActionPo actionPo) {
+        return jdbcUtils.update(actionPo);
     }
 
     @Override
@@ -41,13 +41,13 @@ public class ActionDaoImpl implements ActionDao {
     }
 
     @Override
-    public Action getAction(long id) {
+    public ActionPo getAction(long id) {
         String sql = "select * from gflow_action where id=?";
-        return jdbcUtils.queryForObject(sql, new Object[]{id}, Action.class);
+        return jdbcUtils.queryForObject(sql, new Object[]{id}, ActionPo.class);
     }
 
     @Override
-    public List<Action> listAction(String tag, String name, String className, int pageSize, int pageIndex) {
+    public List<ActionPo> listAction(String tag, String name, String className, int pageSize, int pageIndex) {
         String sql = "select * from gflow_action where del=0 ";
         List<Object> paramList = new ArrayList<>();
         if (!StringUtils.isEmpty(tag)) {
@@ -62,7 +62,7 @@ public class ActionDaoImpl implements ActionDao {
             sql += "and class_name like ? ";
             paramList.add("%" + className + "%");
         }
-        return jdbcUtils.queryForList(sql, paramList.toArray(), Action.class);
+        return jdbcUtils.queryForList(sql, paramList.toArray(), ActionPo.class);
     }
 
     @Override

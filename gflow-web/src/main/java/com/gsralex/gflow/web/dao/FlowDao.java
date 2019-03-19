@@ -1,6 +1,6 @@
 package com.gsralex.gflow.web.dao;
 
-import com.gsralex.gflow.pub.domain.FlowGroup;
+import com.gsralex.gflow.core.domain.FlowGroupPo;
 
 import java.util.List;
 
@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface FlowDao {
 
-    List<FlowGroup> listFlowGroup();
+    List<FlowGroupPo> listFlowGroup();
 }

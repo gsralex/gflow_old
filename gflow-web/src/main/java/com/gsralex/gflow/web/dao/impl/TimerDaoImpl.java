@@ -1,7 +1,7 @@
 package com.gsralex.gflow.web.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.pub.domain.TimerConfig;
+import com.gsralex.gflow.core.domain.TimerConfigPo;
 import com.gsralex.gflow.web.dao.TimerDao;
 import com.gsralex.gflow.web.model.TimerVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +20,9 @@ public class TimerDaoImpl implements TimerDao {
     private JdbcUtils jdbcUtils;
 
     @Override
-    public TimerConfig getTimer(long id) {
+    public TimerConfigPo getTimer(long id) {
         String sql = "select * from gflow_timerconfig where id=? and del=0 ";
-        return jdbcUtils.queryForObject(sql, new Object[]{id}, TimerConfig.class);
+        return jdbcUtils.queryForObject(sql, new Object[]{id}, TimerConfigPo.class);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.gsralex.gflow.scheduler.dao.impl;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
-import com.gsralex.gflow.pub.domain.FlowDirect;
-import com.gsralex.gflow.pub.domain.FlowGroup;
-import com.gsralex.gflow.pub.domain.FlowItem;
+import com.gsralex.gflow.core.domain.FlowDirectPo;
+import com.gsralex.gflow.core.domain.FlowGroupPo;
+import com.gsralex.gflow.core.domain.FlowItemPo;
 import com.gsralex.gflow.scheduler.dao.FlowDao;
 import com.gsralex.gflow.scheduler.dao.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +23,19 @@ public class FlowDaoImpl implements FlowDao {
     private JdbcUtils jdbcUtils;
 
     @Override
-    public boolean saveFlowGroup(FlowGroup flowGroup) {
-        return jdbcUtils.insert(flowGroup, true);
+    public boolean saveFlowGroup(FlowGroupPo flowGroupPo) {
+        return jdbcUtils.insert(flowGroupPo, true);
     }
 
     @Override
-    public boolean updateFlowGroup(FlowGroup flowGroup) {
-        return jdbcUtils.update(flowGroup);
+    public boolean updateFlowGroup(FlowGroupPo flowGroupPo) {
+        return jdbcUtils.update(flowGroupPo);
     }
 
     @Override
-    public FlowGroup getFlowGroup(long id) {
+    public FlowGroupPo getFlowGroup(long id) {
         String sql = "select * from gflow_flowgroup where id=?";
-        return jdbcUtils.queryForObject(sql, new Object[]{id}, FlowGroup.class);
+        return jdbcUtils.queryForObject(sql, new Object[]{id}, FlowGroupPo.class);
     }
 
     @Override
@@ -45,17 +45,17 @@ public class FlowDaoImpl implements FlowDao {
     }
 
     @Override
-    public int batchSaveFlowItem(List<FlowItem> list) {
+    public int batchSaveFlowItem(List<FlowItemPo> list) {
         return jdbcUtils.batchInsert(list, true);
     }
 
     @Override
-    public int batchUpdateFlowItem(List<FlowItem> list) {
+    public int batchUpdateFlowItem(List<FlowItemPo> list) {
         return jdbcUtils.batchUpdate(list);
     }
 
     @Override
-    public int batchRemoveFlowItem(List<FlowItem> list) {
+    public int batchRemoveFlowItem(List<FlowItemPo> list) {
         if (list != null && list.size() != 0) {
             List<Long> idList = list.stream().map(x -> x.getId()).collect(Collectors.toList());
             String ids = IdUtils.longToInts(idList);
@@ -66,23 +66,23 @@ public class FlowDaoImpl implements FlowDao {
     }
 
     @Override
-    public List<FlowItem> listFlowItem(long groupId) {
+    public List<FlowItemPo> listFlowItem(long groupId) {
         String sql = "select * from gflow_flowitem where action_group_id=?";
-        return jdbcUtils.queryForList(sql, new Object[]{groupId}, FlowItem.class);
+        return jdbcUtils.queryForList(sql, new Object[]{groupId}, FlowItemPo.class);
     }
 
     @Override
-    public int batchSaveFlowDirect(List<FlowDirect> list) {
+    public int batchSaveFlowDirect(List<FlowDirectPo> list) {
         return jdbcUtils.batchInsert(list, true);
     }
 
     @Override
-    public int batchUpdateFlowDirect(List<FlowDirect> list) {
+    public int batchUpdateFlowDirect(List<FlowDirectPo> list) {
         return jdbcUtils.batchUpdate(list);
     }
 
     @Override
-    public int batchRemoveFlowDirect(List<FlowDirect> list) {
+    public int batchRemoveFlowDirect(List<FlowDirectPo> list) {
         if (list != null && list.size() != 0) {
             List<Long> idList = list.stream().map(x -> x.getId()).collect(Collectors.toList());
             String ids = IdUtils.longToInts(idList);
@@ -93,8 +93,8 @@ public class FlowDaoImpl implements FlowDao {
     }
 
     @Override
-    public List<FlowDirect> listFlowDirect(long groupId) {
+    public List<FlowDirectPo> listFlowDirect(long groupId) {
         String sql = "select * from gflow_flowdirect where group_id=?";
-        return jdbcUtils.queryForList(sql, new Object[]{groupId}, FlowDirect.class);
+        return jdbcUtils.queryForList(sql, new Object[]{groupId}, FlowDirectPo.class);
     }
 }

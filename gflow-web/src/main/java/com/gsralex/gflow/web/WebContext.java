@@ -1,8 +1,8 @@
 package com.gsralex.gflow.web;
 
-import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.pub.context.IpManager;
-import com.gsralex.gflow.pub.util.PropertiesUtils;
+import com.gsralex.gflow.core.context.IpAddr;
+import com.gsralex.gflow.core.context.IpManager;
+import com.gsralex.gflow.core.util.PropertiesUtils;
 import com.gsralex.gflow.web.configuration.WebConfig;
 
 import java.io.IOException;

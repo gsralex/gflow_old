@@ -1,6 +1,6 @@
 package com.gsralex.gflow.scheduler.dao;
 
-import com.gsralex.gflow.pub.domain.Action;
+import com.gsralex.gflow.core.domain.ActionPo;
 
 /**
  * @author gsralex
@@ -8,5 +8,5 @@ import com.gsralex.gflow.pub.domain.Action;
  */
 public interface ActionDao {
 
-    Action getAction(long id);
+    ActionPo getAction(long id);
 }

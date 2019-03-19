@@ -1,18 +1,22 @@
 package com.gsralex.gflow.scheduler.timer;
 
-import com.gsralex.gflow.pub.domain.TimerConfig;
-import com.gsralex.gflow.pub.util.DtUtils;
-import com.gsralex.gflow.scheduler.service.SchedulerService;
+import com.gsralex.gflow.core.domain.TimerConfigPo;
+import com.gsralex.gflow.core.rpc.client.RpcClientFactory;
+import com.gsralex.gflow.core.util.DtUtils;
+import com.gsralex.gflow.scheduler.SchedulerContext;
+import com.gsralex.gflow.scheduler.client.ScheduleService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author gsralex
@@ -20,7 +24,6 @@ import java.util.Map;
  */
 @Component
 public class TimerProcess {
-
     private TimerHandler timerHandler = new TimerHandler();
 
     public void start() {
@@ -45,22 +48,28 @@ public class TimerProcess {
         private static final Logger LOG = LoggerFactory.getLogger(TimerProcess.class);
 
         private Map<Long, TimerTask> map = new HashMap<>();
-        @Autowired
-        private SchedulerService schedulerService;
         private volatile boolean interrupt = false;
 
+        private ReentrantLock lock = new ReentrantLock();
+        private Condition timers = lock.newCondition();
 
         public void setTimer(TimerTask task) {
-            synchronized (map) {
+            try {
+                lock.lock();
                 map.put(task.getTimerConfig().getId(), task);
-                map.notify();
+                timers.signal();
+            } finally {
+                lock.unlock();
             }
         }
 
         public void removeTimer(long id) {
-            synchronized (map) {
+            try {
+                lock.lock();
                 map.remove(id);
-                map.notify();
+                timers.signal();
+            } finally {
+                lock.unlock();
             }
         }
 
@@ -88,7 +97,7 @@ public class TimerProcess {
         }
 
         public long getInterval(TimerTask timerTask, Date date) {
-            TimerConfig config = timerTask.getTimerConfig();
+            TimerConfigPo config = timerTask.getTimerConfig();
             long currentTime = date.getTime();
             Date execDate = getTodayDate(config.getTime(), date);
             long execTime = execDate.getTime();
@@ -135,20 +144,20 @@ public class TimerProcess {
                 synchronized (map) {
                     try {
                         if (map.size() == 0) {
-                            map.wait();
+                            timers.await(10, TimeUnit.SECONDS);
                         }
                         TimerTask timerTask = getMin(new Date());
                         //存在已经为size为0，依然删除的情况，会触发notify
                         if (timerTask != null) {
                             long interval = getInterval(timerTask, new Date());
                             if (interval < 0) {
-                                TimerConfig config = timerTask.getTimerConfig();
+                                TimerConfigPo config = timerTask.getTimerConfig();
                                 doScheduler(config.getFlowGroupId(), config.getParameter(), config.getId());
                                 LOG.info("timer executor job,timerid:{},flowgroupid:{}",
                                         config.getId(), config.getFlowGroupId());
                                 timerTask.setLastExecutionTime(System.currentTimeMillis());
                             } else {
-                                map.wait(interval);
+                                timers.await(interval, TimeUnit.MICROSECONDS);
                             }
                         }
                     } catch (Exception e) {
@@ -159,7 +168,9 @@ public class TimerProcess {
         }
 
         private void doScheduler(Long groupId, String parameter, Long timerConfigId) {
-            //schedulerService.scheduleGroup(config.getFlowGroupId(), config.getParameter(), config.getId(), false);
+            ScheduleService scheduleService = RpcClientFactory.create(ScheduleService.class,
+                    SchedulerContext.getInstance().getSchedulerIpManager());
+            scheduleService.scheduleGroup(groupId, parameter, timerConfigId);
         }
     }
 
@@ -167,24 +178,19 @@ public class TimerProcess {
     public static void main(String[] args) throws InterruptedException {
         TimerProcess process = new TimerProcess();
         process.start();
-
-
         for (int i = 0; i < 10000; i++) {
-            TimerConfig config1 = new TimerConfig();
+            TimerConfigPo config1 = new TimerConfigPo();
             config1.setTime("22:56:40");
             config1.setActive(true);
             config1.setId(new Long(i));
             TimerTask timerTask1 = new TimerTask(config1);
             process.setTimer(timerTask1);
         }
-
-
-        TimerConfig config2 = new TimerConfig();
+        TimerConfigPo config2 = new TimerConfigPo();
         config2.setTime("22:38:51");
         config2.setActive(true);
         config2.setId(2L);
         TimerTask timerTask2 = new TimerTask(config2);
         process.setTimer(timerTask2);
-
     }
 }

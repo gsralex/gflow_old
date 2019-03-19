@@ -1,21 +1,14 @@
 package com.gsralex.gflow.executor;
 
+import com.gsralex.gflow.core.context.IpAddr;
+import com.gsralex.gflow.core.rpc.client.RpcClientManager;
+import com.gsralex.gflow.core.util.PropertiesUtils;
 import com.gsralex.gflow.executor.config.ExecutorConfig;
 import com.gsralex.gflow.executor.spring.SpringContextHolder;
-import com.gsralex.gflow.pub.action.Resp;
-import com.gsralex.gflow.pub.constants.ErrConstants;
-import com.gsralex.gflow.pub.context.IpAddr;
-import com.gsralex.gflow.pub.context.IpManager;
-import com.gsralex.gflow.pub.util.PropertiesUtils;
-import com.gsralex.gflow.scheduler.client.SchedulerClient;
-import com.gsralex.gflow.scheduler.client.SchedulerClientFactory;
-import com.gsralex.gflow.scheduler.client.action.scheduler.AckReq;
 import org.springframework.context.ApplicationContext;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author gsralex
@@ -25,29 +18,26 @@ public class ExecutorContext {
 
     private static final String CONFIG_FILEPATH = "/gflow.properties";
 
-    private static final ExecutorContext current = new ExecutorContext();
+    private static final ExecutorContext INSTANCE = new ExecutorContext();
     private boolean spring;
 
     private ExecutorConfig config;
 
     private IpAddr myIp;
+    private RpcClientManager schedulerIpManager;
 
-    private IpManager schedulerIpManager;
 
     private ExecutorContext() {
     }
 
     public static ExecutorContext getInstance() {
-        return current;
+        return INSTANCE;
     }
 
     public void init() throws IOException {
         config = PropertiesUtils.getConfig(CONFIG_FILEPATH, ExecutorConfig.class);
         InetAddress addr = InetAddress.getLocalHost();
         this.myIp = new IpAddr(addr.getHostAddress(), config.getPort());
-
-        //初始化ip轮询
-        schedulerIpManager = new IpManager(config.getSchedulerIps());
     }
 
     public <T> T getSpringBean(Class<T> type) {
@@ -71,17 +61,7 @@ public class ExecutorContext {
         return config;
     }
 
-
-    public IpManager getSchedulerIpManager() {
+    public RpcClientManager getSchedulerIpManager() {
         return schedulerIpManager;
-    }
-
-    public boolean ack(long jobId, boolean ok) {
-        SchedulerClient client = SchedulerClientFactory.createScheduler(schedulerIpManager.getIp(), "");
-        AckReq req = new AckReq();
-        req.setJobId(jobId);
-        req.setCode(ok ? ErrConstants.OK : ErrConstants.ERR_INTERNAL);
-        Resp resp = client.ack(req);
-        return resp.getCode() == ErrConstants.OK ? true : false;
     }
 }
