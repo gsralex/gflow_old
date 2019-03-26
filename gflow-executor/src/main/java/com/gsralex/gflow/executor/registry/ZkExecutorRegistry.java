@@ -1,4 +1,4 @@
-package com.gsralex.gflow.executor.ha;
+package com.gsralex.gflow.executor.registry;
 
 import com.gsralex.gflow.core.constants.ZkConstants;
 import com.gsralex.gflow.core.context.IpAddr;
@@ -55,7 +55,7 @@ public class ZkExecutorRegistry {
     private List<IpAddr> listScheduler(List<String> paths) {
         List<IpAddr> nodeList = new ArrayList<>();
         for (String path : paths) {
-            String ip = zkClient.readData(path);
+            String ip = zkClient.readData(ZkConstants.ZKPATH_SCHEDULER + "/" + path);
             nodeList.add(new IpAddr(ip));
         }
         return nodeList;

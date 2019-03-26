@@ -3,7 +3,7 @@ package com.gsralex.gflow.web.controller;
 import com.gsralex.gflow.core.domain.ActionPo;
 import com.gsralex.gflow.web.resp.PageResp;
 import com.gsralex.gflow.web.resp.ResultResp;
-import com.gsralex.gflow.web.service.ActionService;
+import com.gsralex.gflow.web.service.ActionBizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ActionController {
 
     @Autowired
-    private ActionService service;
+    private ActionBizService service;
 
     @RequestMapping(value = "/action/save", method = RequestMethod.POST)
     public ResultResp saveAction(long id, String name, String className, String tag) {

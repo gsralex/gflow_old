@@ -5,7 +5,7 @@ import com.gsralex.gflow.web.model.JobGroupVo;
 import com.gsralex.gflow.web.model.JobVo;
 import com.gsralex.gflow.web.resp.PageResp;
 import com.gsralex.gflow.web.resp.ResultResp;
-import com.gsralex.gflow.web.service.JobService;
+import com.gsralex.gflow.web.service.JobBizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * @version 2019/3/9
  */
 @Repository
-public class JobServiceImpl implements JobService {
+public class JobBizServiceImpl implements JobBizService {
     @Autowired
     private JobDao jobDao;
 

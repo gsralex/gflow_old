@@ -7,7 +7,7 @@ import com.gsralex.gflow.web.resp.PageResp;
  * @author gsralex
  * @version 2019/3/8
  */
-public interface ActionService {
+public interface ActionBizService {
 
 
     boolean saveAction(String name, String className, String tag);

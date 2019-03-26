@@ -21,7 +21,7 @@ public class ExecutorClientManager {
         return nodes.get(tag);
     }
 
-    public synchronized void setNodes(List<ExecutorNode> nodeList) {
+    public synchronized void updateNodes(List<ExecutorNode> nodeList) {
         Map<String, List<IpAddr>> newNodes = new HashMap<>();
         for (ExecutorNode node : nodeList) {
             if (newNodes.containsKey(node.getTag())) {
@@ -43,7 +43,7 @@ public class ExecutorClientManager {
                 nodes.get(tag).updateServerNodes(entry.getValue());
             }
         }
-        //del
+        //remove
         for (Map.Entry<String, RpcClientManager> entry : nodes.entrySet()) {
             if (!newNodes.containsKey(entry.getKey())) {
                 entry.getValue().removeAllConnect();

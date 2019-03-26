@@ -4,9 +4,6 @@ import com.gsralex.gflow.core.rpc.protocol.RpcReq;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author gsralex
  * @version 2019/3/15
@@ -15,8 +12,8 @@ public class RpcServerHandlerTest {
     @Test
     public void doAction() throws Exception {
 
-        Map<String, Object> serverHandlers = new HashMap<>();
-        RpcServerHandler handler = new RpcServerHandler(serverHandlers);
+        ServiceCache serviceCache = new ServiceCache();
+        RpcServerHandler handler = new RpcServerHandler(serviceCache);
         handler.registerHandler(TestService.class, new TestServiceImpl());
 
         RpcReq req0 = new RpcReq();

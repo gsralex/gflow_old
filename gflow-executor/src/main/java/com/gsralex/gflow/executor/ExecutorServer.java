@@ -3,7 +3,7 @@ package com.gsralex.gflow.executor;
 import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.rpc.server.RpcServer;
 import com.gsralex.gflow.executor.client.ExecutorService;
-import com.gsralex.gflow.executor.ha.ZkExecutorRegistry;
+import com.gsralex.gflow.executor.registry.ZkExecutorRegistry;
 import com.gsralex.gflow.executor.server.ExecutorServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,16 +29,16 @@ public class ExecutorServer {
     public void serve() throws Exception {
         context = ExecutorContext.getInstance();
         context.init();
+        handleNodes();
         LOG.info("====== ExecutorServer STARTING ======");
         LOG.info("port:{}", context.getConfig().getPort());
         RpcServer server = new RpcServer();
-        server.registerHandler(ExecutorService.class, context.getSpringBean(ExecutorServiceImpl.class));
+        server.registerHandler(ExecutorService.class, new ExecutorServiceImpl());
         server.serve(context.getConfig().getPort());
-        handleIps();
         LOG.info("====== ExecutorServer STARTED ======");
     }
 
-    private void handleIps() {
+    private void handleNodes() {
         if (context.getConfig().isZkActive()) {
             ZkExecutorRegistry registry = new ZkExecutorRegistry();
             context.getSchedulerIpManager().updateServerNodes(registry.listScheduler());

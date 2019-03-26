@@ -100,7 +100,7 @@ public class BizFlowServiceImpl implements BizFlowService {
         return true;
     }
 
-    private int updateFlowDirect(long groupId, List<FlowDirectPo> directList) {
+    private boolean updateFlowDirect(long groupId, List<FlowDirectPo> directList) {
         List<FlowDirectPo> dataDirectList = flowDao.listFlowDirect(groupId);
 
         Map<Integer, FlowDirectPo> dataDirectMap = new HashMap<>();
@@ -132,11 +132,10 @@ public class BizFlowServiceImpl implements BizFlowService {
                 removeList.add(direct);
             }
         }
-        int cnt = 0;
-        cnt += flowDao.batchSaveFlowDirect(saveList);
-        cnt += flowDao.batchUpdateFlowDirect(updateList);
-        cnt += flowDao.batchRemoveFlowDirect(removeList);
-        return cnt;
+        flowDao.batchSaveFlowDirect(saveList);
+        flowDao.batchUpdateFlowDirect(updateList);
+        flowDao.batchRemoveFlowDirect(removeList);
+        return true;
     }
 
 

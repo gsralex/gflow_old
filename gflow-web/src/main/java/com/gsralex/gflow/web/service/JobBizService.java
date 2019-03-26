@@ -7,7 +7,7 @@ import com.gsralex.gflow.web.resp.ResultResp;
  * @author gsralex
  * @version 2019/3/9
  */
-public interface JobService {
+public interface JobBizService {
 
     ResultResp getJobGroup(long id);
 

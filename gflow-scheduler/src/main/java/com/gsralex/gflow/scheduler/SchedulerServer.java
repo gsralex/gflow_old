@@ -2,9 +2,9 @@ package com.gsralex.gflow.scheduler;
 
 import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.rpc.server.RpcServer;
-import com.gsralex.gflow.scheduler.client.NFlowService;
-import com.gsralex.gflow.scheduler.client.NScheduleService;
-import com.gsralex.gflow.scheduler.client.NTimerService;
+import com.gsralex.gflow.scheduler.client.FlowService;
+import com.gsralex.gflow.scheduler.client.ScheduleService;
+import com.gsralex.gflow.scheduler.client.TimerService;
 import com.gsralex.gflow.scheduler.parameter.DynamicParam;
 import com.gsralex.gflow.scheduler.registry.ZkMasterRegistry;
 import com.gsralex.gflow.scheduler.registry.ZkSchedulerRegistry;
@@ -46,17 +46,15 @@ public class SchedulerServer {
 
     public void serve() throws UnknownHostException, InterruptedException {
         LOG.info("====== SchedulerServer STARTING ======");
-
+        handleNodes(context);
         RpcServer rpcServer = new RpcServer();
-        rpcServer.registerHandler(NFlowService.class, context.getBean(FlowServiceImpl.class));
-        rpcServer.registerHandler(NTimerService.class, context.getBean(TimerServiceImpl.class));
-        rpcServer.registerHandler(NScheduleService.class, context.getBean(ScheduleServiceImpl.class));
+        rpcServer.registerHandler(FlowService.class, context.getBean(FlowServiceImpl.class));
+        rpcServer.registerHandler(TimerService.class, context.getBean(TimerServiceImpl.class));
+        rpcServer.registerHandler(ScheduleService.class, context.getBean(ScheduleServiceImpl.class));
         rpcServer.serve(context.getConfig().getPort());
-        LOG.info("====== SchedulerServer STARTED ======");
-        selectMaster(context);
     }
 
-    private void selectMaster(SchedulerContext context) throws UnknownHostException {
+    private void handleNodes(SchedulerContext context) throws UnknownHostException {
         //如果有zk，则用zk注册master
         if (context.getConfig().getZkActive() != null
                 && context.getConfig().getZkActive()) {
@@ -73,11 +71,17 @@ public class SchedulerServer {
             zkSchedulerRegistry.register();
             zkSchedulerRegistry.subscribeScheduler();
             zkSchedulerRegistry.subscribeExecutor();
+            //initialize
+            context.getSchedulerIpManager().updateServerNodes(zkSchedulerRegistry.listScheduler());
+            context.getExecutorClientManager().updateNodes(zkSchedulerRegistry.listExecutor());
         } else {
             IpAddr masterIp = new IpAddr(context.getConfig().getSchedulerMaster());
             InetAddress masterAddr = InetAddress.getByName(masterIp.getIp());
             masterIp.setIp(masterAddr.getHostAddress());
             context.setMasterIp(masterIp);
+            //initialize
+            ExecutorClientManager executorClientManager = new ExecutorClientManager();
+            executorClientManager.updateNodes(context.getConfig().getExecutorNodes());
         }
     }
 

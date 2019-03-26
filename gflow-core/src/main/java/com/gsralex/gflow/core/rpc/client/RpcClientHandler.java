@@ -34,11 +34,16 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcResp> {
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        super.channelRegistered(ctx);
         this.channel = ctx.channel();
+    }
+
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception{
         InetSocketAddress addr = (InetSocketAddress) ctx.channel().remoteAddress();
         remoteIp = new IpAddr(addr.getHostString(), addr.getPort());
     }
+
+
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, RpcResp resp) throws Exception {

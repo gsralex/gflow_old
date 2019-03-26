@@ -5,7 +5,7 @@ import com.gsralex.gflow.web.req.TimerReq;
 import com.gsralex.gflow.web.resp.PageResp;
 import com.gsralex.gflow.web.resp.Resp;
 import com.gsralex.gflow.web.resp.ResultResp;
-import com.gsralex.gflow.web.service.TimerService;
+import com.gsralex.gflow.web.service.TimerBizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ public class TimerController {
 
 
     @Autowired
-    private TimerService service;
+    private TimerBizService service;
 
     @RequestMapping(value = "/timer/save", method = RequestMethod.POST)
     public Resp saveTimer(TimerReq req) {

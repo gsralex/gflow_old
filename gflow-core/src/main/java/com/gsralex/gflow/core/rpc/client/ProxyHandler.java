@@ -15,6 +15,7 @@ public class ProxyHandler implements InvocationHandler {
     private Class clazz;
     private RpcClientManager rpcClientManager;
     private IpAddr ip;
+    private static final String METHOD_TOSTRING = "toString";
 
     public ProxyHandler(Class clazz, RpcClientManager rpcClientManager) {
         this.clazz = clazz;
@@ -29,6 +30,9 @@ public class ProxyHandler implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Exception {
+        if (METHOD_TOSTRING.equals(method.getName())) {
+            return proxy.toString();
+        }
         RpcReq req = new RpcReq();
         String reqId = UUID.randomUUID().toString();
         req.setReqId(reqId);

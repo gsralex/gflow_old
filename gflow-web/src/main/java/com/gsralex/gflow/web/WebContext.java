@@ -1,12 +1,11 @@
 package com.gsralex.gflow.web;
 
 import com.gsralex.gflow.core.context.IpAddr;
-import com.gsralex.gflow.core.context.IpManager;
+import com.gsralex.gflow.core.rpc.client.RpcClientManager;
 import com.gsralex.gflow.core.util.PropertiesUtils;
 import com.gsralex.gflow.web.configuration.WebConfig;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,19 +31,16 @@ public class WebContext {
         return webConfig;
     }
 
-    private IpManager schedulerIpManager;
+    private RpcClientManager schedulerIpManager;
 
     public void init() throws IOException {
         webConfig = PropertiesUtils.getConfig(CONFIG_FILEPATH, WebConfig.class);
-        String[] ipArr = webConfig.getSchedulerIps().split(",");
-        List<IpAddr> schedulerIps = new ArrayList<>();
-        for (String ip : ipArr) {
-            schedulerIps.add(new IpAddr(ip));
-        }
-        schedulerIpManager = new IpManager(schedulerIps);
+        List<IpAddr> schedulerIps = IpAddr.getIpsByConfig(webConfig.getSchedulerIps());
+        schedulerIpManager = new RpcClientManager();
+        schedulerIpManager.updateServerNodes(schedulerIps);
     }
 
-    public IpManager getSchedulerIpManager() {
+    public RpcClientManager getSchedulerIpManager() {
         return schedulerIpManager;
     }
 }

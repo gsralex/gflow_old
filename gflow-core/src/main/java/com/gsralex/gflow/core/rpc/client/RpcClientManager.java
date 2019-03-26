@@ -43,6 +43,15 @@ public class RpcClientManager {
     private ReentrantLock lock = new ReentrantLock();
     private Condition connected = lock.newCondition();
 
+
+    public RpcClientManager() {
+    }
+
+    public RpcClientManager(List<IpAddr> ipList) {
+        updateServerNodes(ipList);
+    }
+
+
     public void updateServerNodes(List<IpAddr> ipList) {
         //add nodes
         HashSet<IpAddr> handlerSet = new HashSet<>();

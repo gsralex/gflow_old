@@ -94,5 +94,15 @@
             <artifactId>gflow-schedulerclient</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>com.gsralex.gflow</groupId>
+            <artifactId>gflow-schedulerclient</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.gsralex.gflow</groupId>
+            <artifactId>gflow-schedulerclient</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

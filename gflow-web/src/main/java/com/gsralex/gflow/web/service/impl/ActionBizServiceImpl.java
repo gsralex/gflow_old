@@ -3,7 +3,7 @@ package com.gsralex.gflow.web.service.impl;
 import com.gsralex.gflow.core.domain.ActionPo;
 import com.gsralex.gflow.web.dao.ActionDao;
 import com.gsralex.gflow.web.resp.PageResp;
-import com.gsralex.gflow.web.service.ActionService;
+import com.gsralex.gflow.web.service.ActionBizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * @version 2019/3/9
  */
 @Service
-public class ActionServiceImpl implements ActionService {
+public class ActionBizServiceImpl implements ActionBizService {
 
     @Autowired
     protected ActionDao actionDao;

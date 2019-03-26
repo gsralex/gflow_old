@@ -49,9 +49,9 @@ public class ZkSchedulerRegistry {
     private List<IpAddr> listScheduler(List<String> paths) {
         List<IpAddr> nodeList = new ArrayList<>();
         for (String path : paths) {
-            String ip = zkClient.readData(path);
+            String ip = zkClient.readData(ZkConstants.ZKPATH_SCHEDULER + "/" + path);
             IpAddr node = new IpAddr(ip);
-            if (node != context.getMyIp()) {
+            if (!context.getMyIp().equals(node)) {
                 nodeList.add(node);
             }
         }
@@ -63,20 +63,20 @@ public class ZkSchedulerRegistry {
             @Override
             public void handleChildChange(String s, List<String> paths) throws Exception {
                 List<ExecutorNode> nodeList = listExecutor(paths);
-                context.getExecutorClientManager().setNodes(nodeList);
+                context.getExecutorClientManager().updateNodes(nodeList);
             }
         });
     }
 
-    public List<IpAddr> listExecutor() {
+    public List<ExecutorNode> listExecutor() {
         List<String> paths = zkClient.getChildren(ZkConstants.ZKPATH_EXECUTOR);
-        return listScheduler(paths);
+        return listExecutor(paths);
     }
 
     private List<ExecutorNode> listExecutor(List<String> paths) {
         List<ExecutorNode> nodeList = new ArrayList<>();
         for (String path : paths) {
-            String node = zkClient.readData(path);
+            String node = zkClient.readData(ZkConstants.ZKPATH_EXECUTOR + "/" + path);
             String[] arr = node.split("_");
             String tag = arr[0];
             String ip = arr[1];

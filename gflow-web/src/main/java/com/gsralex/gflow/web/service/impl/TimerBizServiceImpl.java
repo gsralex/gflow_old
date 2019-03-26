@@ -1,13 +1,15 @@
 package com.gsralex.gflow.web.service.impl;
 
+import com.gsralex.gflow.core.rpc.client.RpcClientFactory;
+import com.gsralex.gflow.scheduler.client.TimerService;
+import com.gsralex.gflow.scheduler.client.domain.TimerReq;
 import com.gsralex.gflow.web.WebContext;
 import com.gsralex.gflow.web.dao.TimerDao;
 import com.gsralex.gflow.web.model.TimerVo;
-import com.gsralex.gflow.web.req.TimerReq;
 import com.gsralex.gflow.web.resp.PageResp;
 import com.gsralex.gflow.web.resp.Resp;
 import com.gsralex.gflow.web.resp.ResultResp;
-import com.gsralex.gflow.web.service.TimerService;
+import com.gsralex.gflow.web.service.TimerBizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,7 @@ import java.util.List;
  * @version 2019/3/9
  */
 @Service
-public class TimerServiceImpl implements TimerService {
+public class TimerBizServiceImpl implements TimerBizService {
 
     @Autowired
     private TimerDao timerDao;
@@ -27,28 +29,23 @@ public class TimerServiceImpl implements TimerService {
 
     @Override
     public Resp saveTimer(TimerReq req) {
-//        TimerClient client = SchedulerClientFactory.createTimer(context.getSchedulerIpManager().getIp(), "");
-//        return client.saveTimer(req);
-        return null;
-
+        TimerService timerService = RpcClientFactory.create(TimerService.class, WebContext.getInstance().getSchedulerIpManager());
+        timerService.addTimer(req);
+        return new Resp();
     }
 
     @Override
     public Resp updateTimer(TimerReq req) {
-//        SchedulerClient schedulerClient= SchedulerClientFactory.createScheduler(ipSelector.getIp(), "");
-//        schedulerClient.scheduleAction(new JobReq());
-//        TimerClient client = SchedulerClientFactory.createTimer(context.getSchedulerIpManager().getIp(), "");
-//        return client.updateTimer(req);
-        return null;
+        TimerService timerService = RpcClientFactory.create(TimerService.class, WebContext.getInstance().getSchedulerIpManager());
+        timerService.updateTimer(req);
+        return new Resp();
     }
 
     @Override
     public Resp removeTimer(long id) {
-//        TimerClient client = SchedulerClientFactory.createTimer(context.getSchedulerIpManager().getIp(), "");
-//        IdReq idReq = new IdReq();
-//        idReq.setId(id);
-//        return client.removeTimer(idReq);
-        return null;
+        TimerService timerService = RpcClientFactory.create(TimerService.class, WebContext.getInstance().getSchedulerIpManager());
+        timerService.removeTimer(id);
+        return new Resp();
     }
 
     @Override

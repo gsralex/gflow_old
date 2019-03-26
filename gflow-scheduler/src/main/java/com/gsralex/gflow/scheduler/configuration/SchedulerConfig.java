@@ -3,6 +3,7 @@ package com.gsralex.gflow.scheduler.configuration;
 import com.gsralex.gflow.core.context.IpAddr;
 import com.gsralex.gflow.core.util.PropertiesUtils;
 import com.gsralex.gflow.core.util.PropertyName;
+import com.gsralex.gflow.scheduler.ExecutorNode;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,24 +18,25 @@ public class SchedulerConfig {
         InputStream is = PropertiesUtils.class.getResourceAsStream(CONFIG_FILEPATH);
         Properties props = PropertiesUtils.getProperties(CONFIG_FILEPATH);
         SchedulerConfig config = PropertiesUtils.getConfig(props, SchedulerConfig.class);
-
-        Map<String, List<IpAddr>> execIpMap = new HashMap<>();
         for (Map.Entry<Object, Object> propItem : props.entrySet()) {
             String key = propItem.getKey().toString();
             String value = propItem.getValue().toString();
             if (key.startsWith(TAG_EXECUTORIP)) {
                 int index = key.lastIndexOf(".");
                 String tag = key.substring(index + 1);
-
                 String[] ips = value.split(",");
                 List<IpAddr> ipList = new ArrayList<>();
                 for (String ip : ips) {
                     ipList.add(new IpAddr(ip));
                 }
-                execIpMap.put(tag, ipList);
+                for (IpAddr ip : ipList) {
+                    ExecutorNode node = new ExecutorNode();
+                    node.setIp(ip);
+                    node.setTag(tag);
+                    config.getExecutorNodes().add(node);
+                }
             }
         }
-        config.setExecutorIpMap(execIpMap);
         return config;
     }
 
@@ -63,6 +65,8 @@ public class SchedulerConfig {
     private String accessKey;
 
     private Map<String, List<IpAddr>> executorIpMap = new HashMap<>();
+
+    private List<ExecutorNode> executorNodes = new ArrayList<>();
 
     public String getDbDriver() {
         return dbDriver;
@@ -154,11 +158,7 @@ public class SchedulerConfig {
         this.accessKey = accessKey;
     }
 
-    public Map<String, List<IpAddr>> getExecutorIpMap() {
-        return executorIpMap;
-    }
-
-    public void setExecutorIpMap(Map<String, List<IpAddr>> executorIpMap) {
-        this.executorIpMap = executorIpMap;
+    public List<ExecutorNode> getExecutorNodes() {
+        return executorNodes;
     }
 }

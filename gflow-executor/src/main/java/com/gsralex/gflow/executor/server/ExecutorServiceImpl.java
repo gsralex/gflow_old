@@ -9,7 +9,6 @@ import com.gsralex.gflow.executor.process.AckExecuteTask;
 import com.gsralex.gflow.executor.process.ExecuteTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -19,7 +18,6 @@ import java.util.concurrent.TimeUnit;
  * @author gsralex
  * @version 2019/3/16
  */
-@Component
 public class ExecutorServiceImpl implements ExecutorService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExecutorServiceImpl.class);
@@ -30,8 +28,13 @@ public class ExecutorServiceImpl implements ExecutorService {
     public boolean scheduleAction(JobReq req) {
         try {
             Class<?> clazz = Class.forName(req.getClassName());
+            Object instance;
             if (ExecutorContext.getInstance().isSpring()) {
-                Object instance = ExecutorContext.getInstance().getSpringBean(clazz);
+                instance = ExecutorContext.getInstance().getSpringBean(clazz);
+            } else {
+                instance = clazz.newInstance();
+            }
+            if (instance != null) {
                 if (clazz.isInstance(ExecuteProcess.class)) {
                     ExecuteProcess process = (ExecuteProcess) instance;
                     pool.submit(new ExecuteTask(process, req));
@@ -39,16 +42,12 @@ public class ExecutorServiceImpl implements ExecutorService {
                     AckExecuteProcess process = (AckExecuteProcess) instance;
                     pool.submit(new AckExecuteTask(process, req));
                 }
+                return true;
             }
-            return true;
+            return false;
         } catch (Exception e) {
             LOG.error("ExecutorServiceImpl.scheduleAction", e);
             return false;
         }
-    }
-
-    @Override
-    public boolean stopAction(long jobId) {
-        return false;
     }
 }

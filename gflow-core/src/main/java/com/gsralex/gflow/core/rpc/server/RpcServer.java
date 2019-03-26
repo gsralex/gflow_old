@@ -15,9 +15,6 @@ import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author gsralex
  * @version 2019/3/15
@@ -25,16 +22,15 @@ import java.util.Map;
 public class RpcServer {
 
     private static Logger LOG = LoggerFactory.getLogger(RpcServer.class);
-    private Map<String, Object> serviceHandles = new HashMap<>();
+    private ServiceCache serviceCache = new ServiceCache();
 
     public void registerHandler(Class clazz, Object impl) {
-        serviceHandles.put(clazz.getName(), impl);
+        serviceCache.registerHandler(clazz, impl);
     }
 
     public void serve(int port) throws InterruptedException {
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         NioEventLoopGroup workGroup = new NioEventLoopGroup();
-
         ServerBootstrap bootstrap = new ServerBootstrap();
         bootstrap.group(bossGroup, workGroup)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -47,7 +43,7 @@ public class RpcServer {
 //                                .addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()))
                                 .addLast(new GenericDecoder(RpcReq.class))
                                 .addLast(new GenericEncoder(RpcResp.class))
-                                .addLast(new RpcServerHandler(serviceHandles));
+                                .addLast(new RpcServerHandler(serviceCache));
                     }
                 })
                 .channel(NioServerSocketChannel.class)
@@ -55,12 +51,12 @@ public class RpcServer {
                 .childOption(ChannelOption.SO_KEEPALIVE, true);
         try {
             ChannelFuture cf = bootstrap.bind(port).sync();
-            LOG.info("Server served by port {}", port);
+            LOG.info("====== SchedulerServer STARTED ======");
             cf.channel().closeFuture().sync();
         } finally {
-            System.out.println("123123");
             bossGroup.shutdownGracefully();
             workGroup.shutdownGracefully();
         }
     }
+
 }
