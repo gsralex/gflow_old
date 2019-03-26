@@ -1,7 +1,7 @@
 package com.gsralex.gflow.example.executor;
 
 import com.gsralex.gflow.executor.ExecuteProcess;
-import com.gsralex.gflow.executor.JobReq;
+import com.gsralex.gflow.executor.client.JobReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -22,10 +22,8 @@ public class ExecutorContext {
     private boolean spring;
 
     private ExecutorConfig config;
-
     private IpAddr myIp;
-    private RpcClientManager schedulerIpManager;
-
+    private RpcClientManager schedulerIpManager = new RpcClientManager();
 
     private ExecutorContext() {
     }

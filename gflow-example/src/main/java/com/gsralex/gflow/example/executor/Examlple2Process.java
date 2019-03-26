@@ -1,7 +1,7 @@
 package com.gsralex.gflow.example.executor;
 
 import com.gsralex.gflow.executor.ExecuteProcess;
-import com.gsralex.gflow.executor.JobReq;
+import com.gsralex.gflow.executor.client.JobReq;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +14,7 @@ public class Examlple2Process implements ExecuteProcess {
     private static Logger LOG = LoggerFactory.getLogger(ExampleProcess.class);
 
     @Override
-    public boolean process(JobReq req) throws InterruptedException {
+    public boolean process(JobReq req) throws Exception {
         LOG.info("class:" + this.getClass());
         LOG.info("jobId:" + req.getJobId());
         LOG.info("parameter:" + req.getParameter());
