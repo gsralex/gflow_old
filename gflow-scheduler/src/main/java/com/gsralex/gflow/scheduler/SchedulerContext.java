@@ -60,7 +60,7 @@ public class SchedulerContext {
      */
     private static ApplicationContext context;
 
-    private ExecutorClientManager executorClientManager = new ExecutorClientManager();
+    private ExecutorClientManager executorClientManager = ExecutorClientManager.getInstance();
 
     private RpcClientManager schedulerIpManager = new RpcClientManager();
 

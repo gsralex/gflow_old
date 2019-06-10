@@ -14,11 +14,15 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 2019/3/14
  */
 public class ExecutorClientManager {
+    private static final ExecutorClientManager INSTANCE = new ExecutorClientManager();
 
     private Map<String, RpcClientManager> nodes = new ConcurrentHashMap<>();
 
     public RpcClientManager getRpcClientManager(String tag) {
         return nodes.get(tag);
+    }
+
+    private ExecutorClientManager() {
     }
 
     public synchronized void updateNodes(List<ExecutorNode> nodeList) {
@@ -50,6 +54,10 @@ public class ExecutorClientManager {
                 nodes.remove(entry.getKey());
             }
         }
+    }
+
+    public static ExecutorClientManager getInstance() {
+        return INSTANCE;
     }
 
 }

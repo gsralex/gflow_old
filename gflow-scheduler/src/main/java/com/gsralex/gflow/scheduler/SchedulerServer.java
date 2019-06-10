@@ -46,12 +46,13 @@ public class SchedulerServer {
 
     public void serve() throws UnknownHostException, InterruptedException {
         LOG.info("====== SchedulerServer STARTING ======");
-        handleNodes(context);
         RpcServer rpcServer = new RpcServer();
         rpcServer.registerHandler(FlowService.class, context.getBean(FlowServiceImpl.class));
         rpcServer.registerHandler(TimerService.class, context.getBean(TimerServiceImpl.class));
         rpcServer.registerHandler(ScheduleService.class, context.getBean(ScheduleServiceImpl.class));
-        rpcServer.serve(context.getConfig().getPort());
+        rpcServer.start(context.getConfig().getPort());
+        LOG.info("====== SchedulerServer STARTED ======");
+        handleNodes(context);
     }
 
     private void handleNodes(SchedulerContext context) throws UnknownHostException {
@@ -80,15 +81,15 @@ public class SchedulerServer {
             masterIp.setIp(masterAddr.getHostAddress());
             context.setMasterIp(masterIp);
             //initialize
-            ExecutorClientManager executorClientManager = new ExecutorClientManager();
+            ExecutorClientManager executorClientManager = ExecutorClientManager.getInstance();
             executorClientManager.updateNodes(context.getConfig().getExecutorNodes());
         }
     }
 
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        MainArgs mainArgs = new MainArgs(args);
-        mainArgs.isMaster();
+        ArgsTool argsTool = ArgsTool.fromArgs(args);
+        argsTool.getBoolean("master");
         SchedulerServer server = new SchedulerServer(true);
         server.addParameter(getBizdataParam());
         server.serve();

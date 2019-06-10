@@ -3,10 +3,11 @@ package com.gsralex.gflow.scheduler.timer;
 import com.gsralex.gflow.core.domain.TimerConfigPo;
 import com.gsralex.gflow.scheduler.SchedulerContext;
 import com.gsralex.gflow.scheduler.dao.JobDao;
-import com.gsralex.gflow.scheduler.dao.TimerDao;
 import com.gsralex.gflow.scheduler.dao.TimerExecuteRecord;
+import com.gsralex.gflow.scheduler.service.BizJobService;
+import com.gsralex.gflow.scheduler.service.BizTimerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,20 +20,20 @@ import java.util.stream.Collectors;
  * @author gsralex
  * @version 2018/12/18
  */
-@Service
+@Component
 public class TimerRecovery {
 
     @Autowired
-    private JobDao jobDao;
+    private BizJobService jobService;
     @Autowired
-    private TimerDao timerDao;
+    private BizTimerService timerService;
 
-    private SchedulerContext context=SchedulerContext.getInstance();
+    private SchedulerContext context = SchedulerContext.getInstance();
 
     public void recover() {
-        List<TimerConfigPo> timerList = timerDao.listTimer();
+        List<TimerConfigPo> timerList = timerService.listTimer();
         List<Long> timerIdList = timerList.stream().map(x -> x.getId()).collect(Collectors.toList());
-        List<TimerExecuteRecord> execList = jobDao.listJobGroupExec(timerIdList);
+        List<TimerExecuteRecord> execList = jobService.listJobGroupByTimer(timerIdList);
         Map<Long, Long> execMap = new HashMap<>();
         for (TimerExecuteRecord exec : execList) {
             execMap.put(exec.getTimerConfigId(), exec.getCreateTime());

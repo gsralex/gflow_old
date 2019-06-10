@@ -70,6 +70,8 @@ public class RpcClientManager {
         }
         for (RpcClientHandler handler : connectedClientHandles) {
             if (!ipSet.contains(handler.getRemoteIp())) {
+                handler.close();
+                connectedClients.remove(handler.getRemoteIp());
                 connectedClientHandles.remove(handler);
             }
         }
@@ -91,15 +93,15 @@ public class RpcClientManager {
 //                                .addLast(new DelimiterBasedFrameDecoder(8192, Delimiters.lineDelimiter()))
                                         .addLast(new GenericEncoder(RpcReq.class))
                                         .addLast(new GenericDecoder(RpcResp.class))
-                                        .addLast(new RpcClientHandler());
+                                        .addLast(new RpcClientHandler(remoteIp));
 
                             }
                         });
                 final ChannelFuture channelFuture = b.connect(remoteIp.getIp(), remoteIp.getPort());
                 channelFuture.addListener(new ChannelFutureListener() {
                     @Override
-                    public void operationComplete(ChannelFuture arg0) {
-                        if (channelFuture.isSuccess()) {
+                    public void operationComplete(ChannelFuture cf) {
+                        if (cf.isSuccess()) {
                             //rpcclienthandler必须实例化
                             RpcClientHandler rpcClientHandler = channelFuture.channel().pipeline().get(RpcClientHandler.class);
                             RpcClient rpcClient = new RpcClient(eventLoopGroup, rpcClientHandler.getRemoteIp());

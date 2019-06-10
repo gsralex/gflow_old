@@ -7,6 +7,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -172,7 +173,7 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcReq> {
 
     }
 
-    public static void main(String[] args) throws NoSuchMethodException {
+    public static void main(String[] args) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         System.out.println(long.class);
         System.out.println(Long.class);
 
@@ -182,7 +183,10 @@ public class RpcServerHandler extends SimpleChannelInboundHandler<RpcReq> {
         D d = new D();
         long start = System.currentTimeMillis();
         for (int i = 0; i < 100000; i++) {
-            handler.findMethod(D.class.getName(), "d", new Object[]{1L, "d", 2L});
+            String className = D.class.getName();
+            String methodName = "d";
+            Object[] parameters = new Object[]{1L, "d", 2L};
+            handler.findMethod(className, methodName, parameters);
         }
         long end = System.currentTimeMillis();
         System.out.println(end - start);

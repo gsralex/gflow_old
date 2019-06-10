@@ -45,5 +45,5 @@ public interface JobDao {
 
     List<JobPo> listJobNeedRetry(int maxRetryCnt);
 
-    List<TimerExecuteRecord> listJobGroupExec(List<Long> timerIdList);
+    List<TimerExecuteRecord> listJobGroupByTimer(List<Long> timerIdList);
 }
