@@ -3,7 +3,7 @@ package com.gsralex.gflow.scheduler.server;
 import com.gsralex.gflow.core.domain.FlowDirectPo;
 import com.gsralex.gflow.core.domain.FlowGroupPo;
 import com.gsralex.gflow.core.domain.FlowItemPo;
-import com.gsralex.gflow.scheduler.client.NFlowService;
+import com.gsralex.gflow.scheduler.client.FlowService;
 import com.gsralex.gflow.scheduler.client.domain.FlowDirect;
 import com.gsralex.gflow.scheduler.client.domain.FlowGroup;
 import com.gsralex.gflow.scheduler.client.domain.FlowItem;
@@ -20,7 +20,7 @@ import java.util.List;
  * @version 2019/3/10
  */
 @Component
-public class FlowServiceImpl implements NFlowService {
+public class FlowServiceImpl implements FlowService {
 
     @Autowired
     private BizFlowService bizFlowService;

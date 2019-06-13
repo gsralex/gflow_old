@@ -34,10 +34,7 @@ public class SchedulerServer {
 
     private SchedulerContext context;
 
-    public SchedulerServer(boolean master) throws IOException {
-        context = SchedulerContext.getInstance();
-        context.init();
-        context.setMaster(master);
+    public SchedulerServer()  {
     }
 
     public void addParameter(DynamicParam parameter) {
@@ -46,7 +43,6 @@ public class SchedulerServer {
 
     public void serve() throws UnknownHostException, InterruptedException {
         LOG.info("====== SchedulerServer STARTING ======");
-        handleNodes(context);
         RpcServer rpcServer = new RpcServer();
         rpcServer.registerHandler(FlowService.class, context.getBean(FlowServiceImpl.class));
         rpcServer.registerHandler(TimerService.class, context.getBean(TimerServiceImpl.class));
@@ -54,7 +50,12 @@ public class SchedulerServer {
         rpcServer.serve(context.getConfig().getPort());
     }
 
-    private void handleNodes(SchedulerContext context) throws UnknownHostException {
+    private void initContext() throws IOException {
+        context = SchedulerContext.getInstance();
+        context.init();
+    }
+
+    private void discoverNodes() throws UnknownHostException {
         //如果有zk，则用zk注册master
         if (context.getConfig().getZkActive() != null
                 && context.getConfig().getZkActive()) {
@@ -87,9 +88,9 @@ public class SchedulerServer {
 
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        MainArgs mainArgs = new MainArgs(args);
-        mainArgs.isMaster();
-        SchedulerServer server = new SchedulerServer(true);
+        SchedulerServer server = new SchedulerServer();
+        server.initContext();
+        server.discoverNodes();
         server.addParameter(getBizdataParam());
         server.serve();
     }

@@ -16,7 +16,6 @@
         <module>gflow-example</module>
         <module>gflow-executorclient</module>
         <module>gflow-schedulerclient</module>
-        <module>gflow-rpc</module>
     </modules>
     <properties>
         <junit.version>4.12</junit.version>
@@ -25,7 +24,8 @@
         <lang3.version>3.8.1</lang3.version>
         <thrift.verison>0.11.0</thrift.verison>
         <dbcp.version>1.4</dbcp.version>
-        <mysql.version>5.1.39</mysql.version>
+        <hikaricp.version>3.3.1</hikaricp.version>
+        <mysql.version>8.0.16</mysql.version>
         <gdata.version>1.08</gdata.version>
         <zkclient.version>0.10</zkclient.version>
         <gflow.version>1.0-SNAPSHOT</gflow.version>
@@ -62,12 +62,12 @@
             </dependency>
 
 
-            <dependency>
-                <groupId>commons-dbcp</groupId>
-                <artifactId>commons-dbcp</artifactId>
-                <version>${dbcp.version}</version>
-            </dependency>
 
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikaricp.version}</version>
+            </dependency>
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>

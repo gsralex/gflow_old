@@ -2,7 +2,8 @@ package com.gsralex.gflow.scheduler.configuration;
 
 import com.gsralex.gdata.bean.jdbc.JdbcUtils;
 import com.gsralex.gflow.scheduler.SchedulerContext;
-import org.apache.commons.dbcp.BasicDataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,11 +18,14 @@ public class SpringConfiguration {
     @Bean
     public JdbcUtils jdbcUtils() {
         SchedulerContext context = SchedulerContext.getInstance();
-        BasicDataSource dataSource = new BasicDataSource();
-        dataSource.setDriverClassName(context.getConfig().getDbDriver());
-        dataSource.setUrl(context.getConfig().getDbUrl());
-        dataSource.setUsername(context.getConfig().getDbUsername());
-        dataSource.setPassword(context.getConfig().getDbPassword());
+        SchedulerConfig config = context.getConfig();
+        HikariConfig dbConfig = new HikariConfig();
+        dbConfig.setDriverClassName(config.getDbDriver());
+        dbConfig.setJdbcUrl(config.getDbUrl());
+        dbConfig.setUsername(config.getDbUsername());
+        dbConfig.setPassword(config.getDbPassword());
+
+        HikariDataSource dataSource = new HikariDataSource(dbConfig);
         return new JdbcUtils(dataSource);
 
     }
