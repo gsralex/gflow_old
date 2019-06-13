@@ -35,10 +35,10 @@ public class ExecutorServiceImpl implements ExecutorService {
                 instance = clazz.newInstance();
             }
             if (instance != null) {
-                if (clazz.isInstance(ExecuteProcess.class)) {
+                if (ExecuteProcess.class.isInstance(instance)) {
                     ExecuteProcess process = (ExecuteProcess) instance;
                     pool.submit(new ExecuteTask(process, req));
-                } else if (clazz.isInstance(AckExecuteProcess.class)) {
+                } else if (AckExecuteProcess.class.isInstance(instance)) {
                     AckExecuteProcess process = (AckExecuteProcess) instance;
                     pool.submit(new AckExecuteTask(process, req));
                 }

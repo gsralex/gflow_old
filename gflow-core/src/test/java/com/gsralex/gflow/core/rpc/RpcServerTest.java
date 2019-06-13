@@ -15,6 +15,6 @@ public class RpcServerTest {
     public void serve() throws Exception {
         RpcServer rpcServer = new RpcServer();
         rpcServer.registerHandler(TestService.class, new TestServiceImpl());
-        rpcServer.serve(20091);
+        rpcServer.start(20091);
     }
 }

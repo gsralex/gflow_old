@@ -1,10 +1,12 @@
 package com.gsralex.gflow.core.rpc.client;
 
+import com.gsralex.gflow.core.exception.GflowException;
 import com.gsralex.gflow.core.rpc.protocol.RpcResp;
 
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author gsralex
@@ -12,10 +14,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class RpcFuture implements Future<Object> {
 
+    private static final int TIMEOUT_SECONDS = 30;
+
     private boolean fin;
     private String reqId;
     private RpcResp rpcResp;
-    private CountDownLatch latch = new CountDownLatch(1);
+    private ReentrantLock lock = new ReentrantLock();
+    private Condition done = lock.newCondition();
+
 
     public String getReqId() {
         return reqId;
@@ -25,14 +31,10 @@ public class RpcFuture implements Future<Object> {
         this.reqId = reqId;
     }
 
-
-    public void setRpcResp(RpcResp rpcResp) {
-        this.rpcResp = rpcResp;
-    }
-
-    public void done() {
-        fin = true;
-        latch.countDown();
+    public void doReceived(RpcResp rpcResp){
+        this.rpcResp=rpcResp;
+        fin=true;
+        done.signal();
     }
 
     @Override
@@ -52,7 +54,15 @@ public class RpcFuture implements Future<Object> {
 
     @Override
     public Object get() throws InterruptedException {
-        latch.await();
+        try {
+            lock.lock();
+            done.await(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        } finally {
+            lock.unlock();
+        }
+        if (!isDone()) {
+            throw new GflowException("Timeout");
+        }
         return rpcResp.getData();
     }
 

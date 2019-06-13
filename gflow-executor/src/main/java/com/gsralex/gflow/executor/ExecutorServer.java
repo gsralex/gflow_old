@@ -29,13 +29,13 @@ public class ExecutorServer {
     public void serve() throws Exception {
         context = ExecutorContext.getInstance();
         context.init();
-        handleNodes();
         LOG.info("====== ExecutorServer STARTING ======");
         LOG.info("port:{}", context.getConfig().getPort());
         RpcServer server = new RpcServer();
         server.registerHandler(ExecutorService.class, new ExecutorServiceImpl());
-        server.serve(context.getConfig().getPort());
+        server.start(context.getConfig().getPort());
         LOG.info("====== ExecutorServer STARTED ======");
+        handleNodes();
     }
 
     private void handleNodes() {

@@ -9,7 +9,6 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,11 +18,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RpcClientHandler extends SimpleChannelInboundHandler<RpcResp> {
 
-    private IpAddr remoteIp;
     private Channel channel;
+    private IpAddr remoteIp;
     private Map<String, RpcFuture> rpcFutures = new ConcurrentHashMap<>();
 
-    public RpcClientHandler() {
+    public RpcClientHandler(IpAddr remoteIp) {
+        this.remoteIp = remoteIp;
     }
 
     @Override
@@ -37,19 +37,11 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcResp> {
         this.channel = ctx.channel();
     }
 
-    @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception{
-        InetSocketAddress addr = (InetSocketAddress) ctx.channel().remoteAddress();
-        remoteIp = new IpAddr(addr.getHostString(), addr.getPort());
-    }
-
-
 
     @Override
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, RpcResp resp) throws Exception {
         RpcFuture rpcFuture = rpcFutures.get(resp.getReqId());
-        rpcFuture.setRpcResp(resp);
-        rpcFuture.done();
+        rpcFuture.doReceived(resp);
         rpcFutures.remove(resp.getReqId());
     }
 
@@ -61,12 +53,12 @@ public class RpcClientHandler extends SimpleChannelInboundHandler<RpcResp> {
         return rpcFuture;
     }
 
-    public IpAddr getRemoteIp() {
-        return remoteIp;
-    }
-
     public void close() {
         channel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
 
+    }
+
+    public IpAddr getRemoteIp() {
+        return remoteIp;
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class MainArgs {
 
-    private List<String> argList;
+    private List<String> argList = new ArrayList<>();
 
     public MainArgs(String[] args) {
         this.argList = Arrays.asList(args);

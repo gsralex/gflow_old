@@ -8,6 +8,8 @@ import com.gsralex.gflow.scheduler.timer.TimerTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author gsralex
  * @version 2018/12/26
@@ -67,5 +69,10 @@ public class BizTimerServiceImpl implements BizTimerService {
             return ok;
         }
         return false;
+    }
+
+    @Override
+    public List<TimerConfigPo> listTimer() {
+        return timerDao.listTimer();
     }
 }
